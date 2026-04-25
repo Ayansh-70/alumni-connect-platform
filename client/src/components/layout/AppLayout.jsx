@@ -11,6 +11,9 @@ function AppLayout() {
     ...(isAuthenticated && user
       ? [{ label: 'My Dashboard', to: getDashboardPathForRole(user.role) }]
       : [{ label: 'Login', to: '/login' }]),
+    ...(user?.role === 'SUPER_ADMIN'
+      ? [{ label: 'Institute Requests', to: '/super-admin/institute-requests' }]
+      : []),
     { label: 'Register Institute', to: '/institutes/register' }
   ];
 

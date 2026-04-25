@@ -9,6 +9,7 @@ import SuperAdminDashboardPage from './pages/dashboards/SuperAdminDashboardPage.
 import InstituteRegisterPage from './pages/public/InstituteRegisterPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
 import LoginPage from './pages/public/LoginPage.jsx';
+import InstituteRequestsPage from './pages/superAdmin/InstituteRequestsPage.jsx';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<RoleRoute allowedRoles={['SUPER_ADMIN']} />}>
             <Route path="super-admin/dashboard" element={<SuperAdminDashboardPage />} />
+            <Route path="super-admin/institute-requests" element={<InstituteRequestsPage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['INSTITUTE_ADMIN']} />}>

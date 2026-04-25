@@ -33,3 +33,10 @@ npm run dev
 Frontend: `http://localhost:5173`
 
 Backend health check: `http://localhost:5000/api/health`
+
+## Current MVP Modules
+
+- JWT authentication for all platform roles
+- Frontend login flow with protected role-based routes
+- Public institute registration request form
+- Super admin institute approval and rejection workflow

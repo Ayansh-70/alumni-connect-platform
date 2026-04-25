@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout.jsx';
+import ProtectedRoute from './components/routing/ProtectedRoute.jsx';
+import RoleRoute from './components/routing/RoleRoute.jsx';
 import AlumniDashboardPage from './pages/dashboards/AlumniDashboardPage.jsx';
 import InstituteAdminDashboardPage from './pages/dashboards/InstituteAdminDashboardPage.jsx';
 import StudentDashboardPage from './pages/dashboards/StudentDashboardPage.jsx';
@@ -15,10 +17,24 @@ function App() {
         <Route index element={<LandingPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="institutes/register" element={<InstituteRegisterPage />} />
-        <Route path="dashboard/super-admin" element={<SuperAdminDashboardPage />} />
-        <Route path="dashboard/institute-admin" element={<InstituteAdminDashboardPage />} />
-        <Route path="dashboard/student" element={<StudentDashboardPage />} />
-        <Route path="dashboard/alumni" element={<AlumniDashboardPage />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<RoleRoute allowedRoles={['SUPER_ADMIN']} />}>
+            <Route path="super-admin/dashboard" element={<SuperAdminDashboardPage />} />
+          </Route>
+
+          <Route element={<RoleRoute allowedRoles={['INSTITUTE_ADMIN']} />}>
+            <Route path="institute-admin/dashboard" element={<InstituteAdminDashboardPage />} />
+          </Route>
+
+          <Route element={<RoleRoute allowedRoles={['STUDENT']} />}>
+            <Route path="student/dashboard" element={<StudentDashboardPage />} />
+          </Route>
+
+          <Route element={<RoleRoute allowedRoles={['ALUMNI']} />}>
+            <Route path="alumni/dashboard" element={<AlumniDashboardPage />} />
+          </Route>
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

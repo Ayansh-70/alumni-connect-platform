@@ -1,12 +1,24 @@
-import { Link, Outlet } from 'react-router-dom';
-
-const navItems = [
-  { label: 'Home', to: '/' },
-  { label: 'Login', to: '/login' },
-  { label: 'Register Institute', to: '/institutes/register' }
-];
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { getDashboardPathForRole } from '../../utils/auth.js';
 
 function AppLayout() {
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const navItems = [
+    { label: 'Home', to: '/' },
+    ...(isAuthenticated && user
+      ? [{ label: 'My Dashboard', to: getDashboardPathForRole(user.role) }]
+      : [{ label: 'Login', to: '/login' }]),
+    { label: 'Register Institute', to: '/institutes/register' }
+  ];
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
@@ -20,6 +32,15 @@ function AppLayout() {
                 {item.label}
               </Link>
             ))}
+            {isAuthenticated ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-md px-3 py-2 text-left hover:bg-slate-100"
+              >
+                Logout
+              </button>
+            ) : null}
           </div>
         </nav>
       </header>

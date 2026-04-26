@@ -14,6 +14,14 @@ function AppLayout() {
     ...(user?.role === 'SUPER_ADMIN'
       ? [{ label: 'Institute Requests', to: '/super-admin/institute-requests' }]
       : []),
+    ...(user?.role === 'INSTITUTE_ADMIN'
+      ? [
+          { label: 'Manage Students', to: '/institute-admin/students' },
+          { label: 'Manage Alumni', to: '/institute-admin/alumni' },
+          { label: 'Create Student', to: '/institute-admin/students/create' },
+          { label: 'Create Alumni', to: '/institute-admin/alumni/create' }
+        ]
+      : []),
     { label: 'Register Institute', to: '/institutes/register' }
   ];
 

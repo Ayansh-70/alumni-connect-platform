@@ -40,3 +40,4 @@ Backend health check: `http://localhost:5000/api/health`
 - Frontend login flow with protected role-based routes
 - Public institute registration request form
 - Super admin institute approval and rejection workflow
+- Institute admin student and alumni user management with institute-scoped access control

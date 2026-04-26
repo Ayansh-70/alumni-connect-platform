@@ -6,6 +6,10 @@ import AlumniDashboardPage from './pages/dashboards/AlumniDashboardPage.jsx';
 import InstituteAdminDashboardPage from './pages/dashboards/InstituteAdminDashboardPage.jsx';
 import StudentDashboardPage from './pages/dashboards/StudentDashboardPage.jsx';
 import SuperAdminDashboardPage from './pages/dashboards/SuperAdminDashboardPage.jsx';
+import AlumniPage from './pages/instituteAdmin/AlumniPage.jsx';
+import CreateAlumniPage from './pages/instituteAdmin/CreateAlumniPage.jsx';
+import CreateStudentPage from './pages/instituteAdmin/CreateStudentPage.jsx';
+import StudentsPage from './pages/instituteAdmin/StudentsPage.jsx';
 import InstituteRegisterPage from './pages/public/InstituteRegisterPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
 import LoginPage from './pages/public/LoginPage.jsx';
@@ -27,6 +31,10 @@ function App() {
 
           <Route element={<RoleRoute allowedRoles={['INSTITUTE_ADMIN']} />}>
             <Route path="institute-admin/dashboard" element={<InstituteAdminDashboardPage />} />
+            <Route path="institute-admin/students" element={<StudentsPage />} />
+            <Route path="institute-admin/alumni" element={<AlumniPage />} />
+            <Route path="institute-admin/students/create" element={<CreateStudentPage />} />
+            <Route path="institute-admin/alumni/create" element={<CreateAlumniPage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['STUDENT']} />}>

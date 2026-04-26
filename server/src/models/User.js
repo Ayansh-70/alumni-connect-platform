@@ -11,7 +11,8 @@ export const USER_ROLES = Object.freeze({
 export const USER_STATUSES = Object.freeze({
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
-  PENDING: 'PENDING'
+  PENDING: 'PENDING',
+  BLOCKED: 'BLOCKED'
 });
 
 const userSchema = new mongoose.Schema(

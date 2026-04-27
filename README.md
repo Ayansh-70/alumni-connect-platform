@@ -41,3 +41,6 @@ Backend health check: `http://localhost:5000/api/health`
 - Public institute registration request form
 - Super admin institute approval and rejection workflow
 - Institute admin student and alumni user management with institute-scoped access control
+- Student profile create, view, and update flow
+- Alumni profile create, view, and update flow with verification status tracking
+- Institute admin alumni profile verification and rejection workflow

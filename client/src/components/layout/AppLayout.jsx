@@ -18,10 +18,13 @@ function AppLayout() {
       ? [
           { label: 'Manage Students', to: '/institute-admin/students' },
           { label: 'Manage Alumni', to: '/institute-admin/alumni' },
+          { label: 'Alumni Verification', to: '/institute-admin/alumni-verification' },
           { label: 'Create Student', to: '/institute-admin/students/create' },
           { label: 'Create Alumni', to: '/institute-admin/alumni/create' }
         ]
       : []),
+    ...(user?.role === 'STUDENT' ? [{ label: 'My Profile', to: '/student/profile' }] : []),
+    ...(user?.role === 'ALUMNI' ? [{ label: 'My Profile', to: '/alumni/profile' }] : []),
     { label: 'Register Institute', to: '/institutes/register' }
   ];
 

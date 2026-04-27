@@ -5,6 +5,14 @@ const notFoundHandler = (req, res, next) => {
 };
 
 const errorHandler = (err, req, res, next) => {
+  if (err.name === 'ValidationError' || err.name === 'CastError') {
+    res.status(res.statusCode && res.statusCode !== 200 ? res.statusCode : 400);
+  }
+
+  if (err.code === 11000) {
+    res.status(res.statusCode && res.statusCode !== 200 ? res.statusCode : 409);
+  }
+
   const statusCode =
     err.statusCode || (res.statusCode && res.statusCode !== 200 ? res.statusCode : 500);
 

@@ -22,6 +22,11 @@ function InstituteAdminDashboardPage() {
       title: 'Create Alumni',
       description: 'Create a new alumni account with a temporary password.',
       to: '/institute-admin/alumni/create'
+    },
+    {
+      title: 'Alumni Verification',
+      description: 'Review pending alumni profiles and verify or reject them for your institute.',
+      to: '/institute-admin/alumni-verification'
     }
   ];
 

@@ -6,13 +6,16 @@ import AlumniDashboardPage from './pages/dashboards/AlumniDashboardPage.jsx';
 import InstituteAdminDashboardPage from './pages/dashboards/InstituteAdminDashboardPage.jsx';
 import StudentDashboardPage from './pages/dashboards/StudentDashboardPage.jsx';
 import SuperAdminDashboardPage from './pages/dashboards/SuperAdminDashboardPage.jsx';
+import AlumniProfilePage from './pages/alumni/AlumniProfilePage.jsx';
 import AlumniPage from './pages/instituteAdmin/AlumniPage.jsx';
+import AlumniVerificationPage from './pages/instituteAdmin/AlumniVerificationPage.jsx';
 import CreateAlumniPage from './pages/instituteAdmin/CreateAlumniPage.jsx';
 import CreateStudentPage from './pages/instituteAdmin/CreateStudentPage.jsx';
 import StudentsPage from './pages/instituteAdmin/StudentsPage.jsx';
 import InstituteRegisterPage from './pages/public/InstituteRegisterPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
 import LoginPage from './pages/public/LoginPage.jsx';
+import StudentProfilePage from './pages/student/StudentProfilePage.jsx';
 import InstituteRequestsPage from './pages/superAdmin/InstituteRequestsPage.jsx';
 
 function App() {
@@ -35,14 +38,17 @@ function App() {
             <Route path="institute-admin/alumni" element={<AlumniPage />} />
             <Route path="institute-admin/students/create" element={<CreateStudentPage />} />
             <Route path="institute-admin/alumni/create" element={<CreateAlumniPage />} />
+            <Route path="institute-admin/alumni-verification" element={<AlumniVerificationPage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['STUDENT']} />}>
             <Route path="student/dashboard" element={<StudentDashboardPage />} />
+            <Route path="student/profile" element={<StudentProfilePage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['ALUMNI']} />}>
             <Route path="alumni/dashboard" element={<AlumniDashboardPage />} />
+            <Route path="alumni/profile" element={<AlumniProfilePage />} />
           </Route>
         </Route>
       </Route>

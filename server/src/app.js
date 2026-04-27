@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import alumniProfileRoutes from './routes/alumniProfileRoutes.js';
+import alumniConnectionRoutes from './routes/alumniConnectionRoutes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorMiddleware.js';
 import instituteAdminAlumniProfileRoutes from './routes/instituteAdminAlumniProfileRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -8,6 +9,7 @@ import healthRoutes from './routes/healthRoutes.js';
 import instituteAdminUserRoutes from './routes/instituteAdminUserRoutes.js';
 import instituteRoutes from './routes/instituteRoutes.js';
 import studentAlumniRoutes from './routes/studentAlumniRoutes.js';
+import studentConnectionRoutes from './routes/studentConnectionRoutes.js';
 import studentProfileRoutes from './routes/studentProfileRoutes.js';
 
 const app = express();
@@ -27,7 +29,9 @@ app.use('/api/institutes', instituteRoutes);
 app.use('/api/institute-admin/users', instituteAdminUserRoutes);
 app.use('/api/student', studentProfileRoutes);
 app.use('/api/student/alumni', studentAlumniRoutes);
+app.use('/api/student/connections', studentConnectionRoutes);
 app.use('/api/alumni', alumniProfileRoutes);
+app.use('/api/alumni/connections', alumniConnectionRoutes);
 app.use('/api/institute-admin/alumni-profiles', instituteAdminAlumniProfileRoutes);
 
 app.use(notFoundHandler);

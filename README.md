@@ -45,3 +45,4 @@ Backend health check: `http://localhost:5000/api/health`
 - Alumni profile create, view, and update flow with verification status tracking
 - Institute admin alumni profile verification and rejection workflow
 - Student-only verified alumni search and detail views scoped to the same institute
+- Student-to-alumni connection requests with student tracking and alumni accept/reject actions

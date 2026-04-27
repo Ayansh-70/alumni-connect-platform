@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { getStudentToAlumniConnectionRequest } from './connectionRequestService.js';
 import AlumniProfile, { ALUMNI_VERIFICATION_STATUSES } from '../models/AlumniProfile.js';
 import StudentProfile from '../models/StudentProfile.js';
 import { USER_ROLES, USER_STATUSES } from '../models/User.js';
@@ -433,7 +434,12 @@ const getStudentVisibleAlumniDetail = async (studentUser, profileId) => {
     throw buildError('Verified alumni profile not found in your institute.', 404);
   }
 
-  return sanitizeStudentVisibleAlumniDetail(profile);
+  const connectionRequest = await getStudentToAlumniConnectionRequest(studentUser, profile.user._id);
+
+  return {
+    ...sanitizeStudentVisibleAlumniDetail(profile),
+    connectionRequest
+  };
 };
 
 export {

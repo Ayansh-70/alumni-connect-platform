@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getStudentAlumniDetailRequest } from '../../api/studentAlumni.js';
+import { createStudentConnectionRequest } from '../../api/studentConnections.js';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+
+const STATUS_STYLES = {
+  PENDING: 'border-amber-200 bg-amber-50 text-amber-700',
+  ACCEPTED: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+  REJECTED: 'border-rose-200 bg-rose-50 text-rose-700'
+};
 
 function StudentAlumniDetailPage() {
   const { id } = useParams();
   const [alumni, setAlumni] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const loadAlumni = async () => {
@@ -16,7 +26,9 @@ function StudentAlumniDetailPage() {
 
       try {
         const response = await getStudentAlumniDetailRequest(id);
-        setAlumni(response.data?.alumni || null);
+        const nextAlumni = response.data?.alumni || null;
+        setAlumni(nextAlumni);
+        setMessage(nextAlumni?.connectionRequest?.message || '');
       } catch (error) {
         setErrorMessage(error.userMessage || 'Unable to load alumni details.');
       } finally {
@@ -26,6 +38,45 @@ function StudentAlumniDetailPage() {
 
     loadAlumni();
   }, [id]);
+
+  const handleSubmitRequest = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const response = await createStudentConnectionRequest({
+        alumniId: id,
+        message
+      });
+
+      const createdRequest = response.data?.request;
+
+      setAlumni((current) =>
+        current
+          ? {
+              ...current,
+              connectionRequest: createdRequest
+                ? {
+                    _id: createdRequest._id,
+                    status: createdRequest.status,
+                    message: createdRequest.message,
+                    respondedAt: createdRequest.respondedAt,
+                    createdAt: createdRequest.createdAt,
+                    updatedAt: createdRequest.updatedAt
+                  }
+                : current.connectionRequest
+            }
+          : current
+      );
+      setSuccessMessage(response.message || 'Connection request sent successfully.');
+    } catch (error) {
+      setErrorMessage(error.userMessage || 'Unable to send connection request.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div>
@@ -83,6 +134,64 @@ function StudentAlumniDetailPage() {
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Bio</h3>
               <p className="mt-2 text-sm leading-6 text-slate-600">{alumni.bio || 'No bio provided.'}</p>
+            </div>
+
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Connection request</h3>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Send a simple introduction to start a connection with this verified alumni.
+                  </p>
+                </div>
+                {alumni.connectionRequest ? (
+                  <span
+                    className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                      STATUS_STYLES[alumni.connectionRequest.status] || STATUS_STYLES.PENDING
+                    }`}
+                  >
+                    {alumni.connectionRequest.status}
+                  </span>
+                ) : null}
+              </div>
+
+              <form onSubmit={handleSubmitRequest} className="mt-4">
+                <textarea
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                  rows="4"
+                  disabled={Boolean(alumni.connectionRequest)}
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-not-allowed disabled:bg-slate-100"
+                  placeholder="Write an optional message about why you want to connect."
+                />
+
+                {errorMessage ? (
+                  <p className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                    {errorMessage}
+                  </p>
+                ) : null}
+
+                {successMessage ? (
+                  <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                    {successMessage}
+                  </p>
+                ) : null}
+
+                {alumni.connectionRequest ? (
+                  <p className="mt-4 text-sm text-slate-600">
+                    You already sent a connection request on{' '}
+                    {new Date(alumni.connectionRequest.createdAt).toLocaleDateString()}.
+                  </p>
+                ) : null}
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting || Boolean(alumni.connectionRequest)}
+                  className="mt-4 rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {alumni.connectionRequest ? 'Connection Request Sent' : isSubmitting ? 'Sending...' : 'Send Connection Request'}
+                </button>
+              </form>
             </div>
 
             <div className="grid gap-4 md:grid-cols-3">

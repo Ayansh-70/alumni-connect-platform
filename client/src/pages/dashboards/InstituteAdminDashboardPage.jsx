@@ -1,44 +1,52 @@
-import { Link } from 'react-router-dom';
+import DashboardActionGrid from '../../components/ui/DashboardActionGrid.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 
 function InstituteAdminDashboardPage() {
   const actions = [
     {
+      eyebrow: 'People',
       title: 'Manage Students',
       description: 'View current student users and update their account status.',
       to: '/institute-admin/students'
     },
     {
+      eyebrow: 'People',
       title: 'Manage Alumni',
       description: 'View current alumni users and update their account status.',
       to: '/institute-admin/alumni'
     },
     {
+      eyebrow: 'People',
       title: 'Create Student',
       description: 'Create a new student account with a temporary password.',
       to: '/institute-admin/students/create'
     },
     {
+      eyebrow: 'People',
       title: 'Create Alumni',
       description: 'Create a new alumni account with a temporary password.',
       to: '/institute-admin/alumni/create'
     },
     {
+      eyebrow: 'Approvals',
       title: 'Alumni Verification',
       description: 'Review pending alumni profiles and verify or reject them for your institute.',
       to: '/institute-admin/alumni-verification'
     },
     {
+      eyebrow: 'Approvals',
       title: 'Opportunity Approvals',
       description: 'Review pending opportunities posted by alumni and approve or reject them.',
       to: '/institute-admin/opportunities'
     },
     {
+      eyebrow: 'Broadcasts',
       title: 'Announcements',
       description: 'Create and manage announcements for your institute audience.',
       to: '/institute-admin/announcements'
     },
     {
+      eyebrow: 'Broadcasts',
       title: 'Events',
       description: 'Create and manage institute events for students and alumni.',
       to: '/institute-admin/events'
@@ -50,21 +58,9 @@ function InstituteAdminDashboardPage() {
       <PageHeader
         eyebrow="INSTITUTE_ADMIN"
         title="Institute admin dashboard"
-        description="Manage student and alumni users for your institute from one place."
+        description="Oversee people, approvals, and institute-wide communication from one organized workspace."
       />
-
-      <section className="grid gap-4 md:grid-cols-2">
-        {actions.map((action) => (
-          <Link
-            key={action.to}
-            to={action.to}
-            className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition hover:border-brand-300 hover:shadow"
-          >
-            <h2 className="text-xl font-semibold text-slate-950">{action.title}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{action.description}</p>
-          </Link>
-        ))}
-      </section>
+      <DashboardActionGrid actions={actions} />
     </div>
   );
 }

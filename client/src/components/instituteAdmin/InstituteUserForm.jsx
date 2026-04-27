@@ -46,71 +46,75 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
   };
 
   return (
-    <section className="max-w-xl rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="surface-card max-w-2xl p-8">
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-slate-950">{title}</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+        <p className="inline-flex rounded-full border border-brand-100 bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-brand-700">
+          Quick Create
+        </p>
+        <h2 className="mt-4 text-2xl font-semibold text-slate-950">{title}</h2>
+        <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">{description}</p>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <label className="block text-sm font-medium text-slate-700" htmlFor="name">
-          Name
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          value={formData.name}
-          onChange={handleChange}
-          className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
-          placeholder="Enter full name"
-        />
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="block text-sm font-medium text-slate-700" htmlFor="name">
+            Name
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            value={formData.name}
+            onChange={handleChange}
+            className="field-control mt-2"
+            placeholder="Enter full name"
+          />
+        </div>
 
-        <label className="mt-4 block text-sm font-medium text-slate-700" htmlFor="email">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
-          placeholder="user@institute.edu"
-        />
+        <div>
+          <label className="block text-sm font-medium text-slate-700" htmlFor="email">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="field-control mt-2"
+            placeholder="user@institute.edu"
+          />
+        </div>
 
-        <label className="mt-4 block text-sm font-medium text-slate-700" htmlFor="password">
-          Temporary password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
-          placeholder="Minimum 6 characters"
-        />
+        <div>
+          <label className="block text-sm font-medium text-slate-700" htmlFor="password">
+            Temporary password
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="field-control mt-2"
+            placeholder="Minimum 6 characters"
+          />
+        </div>
 
         {formError ? (
-          <p className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-            {formError}
-          </p>
+          <p className="alert-error">{formError}</p>
         ) : null}
 
         {successMessage ? (
-          <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-            {successMessage}
-          </p>
+          <p className="alert-success">{successMessage}</p>
         ) : null}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-6 rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {isSubmitting ? 'Submitting...' : submitLabel}
-        </button>
+        <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-2">
+          <p className="text-xs text-slate-500">New accounts inherit institute access automatically.</p>
+          <button type="submit" disabled={isSubmitting} className="btn-primary min-w-36">
+            {isSubmitting ? 'Submitting...' : submitLabel}
+          </button>
+        </div>
       </form>
     </section>
   );

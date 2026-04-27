@@ -11,23 +11,34 @@ function LandingPage() {
       />
 
       <div className="grid gap-4 md:grid-cols-3">
-        {['Institute-led verification', 'Student alumni discovery', 'Mentorship and opportunities'].map((item) => (
-          <div key={item} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-slate-950">{item}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              Placeholder module ready for the MVP implementation phase.
-            </p>
+        {[
+          {
+            title: 'Institute-led verification',
+            description: 'Every alumni and student journey stays grounded in institute-level approval and role-based access.'
+          },
+          {
+            title: 'Career discovery',
+            description: 'Students can browse alumni, request guidance, and explore approved opportunities with confidence.'
+          },
+          {
+            title: 'Shared campus updates',
+            description: 'Announcements, events, and notifications help the whole network stay aligned and active.'
+          }
+        ].map((item) => (
+          <div key={item.title} className="surface-card p-5">
+            <h2 className="text-base font-semibold text-slate-950">{item.title}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link to="/login" className="rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-900">
+        <Link to="/login" className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-brand-700">
           Sign in
         </Link>
         <Link
           to="/institutes/register"
-          className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-100"
+          className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
         >
           Register institute
         </Link>

@@ -54,67 +54,81 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
 
   return (
     <div>
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card p-6 md:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-slate-950">{title}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+            <p className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
+              Institute Members
+            </p>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-950">{title}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">{description}</p>
           </div>
           {pagination ? (
-            <p className="text-sm text-slate-500">
+            <p className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-500">
               {pagination.total} total {pagination.total === 1 ? 'user' : 'users'}
             </p>
           ) : null}
         </div>
 
-        {errorMessage ? (
-          <p className="mt-6 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-            {errorMessage}
-          </p>
-        ) : null}
+        <div className="mt-6 space-y-3">
+          {errorMessage ? <p className="alert-error">{errorMessage}</p> : null}
 
-        {actionMessage ? (
-          <p className="mt-6 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-            {actionMessage}
-          </p>
-        ) : null}
+          {actionMessage ? <p className="alert-success">{actionMessage}</p> : null}
+        </div>
 
         {isLoading ? (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+          <div className="empty-state mt-6">
             Loading users...
           </div>
         ) : users.length === 0 ? (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+          <div className="empty-state mt-6">
             {emptyMessage}
           </div>
         ) : (
           <>
-            <div className="mt-6 hidden overflow-x-auto lg:block">
+            <div className="mt-6 hidden overflow-hidden rounded-[1.5rem] border border-slate-200 lg:block">
               <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-                <thead className="bg-slate-50 text-slate-600">
+                <thead className="bg-slate-50/80 text-slate-600">
                   <tr>
-                    <th className="px-4 py-3 font-medium">Name</th>
-                    <th className="px-4 py-3 font-medium">Email</th>
-                    <th className="px-4 py-3 font-medium">Role</th>
-                    <th className="px-4 py-3 font-medium">Status</th>
-                    <th className="px-4 py-3 font-medium">Created</th>
-                    <th className="px-4 py-3 font-medium">Update status</th>
+                    <th className="px-4 py-3.5 font-medium">Name</th>
+                    <th className="px-4 py-3.5 font-medium">Email</th>
+                    <th className="px-4 py-3.5 font-medium">Role</th>
+                    <th className="px-4 py-3.5 font-medium">Status</th>
+                    <th className="px-4 py-3.5 font-medium">Created</th>
+                    <th className="px-4 py-3.5 font-medium">Update status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-slate-200 bg-white">
                   {users.map((user) => (
-                    <tr key={user._id} className="bg-white">
-                      <td className="px-4 py-4 font-medium text-slate-900">{user.name}</td>
+                    <tr key={user._id} className="transition hover:bg-slate-50/80">
+                      <td className="px-4 py-4">
+                        <div>
+                          <p className="font-medium text-slate-900">{user.name}</p>
+                          <p className="mt-1 text-xs uppercase tracking-wide text-slate-400">{user.role}</p>
+                        </div>
+                      </td>
                       <td className="px-4 py-4 text-slate-600">{user.email}</td>
                       <td className="px-4 py-4 text-slate-600">{user.role}</td>
-                      <td className="px-4 py-4 text-slate-600">{user.status}</td>
+                      <td className="px-4 py-4">
+                        <span
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                            user.status === 'ACTIVE'
+                              ? 'bg-emerald-50 text-emerald-700'
+                              : user.status === 'INACTIVE'
+                                ? 'bg-amber-50 text-amber-700'
+                                : 'bg-rose-50 text-rose-700'
+                          }`}
+                        >
+                          {user.status}
+                        </span>
+                      </td>
                       <td className="px-4 py-4 text-slate-600">{formatDate(user.createdAt)}</td>
                       <td className="px-4 py-4">
                         <select
                           value={user.status}
                           disabled={updatingUserId === user._id}
                           onChange={(event) => handleStatusChange(user._id, event.target.value)}
-                          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                          className="field-control py-2.5"
                         >
                           {STATUS_OPTIONS.map((status) => (
                             <option key={status} value={status}>
@@ -131,19 +145,22 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
 
             <div className="mt-6 space-y-4 lg:hidden">
               {users.map((user) => (
-                <article key={user._id} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <article key={user._id} className="surface-muted p-5">
                   <div className="space-y-2 text-sm text-slate-600">
                     <p className="text-base font-semibold text-slate-950">{user.name}</p>
                     <p>{user.email}</p>
                     <p>Role: {user.role}</p>
-                    <p>Status: {user.status}</p>
+                    <p>
+                      Status:{' '}
+                      <span className="font-medium text-slate-800">{user.status}</span>
+                    </p>
                     <p>Created: {formatDate(user.createdAt)}</p>
                   </div>
                   <select
                     value={user.status}
                     disabled={updatingUserId === user._id}
                     onChange={(event) => handleStatusChange(user._id, event.target.value)}
-                    className="mt-4 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-4 py-2.5"
                   >
                     {STATUS_OPTIONS.map((status) => (
                       <option key={status} value={status}>

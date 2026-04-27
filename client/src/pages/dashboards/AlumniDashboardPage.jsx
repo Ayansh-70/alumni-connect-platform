@@ -1,59 +1,60 @@
-import { Link } from 'react-router-dom';
+import DashboardActionGrid from '../../components/ui/DashboardActionGrid.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 
 function AlumniDashboardPage() {
+  const actions = [
+    {
+      eyebrow: 'Overview',
+      title: 'My Profile',
+      description: 'Maintain your alumni profile and keep your institute verification status visible and current.',
+      to: '/alumni/profile'
+    },
+    {
+      eyebrow: 'Requests',
+      title: 'Connection Requests',
+      description: 'Review incoming student connection requests and decide who to connect with.',
+      to: '/alumni/connection-requests'
+    },
+    {
+      eyebrow: 'Requests',
+      title: 'Guidance Requests',
+      description: 'Respond to mentorship, referral, project, and career guidance requests from students.',
+      to: '/alumni/guidance-requests'
+    },
+    {
+      eyebrow: 'Sharing',
+      title: 'My Opportunities',
+      description: 'Track the status of opportunities you have shared and close listings when they are no longer active.',
+      to: '/alumni/opportunities'
+    },
+    {
+      eyebrow: 'Sharing',
+      title: 'Post Opportunity',
+      description: 'Publish new internships, jobs, scholarships, projects, and other openings for your institute.',
+      to: '/alumni/opportunities/create'
+    },
+    {
+      eyebrow: 'Campus',
+      title: 'Announcements',
+      description: 'Read institute updates that are relevant to alumni members.',
+      to: '/alumni/announcements'
+    },
+    {
+      eyebrow: 'Campus',
+      title: 'Events',
+      description: 'Stay informed about alumni talks, webinars, meetups, and networking sessions.',
+      to: '/alumni/events'
+    }
+  ];
+
   return (
     <div>
       <PageHeader
         eyebrow="ALUMNI"
         title="Alumni dashboard"
-        description="Manage your alumni profile and track its verification status before mentorship and referral features are added."
+        description="Manage your profile, respond to student outreach, and contribute opportunities and guidance from one polished hub."
       />
-
-      <div className="flex flex-wrap gap-3">
-        <Link
-          to="/alumni/profile"
-          className="inline-flex rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900"
-        >
-          My Profile
-        </Link>
-        <Link
-          to="/alumni/connection-requests"
-          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          Connection Requests
-        </Link>
-        <Link
-          to="/alumni/guidance-requests"
-          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          Guidance Requests
-        </Link>
-        <Link
-          to="/alumni/opportunities"
-          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          My Opportunities
-        </Link>
-        <Link
-          to="/alumni/opportunities/create"
-          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          Post Opportunity
-        </Link>
-        <Link
-          to="/alumni/announcements"
-          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          Announcements
-        </Link>
-        <Link
-          to="/alumni/events"
-          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          Events
-        </Link>
-      </div>
+      <DashboardActionGrid actions={actions} />
     </div>
   );
 }

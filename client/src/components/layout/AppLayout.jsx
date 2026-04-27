@@ -4,12 +4,15 @@ import { getDashboardPathForRole } from '../../utils/auth.js';
 
 function AppLayout() {
   const navigate = useNavigate();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, unreadNotificationCount, user, logout } = useAuth();
 
   const navItems = [
     { label: 'Home', to: '/' },
     ...(isAuthenticated && user
-      ? [{ label: 'My Dashboard', to: getDashboardPathForRole(user.role) }]
+      ? [
+          { label: 'My Dashboard', to: getDashboardPathForRole(user.role) },
+          { label: 'Notifications', to: '/notifications', count: unreadNotificationCount }
+        ]
       : [{ label: 'Login', to: '/login' }]),
     ...(user?.role === 'SUPER_ADMIN'
       ? [{ label: 'Institute Requests', to: '/super-admin/institute-requests' }]
@@ -66,7 +69,14 @@ function AppLayout() {
           <div className="flex flex-wrap gap-3 text-sm font-medium text-slate-600">
             {navItems.map((item) => (
               <Link key={item.to} to={item.to} className="rounded-md px-3 py-2 hover:bg-slate-100">
-                {item.label}
+                <span className="inline-flex items-center gap-2">
+                  <span>{item.label}</span>
+                  {item.count ? (
+                    <span className="rounded-full bg-brand-700 px-2 py-0.5 text-xs font-semibold text-white">
+                      {item.count}
+                    </span>
+                  ) : null}
+                </span>
               </Link>
             ))}
             {isAuthenticated ? (

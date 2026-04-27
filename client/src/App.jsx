@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout.jsx';
 import ProtectedRoute from './components/routing/ProtectedRoute.jsx';
 import RoleRoute from './components/routing/RoleRoute.jsx';
+import NotificationsPage from './pages/NotificationsPage.jsx';
 import AlumniAnnouncementsPage from './pages/alumni/AlumniAnnouncementsPage.jsx';
 import AlumniConnectionRequestsPage from './pages/alumni/AlumniConnectionRequestsPage.jsx';
 import AlumniEventsPage from './pages/alumni/AlumniEventsPage.jsx';
@@ -44,6 +45,8 @@ function App() {
         <Route path="institutes/register" element={<InstituteRegisterPage />} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="notifications" element={<NotificationsPage />} />
+
           <Route element={<RoleRoute allowedRoles={['SUPER_ADMIN']} />}>
             <Route path="super-admin/dashboard" element={<SuperAdminDashboardPage />} />
             <Route path="super-admin/institute-requests" element={<InstituteRequestsPage />} />

@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
+import { NOTIFICATION_TYPES } from '../models/Notification.js';
 import Opportunity, {
   OPPORTUNITY_MODES,
   OPPORTUNITY_STATUSES,
   OPPORTUNITY_TYPES
 } from '../models/Opportunity.js';
+import { createNotification } from './notificationService.js';
 import { USER_ROLES } from '../models/User.js';
 
 const buildError = (message, statusCode = 400) => {
@@ -318,6 +320,16 @@ const approveOpportunity = async (adminUser, opportunityId) => {
   opportunity.approvedAt = new Date();
   await opportunity.save();
 
+  await createNotification({
+    recipient: opportunity.postedBy,
+    institute: opportunity.institute,
+    type: NOTIFICATION_TYPES.OPPORTUNITY_APPROVED,
+    title: 'Opportunity approved',
+    message: `Your opportunity "${opportunity.title}" was approved.`,
+    relatedModel: 'Opportunity',
+    relatedId: opportunity._id
+  });
+
   const populated = await Opportunity.findById(opportunity._id).populate(buildPopulate());
   return sanitizeOpportunity(populated);
 };
@@ -338,6 +350,16 @@ const rejectOpportunity = async (adminUser, opportunityId, reason) => {
   opportunity.approvedBy = adminUser._id;
   opportunity.approvedAt = new Date();
   await opportunity.save();
+
+  await createNotification({
+    recipient: opportunity.postedBy,
+    institute: opportunity.institute,
+    type: NOTIFICATION_TYPES.OPPORTUNITY_REJECTED,
+    title: 'Opportunity rejected',
+    message: `Your opportunity "${opportunity.title}" was rejected. Reason: ${opportunity.rejectionReason}`,
+    relatedModel: 'Opportunity',
+    relatedId: opportunity._id
+  });
 
   const populated = await Opportunity.findById(opportunity._id).populate(buildPopulate());
   return sanitizeOpportunity(populated);

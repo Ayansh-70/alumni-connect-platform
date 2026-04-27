@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import AlumniProfile, { ALUMNI_VERIFICATION_STATUSES } from '../models/AlumniProfile.js';
 import ConnectionRequest, { CONNECTION_REQUEST_STATUSES } from '../models/ConnectionRequest.js';
+import { NOTIFICATION_TYPES } from '../models/Notification.js';
 import StudentProfile from '../models/StudentProfile.js';
+import { createNotification } from './notificationService.js';
 import { USER_ROLES, USER_STATUSES } from '../models/User.js';
 
 const buildError = (message, statusCode = 400) => {
@@ -138,6 +140,16 @@ const createConnectionRequest = async (studentUser, alumniProfileId, payload = {
       message
     });
 
+    await createNotification({
+      recipient: alumniProfile.user._id,
+      institute: studentUser.institute,
+      type: NOTIFICATION_TYPES.CONNECTION_REQUEST,
+      title: 'New connection request',
+      message: `${studentUser.name} sent you a connection request.`,
+      relatedModel: 'ConnectionRequest',
+      relatedId: request._id
+    });
+
     return getStudentConnectionRequestById(studentUser, request._id);
   } catch (error) {
     if (error?.code === 11000) {
@@ -252,6 +264,25 @@ const updateConnectionRequestStatus = async (alumniUser, requestId, nextStatus) 
   request.status = nextStatus;
   request.respondedAt = new Date();
   await request.save();
+
+  await createNotification({
+    recipient: request.student,
+    institute: request.institute,
+    type:
+      nextStatus === CONNECTION_REQUEST_STATUSES.ACCEPTED
+        ? NOTIFICATION_TYPES.CONNECTION_ACCEPTED
+        : NOTIFICATION_TYPES.CONNECTION_REJECTED,
+    title:
+      nextStatus === CONNECTION_REQUEST_STATUSES.ACCEPTED
+        ? 'Connection request accepted'
+        : 'Connection request rejected',
+    message:
+      nextStatus === CONNECTION_REQUEST_STATUSES.ACCEPTED
+        ? `${alumniUser.name} accepted your connection request.`
+        : `${alumniUser.name} rejected your connection request.`,
+    relatedModel: 'ConnectionRequest',
+    relatedId: request._id
+  });
 
   const requests = await getAlumniReceivedConnectionRequests(alumniUser);
   return requests.find((item) => item._id.toString() === request._id.toString());

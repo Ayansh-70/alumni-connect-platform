@@ -11,6 +11,7 @@ import instituteAdminAlumniProfileRoutes from './routes/instituteAdminAlumniProf
 import instituteAdminAnnouncementRoutes from './routes/instituteAdminAnnouncementRoutes.js';
 import instituteAdminEventRoutes from './routes/instituteAdminEventRoutes.js';
 import instituteAdminOpportunityRoutes from './routes/instituteAdminOpportunityRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
 import instituteAdminUserRoutes from './routes/instituteAdminUserRoutes.js';
@@ -35,6 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/institutes', instituteRoutes);
 app.use('/api/institute-admin/users', instituteAdminUserRoutes);

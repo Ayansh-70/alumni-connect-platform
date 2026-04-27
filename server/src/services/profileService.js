@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import { getStudentToAlumniConnectionRequest } from './connectionRequestService.js';
 import AlumniProfile, { ALUMNI_VERIFICATION_STATUSES } from '../models/AlumniProfile.js';
+import { NOTIFICATION_TYPES } from '../models/Notification.js';
 import StudentProfile from '../models/StudentProfile.js';
+import { createNotification } from './notificationService.js';
 import { USER_ROLES, USER_STATUSES } from '../models/User.js';
 
 const buildError = (message, statusCode = 400) => {
@@ -330,6 +332,16 @@ const verifyAlumniProfile = async (adminUser, profileId) => {
   profile.verifiedAt = new Date();
   await profile.save();
 
+  await createNotification({
+    recipient: profile.user,
+    institute: profile.institute,
+    type: NOTIFICATION_TYPES.ALUMNI_VERIFIED,
+    title: 'Alumni profile verified',
+    message: 'Your alumni profile has been verified by your institute admin.',
+    relatedModel: 'AlumniProfile',
+    relatedId: profile._id
+  });
+
   const populatedProfile = await AlumniProfile.findById(profile._id)
     .populate('user', 'name email status')
     .populate('verifiedBy', 'name email');
@@ -349,6 +361,16 @@ const rejectAlumniProfile = async (adminUser, profileId, reason) => {
   profile.verifiedBy = adminUser._id;
   profile.verifiedAt = new Date();
   await profile.save();
+
+  await createNotification({
+    recipient: profile.user,
+    institute: profile.institute,
+    type: NOTIFICATION_TYPES.ALUMNI_REJECTED,
+    title: 'Alumni profile rejected',
+    message: `Your alumni profile was rejected. Reason: ${profile.verificationReason}`,
+    relatedModel: 'AlumniProfile',
+    relatedId: profile._id
+  });
 
   const populatedProfile = await AlumniProfile.findById(profile._id)
     .populate('user', 'name email status')

@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import Announcement, { ANNOUNCEMENT_AUDIENCES, ANNOUNCEMENT_CATEGORIES } from '../models/Announcement.js';
 import Event, { EVENT_AUDIENCES, EVENT_MODES, EVENT_TYPES } from '../models/Event.js';
-import { USER_ROLES } from '../models/User.js';
+import { NOTIFICATION_TYPES } from '../models/Notification.js';
+import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
+import { createBulkNotifications } from './notificationService.js';
 
 const buildError = (message, statusCode = 400) => {
   const error = new Error(message);
@@ -208,6 +210,24 @@ const createAnnouncement = async (adminUser, payload) => {
     createdBy: adminUser._id
   });
 
+  const recipients = await User.find({
+    institute: adminUser.institute,
+    role: { $in: getRecipientRolesForAudience(normalizedPayload.audience) },
+    status: USER_STATUSES.ACTIVE
+  }).select('_id institute');
+
+  await createBulkNotifications(
+    recipients.map((recipient) => ({
+      recipient: recipient._id,
+      institute: recipient.institute,
+      type: NOTIFICATION_TYPES.NEW_ANNOUNCEMENT,
+      title: `New announcement: ${announcement.title}`,
+      message: announcement.message,
+      relatedModel: 'Announcement',
+      relatedId: announcement._id
+    }))
+  );
+
   const populated = await Announcement.findById(announcement._id).populate(adminPopulate);
   return sanitizeAnnouncement(populated);
 };
@@ -262,6 +282,24 @@ const createEvent = async (adminUser, payload) => {
     institute: adminUser.institute,
     createdBy: adminUser._id
   });
+
+  const recipients = await User.find({
+    institute: adminUser.institute,
+    role: { $in: getRecipientRolesForAudience(normalizedPayload.audience) },
+    status: USER_STATUSES.ACTIVE
+  }).select('_id institute');
+
+  await createBulkNotifications(
+    recipients.map((recipient) => ({
+      recipient: recipient._id,
+      institute: recipient.institute,
+      type: NOTIFICATION_TYPES.NEW_EVENT,
+      title: `New event: ${event.title}`,
+      message: `${event.eventType} scheduled on ${event.date.toLocaleDateString('en-CA')}.`,
+      relatedModel: 'Event',
+      relatedId: event._id
+    }))
+  );
 
   const populated = await Event.findById(event._id).populate(adminPopulate);
   return sanitizeEvent(populated);
@@ -318,6 +356,18 @@ const getAudienceOptionsForRole = (role, audienceEnum) => {
   }
 
   return [];
+};
+
+const getRecipientRolesForAudience = (audience) => {
+  if (audience === ANNOUNCEMENT_AUDIENCES.STUDENTS || audience === EVENT_AUDIENCES.STUDENTS) {
+    return [USER_ROLES.STUDENT];
+  }
+
+  if (audience === ANNOUNCEMENT_AUDIENCES.ALUMNI || audience === EVENT_AUDIENCES.ALUMNI) {
+    return [USER_ROLES.ALUMNI];
+  }
+
+  return [USER_ROLES.STUDENT, USER_ROLES.ALUMNI];
 };
 
 const getVisibleAnnouncements = async (user) => {

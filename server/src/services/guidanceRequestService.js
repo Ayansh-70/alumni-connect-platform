@@ -4,7 +4,9 @@ import GuidanceRequest, {
   GUIDANCE_REQUEST_STATUSES,
   GUIDANCE_REQUEST_TYPES
 } from '../models/GuidanceRequest.js';
+import { NOTIFICATION_TYPES } from '../models/Notification.js';
 import StudentProfile from '../models/StudentProfile.js';
+import { createNotification } from './notificationService.js';
 import { USER_ROLES, USER_STATUSES } from '../models/User.js';
 
 const buildError = (message, statusCode = 400) => {
@@ -211,6 +213,16 @@ const createGuidanceRequest = async (studentUser, payload = {}) => {
     message: String(payload.message).trim()
   });
 
+  await createNotification({
+    recipient: alumniProfile.user._id,
+    institute: studentUser.institute,
+    type: NOTIFICATION_TYPES.GUIDANCE_REQUEST,
+    title: 'New guidance request',
+    message: `${studentUser.name} sent you a ${payload.type.toLowerCase().replaceAll('_', ' ')} request.`,
+    relatedModel: 'GuidanceRequest',
+    relatedId: request._id
+  });
+
   return getStudentGuidanceRequestById(studentUser, request._id);
 };
 
@@ -341,6 +353,35 @@ const updateGuidanceRequestAsAlumni = async (alumniUser, requestId, action, resp
   }
 
   await request.save();
+
+  const notificationConfig =
+    action === 'accept'
+      ? {
+          type: NOTIFICATION_TYPES.GUIDANCE_ACCEPTED,
+          title: 'Guidance request accepted',
+          message: `${alumniUser.name} accepted your guidance request.`
+        }
+      : action === 'reject'
+        ? {
+            type: NOTIFICATION_TYPES.GUIDANCE_REJECTED,
+            title: 'Guidance request rejected',
+            message: `${alumniUser.name} rejected your guidance request.`
+          }
+        : {
+            type: NOTIFICATION_TYPES.GUIDANCE_COMPLETED,
+            title: 'Guidance request completed',
+            message: `${alumniUser.name} marked your guidance request as completed.`
+          };
+
+  await createNotification({
+    recipient: request.student,
+    institute: request.institute,
+    type: notificationConfig.type,
+    title: notificationConfig.title,
+    message: notificationConfig.message,
+    relatedModel: 'GuidanceRequest',
+    relatedId: request._id
+  });
 
   return getAlumniGuidanceRequestById(alumniUser, request._id);
 };

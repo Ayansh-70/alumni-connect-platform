@@ -27,13 +27,15 @@ function AppLayout() {
       ? [
           { label: 'My Profile', to: '/student/profile' },
           { label: 'Search Alumni', to: '/student/alumni-search' },
-          { label: 'My Connections', to: '/student/connections' }
+          { label: 'My Connections', to: '/student/connections' },
+          { label: 'My Guidance Requests', to: '/student/guidance-requests' }
         ]
       : []),
     ...(user?.role === 'ALUMNI'
       ? [
           { label: 'My Profile', to: '/alumni/profile' },
-          { label: 'Connection Requests', to: '/alumni/connection-requests' }
+          { label: 'Connection Requests', to: '/alumni/connection-requests' },
+          { label: 'Guidance Requests', to: '/alumni/guidance-requests' }
         ]
       : []),
     { label: 'Register Institute', to: '/institutes/register' }

@@ -3,6 +3,7 @@ import AppLayout from './components/layout/AppLayout.jsx';
 import ProtectedRoute from './components/routing/ProtectedRoute.jsx';
 import RoleRoute from './components/routing/RoleRoute.jsx';
 import AlumniConnectionRequestsPage from './pages/alumni/AlumniConnectionRequestsPage.jsx';
+import AlumniGuidanceRequestsPage from './pages/alumni/AlumniGuidanceRequestsPage.jsx';
 import AlumniDashboardPage from './pages/dashboards/AlumniDashboardPage.jsx';
 import InstituteAdminDashboardPage from './pages/dashboards/InstituteAdminDashboardPage.jsx';
 import StudentDashboardPage from './pages/dashboards/StudentDashboardPage.jsx';
@@ -19,6 +20,7 @@ import LoginPage from './pages/public/LoginPage.jsx';
 import StudentAlumniDetailPage from './pages/student/StudentAlumniDetailPage.jsx';
 import StudentAlumniSearchPage from './pages/student/StudentAlumniSearchPage.jsx';
 import StudentConnectionsPage from './pages/student/StudentConnectionsPage.jsx';
+import StudentGuidanceRequestsPage from './pages/student/StudentGuidanceRequestsPage.jsx';
 import StudentProfilePage from './pages/student/StudentProfilePage.jsx';
 import InstituteRequestsPage from './pages/superAdmin/InstituteRequestsPage.jsx';
 
@@ -51,12 +53,14 @@ function App() {
             <Route path="student/alumni-search" element={<StudentAlumniSearchPage />} />
             <Route path="student/alumni/:id" element={<StudentAlumniDetailPage />} />
             <Route path="student/connections" element={<StudentConnectionsPage />} />
+            <Route path="student/guidance-requests" element={<StudentGuidanceRequestsPage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['ALUMNI']} />}>
             <Route path="alumni/dashboard" element={<AlumniDashboardPage />} />
             <Route path="alumni/profile" element={<AlumniProfilePage />} />
             <Route path="alumni/connection-requests" element={<AlumniConnectionRequestsPage />} />
+            <Route path="alumni/guidance-requests" element={<AlumniGuidanceRequestsPage />} />
           </Route>
         </Route>
       </Route>

@@ -2,7 +2,18 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getStudentAlumniDetailRequest } from '../../api/studentAlumni.js';
 import { createStudentConnectionRequest } from '../../api/studentConnections.js';
+import { createStudentGuidanceRequest } from '../../api/studentGuidanceRequests.js';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+
+const GUIDANCE_REQUEST_TYPES = [
+  'MENTORSHIP',
+  'REFERRAL',
+  'INTERNSHIP_HELP',
+  'JOB_GUIDANCE',
+  'PROJECT_GUIDANCE',
+  'HIGHER_STUDIES',
+  'GENERAL_CAREER_ADVICE'
+];
 
 const STATUS_STYLES = {
   PENDING: 'border-amber-200 bg-amber-50 text-amber-700',
@@ -18,6 +29,14 @@ function StudentAlumniDetailPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [guidanceForm, setGuidanceForm] = useState({
+    type: 'MENTORSHIP',
+    title: '',
+    message: ''
+  });
+  const [guidanceErrorMessage, setGuidanceErrorMessage] = useState('');
+  const [guidanceSuccessMessage, setGuidanceSuccessMessage] = useState('');
+  const [isGuidanceSubmitting, setIsGuidanceSubmitting] = useState(false);
 
   useEffect(() => {
     const loadAlumni = async () => {
@@ -38,6 +57,11 @@ function StudentAlumniDetailPage() {
 
     loadAlumni();
   }, [id]);
+
+  const handleGuidanceChange = (event) => {
+    const { name, value } = event.target;
+    setGuidanceForm((current) => ({ ...current, [name]: value }));
+  };
 
   const handleSubmitRequest = async (event) => {
     event.preventDefault();
@@ -75,6 +99,33 @@ function StudentAlumniDetailPage() {
       setErrorMessage(error.userMessage || 'Unable to send connection request.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmitGuidanceRequest = async (event) => {
+    event.preventDefault();
+    setIsGuidanceSubmitting(true);
+    setGuidanceErrorMessage('');
+    setGuidanceSuccessMessage('');
+
+    try {
+      const response = await createStudentGuidanceRequest({
+        alumniId: id,
+        type: guidanceForm.type,
+        title: guidanceForm.title,
+        message: guidanceForm.message
+      });
+
+      setGuidanceSuccessMessage(response.message || 'Guidance request sent successfully.');
+      setGuidanceForm({
+        type: 'MENTORSHIP',
+        title: '',
+        message: ''
+      });
+    } catch (error) {
+      setGuidanceErrorMessage(error.userMessage || 'Unable to send guidance request.');
+    } finally {
+      setIsGuidanceSubmitting(false);
     }
   };
 
@@ -190,6 +241,78 @@ function StudentAlumniDetailPage() {
                   className="mt-4 rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {alumni.connectionRequest ? 'Connection Request Sent' : isSubmitting ? 'Sending...' : 'Send Connection Request'}
+                </button>
+              </form>
+            </div>
+
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                  Guidance or referral request
+                </h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  Ask this alumni for mentorship, referral support, project guidance, or broader career help.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmitGuidanceRequest} className="mt-4 space-y-4">
+                <label className="block text-sm font-medium text-slate-700">
+                  Request type
+                  <select
+                    name="type"
+                    value={guidanceForm.type}
+                    onChange={handleGuidanceChange}
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  >
+                    {GUIDANCE_REQUEST_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block text-sm font-medium text-slate-700">
+                  Title
+                  <input
+                    name="title"
+                    value={guidanceForm.title}
+                    onChange={handleGuidanceChange}
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    placeholder="Need help with internship preparation"
+                  />
+                </label>
+
+                <label className="block text-sm font-medium text-slate-700">
+                  Message
+                  <textarea
+                    name="message"
+                    value={guidanceForm.message}
+                    onChange={handleGuidanceChange}
+                    rows="4"
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    placeholder="Explain what kind of help you need and any context that would help the alumni respond."
+                  />
+                </label>
+
+                {guidanceErrorMessage ? (
+                  <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                    {guidanceErrorMessage}
+                  </p>
+                ) : null}
+
+                {guidanceSuccessMessage ? (
+                  <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                    {guidanceSuccessMessage}
+                  </p>
+                ) : null}
+
+                <button
+                  type="submit"
+                  disabled={isGuidanceSubmitting}
+                  className="rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isGuidanceSubmitting ? 'Sending...' : 'Send Guidance/Referral Request'}
                 </button>
               </form>
             </div>

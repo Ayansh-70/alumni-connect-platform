@@ -19,6 +19,7 @@ function AppLayout() {
           { label: 'Manage Students', to: '/institute-admin/students' },
           { label: 'Manage Alumni', to: '/institute-admin/alumni' },
           { label: 'Alumni Verification', to: '/institute-admin/alumni-verification' },
+          { label: 'Opportunity Approvals', to: '/institute-admin/opportunities' },
           { label: 'Create Student', to: '/institute-admin/students/create' },
           { label: 'Create Alumni', to: '/institute-admin/alumni/create' }
         ]
@@ -28,14 +29,17 @@ function AppLayout() {
           { label: 'My Profile', to: '/student/profile' },
           { label: 'Search Alumni', to: '/student/alumni-search' },
           { label: 'My Connections', to: '/student/connections' },
-          { label: 'My Guidance Requests', to: '/student/guidance-requests' }
+          { label: 'My Guidance Requests', to: '/student/guidance-requests' },
+          { label: 'Opportunities', to: '/student/opportunities' }
         ]
       : []),
     ...(user?.role === 'ALUMNI'
       ? [
           { label: 'My Profile', to: '/alumni/profile' },
           { label: 'Connection Requests', to: '/alumni/connection-requests' },
-          { label: 'Guidance Requests', to: '/alumni/guidance-requests' }
+          { label: 'Guidance Requests', to: '/alumni/guidance-requests' },
+          { label: 'My Opportunities', to: '/alumni/opportunities' },
+          { label: 'Post Opportunity', to: '/alumni/opportunities/create' }
         ]
       : []),
     { label: 'Register Institute', to: '/institutes/register' }

@@ -27,6 +27,11 @@ function InstituteAdminDashboardPage() {
       title: 'Alumni Verification',
       description: 'Review pending alumni profiles and verify or reject them for your institute.',
       to: '/institute-admin/alumni-verification'
+    },
+    {
+      title: 'Opportunity Approvals',
+      description: 'Review pending opportunities posted by alumni and approve or reject them.',
+      to: '/institute-admin/opportunities'
     }
   ];
 

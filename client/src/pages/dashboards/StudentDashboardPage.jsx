@@ -35,6 +35,12 @@ function StudentDashboardPage() {
         >
           My Guidance Requests
         </Link>
+        <Link
+          to="/student/opportunities"
+          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        >
+          Opportunities
+        </Link>
       </div>
     </div>
   );

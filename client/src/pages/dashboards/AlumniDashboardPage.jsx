@@ -29,6 +29,18 @@ function AlumniDashboardPage() {
         >
           Guidance Requests
         </Link>
+        <Link
+          to="/alumni/opportunities"
+          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        >
+          My Opportunities
+        </Link>
+        <Link
+          to="/alumni/opportunities/create"
+          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        >
+          Post Opportunity
+        </Link>
       </div>
     </div>
   );

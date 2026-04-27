@@ -2,10 +2,13 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout.jsx';
 import ProtectedRoute from './components/routing/ProtectedRoute.jsx';
 import RoleRoute from './components/routing/RoleRoute.jsx';
+import AlumniAnnouncementsPage from './pages/alumni/AlumniAnnouncementsPage.jsx';
 import AlumniConnectionRequestsPage from './pages/alumni/AlumniConnectionRequestsPage.jsx';
+import AlumniEventsPage from './pages/alumni/AlumniEventsPage.jsx';
 import AlumniGuidanceRequestsPage from './pages/alumni/AlumniGuidanceRequestsPage.jsx';
 import AlumniOpportunitiesPage from './pages/alumni/AlumniOpportunitiesPage.jsx';
 import CreateOpportunityPage from './pages/alumni/CreateOpportunityPage.jsx';
+import AnnouncementsPage from './pages/instituteAdmin/AnnouncementsPage.jsx';
 import AlumniDashboardPage from './pages/dashboards/AlumniDashboardPage.jsx';
 import InstituteAdminDashboardPage from './pages/dashboards/InstituteAdminDashboardPage.jsx';
 import StudentDashboardPage from './pages/dashboards/StudentDashboardPage.jsx';
@@ -13,6 +16,7 @@ import SuperAdminDashboardPage from './pages/dashboards/SuperAdminDashboardPage.
 import AlumniProfilePage from './pages/alumni/AlumniProfilePage.jsx';
 import AlumniPage from './pages/instituteAdmin/AlumniPage.jsx';
 import AlumniVerificationPage from './pages/instituteAdmin/AlumniVerificationPage.jsx';
+import EventsPage from './pages/instituteAdmin/EventsPage.jsx';
 import OpportunityApprovalsPage from './pages/instituteAdmin/OpportunityApprovalsPage.jsx';
 import CreateAlumniPage from './pages/instituteAdmin/CreateAlumniPage.jsx';
 import CreateStudentPage from './pages/instituteAdmin/CreateStudentPage.jsx';
@@ -22,7 +26,9 @@ import LandingPage from './pages/public/LandingPage.jsx';
 import LoginPage from './pages/public/LoginPage.jsx';
 import StudentAlumniDetailPage from './pages/student/StudentAlumniDetailPage.jsx';
 import StudentAlumniSearchPage from './pages/student/StudentAlumniSearchPage.jsx';
+import StudentAnnouncementsPage from './pages/student/StudentAnnouncementsPage.jsx';
 import StudentConnectionsPage from './pages/student/StudentConnectionsPage.jsx';
+import StudentEventsPage from './pages/student/StudentEventsPage.jsx';
 import StudentGuidanceRequestsPage from './pages/student/StudentGuidanceRequestsPage.jsx';
 import StudentOpportunityDetailPage from './pages/student/StudentOpportunityDetailPage.jsx';
 import StudentOpportunitiesPage from './pages/student/StudentOpportunitiesPage.jsx';
@@ -51,6 +57,8 @@ function App() {
             <Route path="institute-admin/alumni/create" element={<CreateAlumniPage />} />
             <Route path="institute-admin/alumni-verification" element={<AlumniVerificationPage />} />
             <Route path="institute-admin/opportunities" element={<OpportunityApprovalsPage />} />
+            <Route path="institute-admin/announcements" element={<AnnouncementsPage />} />
+            <Route path="institute-admin/events" element={<EventsPage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['STUDENT']} />}>
@@ -62,6 +70,8 @@ function App() {
             <Route path="student/guidance-requests" element={<StudentGuidanceRequestsPage />} />
             <Route path="student/opportunities" element={<StudentOpportunitiesPage />} />
             <Route path="student/opportunities/:id" element={<StudentOpportunityDetailPage />} />
+            <Route path="student/announcements" element={<StudentAnnouncementsPage />} />
+            <Route path="student/events" element={<StudentEventsPage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['ALUMNI']} />}>
@@ -71,6 +81,8 @@ function App() {
             <Route path="alumni/guidance-requests" element={<AlumniGuidanceRequestsPage />} />
             <Route path="alumni/opportunities" element={<AlumniOpportunitiesPage />} />
             <Route path="alumni/opportunities/create" element={<CreateOpportunityPage />} />
+            <Route path="alumni/announcements" element={<AlumniAnnouncementsPage />} />
+            <Route path="alumni/events" element={<AlumniEventsPage />} />
           </Route>
         </Route>
       </Route>

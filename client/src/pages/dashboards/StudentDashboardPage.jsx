@@ -41,6 +41,18 @@ function StudentDashboardPage() {
         >
           Opportunities
         </Link>
+        <Link
+          to="/student/announcements"
+          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        >
+          Announcements
+        </Link>
+        <Link
+          to="/student/events"
+          className="inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        >
+          Events
+        </Link>
       </div>
     </div>
   );

@@ -32,6 +32,16 @@ function InstituteAdminDashboardPage() {
       title: 'Opportunity Approvals',
       description: 'Review pending opportunities posted by alumni and approve or reject them.',
       to: '/institute-admin/opportunities'
+    },
+    {
+      title: 'Announcements',
+      description: 'Create and manage announcements for your institute audience.',
+      to: '/institute-admin/announcements'
+    },
+    {
+      title: 'Events',
+      description: 'Create and manage institute events for students and alumni.',
+      to: '/institute-admin/events'
     }
   ];
 

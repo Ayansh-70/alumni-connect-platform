@@ -48,3 +48,4 @@ Backend health check: `http://localhost:5000/api/health`
 - Student-to-alumni connection requests with student tracking and alumni accept/reject actions
 - Student-to-alumni guidance and referral requests with alumni response and completion workflow
 - Alumni-posted opportunities with institute-admin approval and student visibility for approved listings
+- Institute-admin announcements and events with audience-scoped visibility for students and alumni

@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
 import instituteAdminUserRoutes from './routes/instituteAdminUserRoutes.js';
 import instituteRoutes from './routes/instituteRoutes.js';
+import studentAlumniRoutes from './routes/studentAlumniRoutes.js';
 import studentProfileRoutes from './routes/studentProfileRoutes.js';
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/api/health', healthRoutes);
 app.use('/api/institutes', instituteRoutes);
 app.use('/api/institute-admin/users', instituteAdminUserRoutes);
 app.use('/api/student', studentProfileRoutes);
+app.use('/api/student/alumni', studentAlumniRoutes);
 app.use('/api/alumni', alumniProfileRoutes);
 app.use('/api/institute-admin/alumni-profiles', instituteAdminAlumniProfileRoutes);
 

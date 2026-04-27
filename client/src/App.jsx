@@ -15,6 +15,8 @@ import StudentsPage from './pages/instituteAdmin/StudentsPage.jsx';
 import InstituteRegisterPage from './pages/public/InstituteRegisterPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
 import LoginPage from './pages/public/LoginPage.jsx';
+import StudentAlumniDetailPage from './pages/student/StudentAlumniDetailPage.jsx';
+import StudentAlumniSearchPage from './pages/student/StudentAlumniSearchPage.jsx';
 import StudentProfilePage from './pages/student/StudentProfilePage.jsx';
 import InstituteRequestsPage from './pages/superAdmin/InstituteRequestsPage.jsx';
 
@@ -44,6 +46,8 @@ function App() {
           <Route element={<RoleRoute allowedRoles={['STUDENT']} />}>
             <Route path="student/dashboard" element={<StudentDashboardPage />} />
             <Route path="student/profile" element={<StudentProfilePage />} />
+            <Route path="student/alumni-search" element={<StudentAlumniSearchPage />} />
+            <Route path="student/alumni/:id" element={<StudentAlumniDetailPage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['ALUMNI']} />}>

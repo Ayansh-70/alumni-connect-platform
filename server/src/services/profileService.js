@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import AlumniProfile, { ALUMNI_VERIFICATION_STATUSES } from '../models/AlumniProfile.js';
 import StudentProfile from '../models/StudentProfile.js';
-import { USER_ROLES } from '../models/User.js';
+import { USER_ROLES, USER_STATUSES } from '../models/User.js';
 
 const buildError = (message, statusCode = 400) => {
   const error = new Error(message);
@@ -51,6 +51,10 @@ const ensureValidProfileId = (profileId) => {
     throw buildError('Invalid profile ID.', 400);
   }
 };
+
+const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const buildContainsRegex = (value) => new RegExp(escapeRegex(String(value).trim()), 'i');
 
 const validateRequiredFields = (payload, requiredFields) => {
   for (const fieldName of requiredFields) {
@@ -127,6 +131,49 @@ const normalizeAlumniPayload = (payload) => {
 const sanitizeStudentProfile = (profile) => profile.toObject();
 
 const sanitizeAlumniProfile = (profile) => profile.toObject();
+
+const sanitizeStudentVisibleAlumniSummary = (profile) => ({
+  _id: profile._id,
+  user: {
+    _id: profile.user._id,
+    name: profile.user.name,
+    email: profile.user.email
+  },
+  branch: profile.branch,
+  batch: profile.batch,
+  currentCompany: profile.currentCompany,
+  currentRole: profile.currentRole,
+  skills: profile.skills,
+  domain: profile.domain,
+  location: profile.location,
+  canProvideReferral: profile.canProvideReferral,
+  canMentor: profile.canMentor,
+  verificationStatus: profile.verificationStatus
+});
+
+const sanitizeStudentVisibleAlumniDetail = (profile) => ({
+  _id: profile._id,
+  user: {
+    _id: profile.user._id,
+    name: profile.user.name,
+    email: profile.user.email
+  },
+  branch: profile.branch,
+  batch: profile.batch,
+  currentCompany: profile.currentCompany,
+  currentRole: profile.currentRole,
+  experienceYears: profile.experienceYears,
+  skills: profile.skills,
+  domain: profile.domain,
+  location: profile.location,
+  bio: profile.bio,
+  linkedInUrl: profile.linkedInUrl,
+  githubUrl: profile.githubUrl,
+  portfolioUrl: profile.portfolioUrl,
+  canProvideReferral: profile.canProvideReferral,
+  canMentor: profile.canMentor,
+  verificationStatus: profile.verificationStatus
+});
 
 const getStudentProfile = async (user) => {
   ensureRoleAndInstitute(user, USER_ROLES.STUDENT);
@@ -309,12 +356,94 @@ const rejectAlumniProfile = async (adminUser, profileId, reason) => {
   return sanitizeAlumniProfile(populatedProfile);
 };
 
+const buildStudentAlumniSearchFilter = (studentUser, query = {}) => {
+  ensureRoleAndInstitute(studentUser, USER_ROLES.STUDENT);
+
+  const filter = {
+    institute: studentUser.institute,
+    verificationStatus: ALUMNI_VERIFICATION_STATUSES.VERIFIED,
+    profileCompleted: true
+  };
+
+  if (query.branch) {
+    filter.branch = buildContainsRegex(query.branch);
+  }
+
+  if (query.batch) {
+    filter.batch = buildContainsRegex(query.batch);
+  }
+
+  if (query.currentCompany || query.company) {
+    filter.currentCompany = buildContainsRegex(query.currentCompany || query.company);
+  }
+
+  if (query.skill) {
+    filter.skills = buildContainsRegex(query.skill);
+  }
+
+  if (query.domain) {
+    filter.domain = buildContainsRegex(query.domain);
+  }
+
+  if (query.location) {
+    filter.location = buildContainsRegex(query.location);
+  }
+
+  return filter;
+};
+
+const populateStudentVisibleAlumniUser = {
+  path: 'user',
+  select: 'name email role status institute',
+  match: {
+    role: USER_ROLES.ALUMNI,
+    status: USER_STATUSES.ACTIVE
+  }
+};
+
+const searchStudentVisibleAlumni = async (studentUser, query = {}) => {
+  const filter = buildStudentAlumniSearchFilter(studentUser, query);
+  const profiles = await AlumniProfile.find(filter)
+    .populate(populateStudentVisibleAlumniUser)
+    .sort({ verifiedAt: -1, updatedAt: -1 });
+
+  return profiles
+    .filter((profile) => profile.user && profile.user.institute?.toString() === studentUser.institute.toString())
+    .map(sanitizeStudentVisibleAlumniSummary);
+};
+
+const getStudentVisibleAlumniDetail = async (studentUser, profileId) => {
+  ensureRoleAndInstitute(studentUser, USER_ROLES.STUDENT);
+  ensureValidProfileId(profileId);
+
+  const profile = await AlumniProfile.findById(profileId).populate(populateStudentVisibleAlumniUser);
+
+  if (!profile) {
+    throw buildError('Alumni profile not found.', 404);
+  }
+
+  const isVisibleToStudent =
+    profile.user &&
+    profile.institute?.toString() === studentUser.institute.toString() &&
+    profile.user.institute?.toString() === studentUser.institute.toString() &&
+    profile.verificationStatus === ALUMNI_VERIFICATION_STATUSES.VERIFIED &&
+    profile.profileCompleted;
+
+  if (!isVisibleToStudent) {
+    throw buildError('Verified alumni profile not found in your institute.', 404);
+  }
+
+  return sanitizeStudentVisibleAlumniDetail(profile);
+};
+
 export {
   getAlumniProfile,
   getPendingInstituteAlumniProfiles,
   getStudentProfile,
+  getStudentVisibleAlumniDetail,
   listInstituteAlumniProfiles,
   rejectAlumniProfile,
+  searchStudentVisibleAlumni,
   upsertAlumniProfile,
   upsertStudentProfile,
   verifyAlumniProfile

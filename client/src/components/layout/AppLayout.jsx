@@ -23,7 +23,12 @@ function AppLayout() {
           { label: 'Create Alumni', to: '/institute-admin/alumni/create' }
         ]
       : []),
-    ...(user?.role === 'STUDENT' ? [{ label: 'My Profile', to: '/student/profile' }] : []),
+    ...(user?.role === 'STUDENT'
+      ? [
+          { label: 'My Profile', to: '/student/profile' },
+          { label: 'Search Alumni', to: '/student/alumni-search' }
+        ]
+      : []),
     ...(user?.role === 'ALUMNI' ? [{ label: 'My Profile', to: '/alumni/profile' }] : []),
     { label: 'Register Institute', to: '/institutes/register' }
   ];

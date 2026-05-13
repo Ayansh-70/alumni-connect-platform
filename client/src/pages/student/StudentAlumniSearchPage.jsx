@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { searchStudentAlumniRequest } from '../../api/studentAlumni.js';
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 
 const INITIAL_FILTERS = {
   branch: '',
@@ -66,7 +69,7 @@ function StudentAlumniSearchPage() {
         description="Browse verified alumni from your own institute using simple filters like branch, company, skill, and location."
       />
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card p-6 md:p-8">
         <form onSubmit={handleSearch} className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <label className="text-sm font-medium text-slate-700">
             Branch
@@ -74,7 +77,7 @@ function StudentAlumniSearchPage() {
               name="branch"
               value={filters.branch}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="CSE"
             />
           </label>
@@ -84,7 +87,7 @@ function StudentAlumniSearchPage() {
               name="batch"
               value={filters.batch}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="2020"
             />
           </label>
@@ -94,7 +97,7 @@ function StudentAlumniSearchPage() {
               name="company"
               value={filters.company}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="Infosys"
             />
           </label>
@@ -104,7 +107,7 @@ function StudentAlumniSearchPage() {
               name="skill"
               value={filters.skill}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="React"
             />
           </label>
@@ -114,7 +117,7 @@ function StudentAlumniSearchPage() {
               name="domain"
               value={filters.domain}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="Web Development"
             />
           </label>
@@ -124,23 +127,16 @@ function StudentAlumniSearchPage() {
               name="location"
               value={filters.location}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="Jaipur"
             />
           </label>
 
           <div className="flex flex-wrap gap-3 md:col-span-2 xl:col-span-3">
-            <button
-              type="submit"
-              className="rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900"
-            >
+            <button type="submit" className="btn-primary">
               Search alumni
             </button>
-            <button
-              type="button"
-              onClick={handleClear}
-              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-            >
+            <button type="button" onClick={handleClear} className="btn-secondary">
               Clear filters
             </button>
           </div>
@@ -153,17 +149,18 @@ function StudentAlumniSearchPage() {
         ) : null}
 
         {isLoading ? (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading verified alumni...
-          </div>
+          <LoadingState message="Loading verified alumni..." className="mt-6" />
         ) : results.length === 0 ? (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            No verified alumni matched your filters.
+          <div className="mt-6">
+            <EmptyState
+              title="No alumni matched your search"
+              description="Try clearing one or two filters to broaden the results across your institute network."
+            />
           </div>
         ) : (
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {results.map((alumni) => (
-              <article key={alumni._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={alumni._id} className="content-card">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h2 className="text-lg font-semibold text-slate-950">{alumni.user?.name}</h2>
@@ -171,9 +168,7 @@ function StudentAlumniSearchPage() {
                       {alumni.currentRole} at {alumni.currentCompany}
                     </p>
                   </div>
-                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                    {alumni.verificationStatus}
-                  </span>
+                  <StatusBadge value={alumni.verificationStatus} />
                 </div>
 
                 <div className="mt-4 grid gap-2 text-sm text-slate-600">
@@ -188,7 +183,7 @@ function StudentAlumniSearchPage() {
 
                 <Link
                   to={`/student/alumni/${alumni._id}`}
-                  className="mt-4 inline-flex rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900"
+                  className="btn-primary mt-4"
                 >
                   View details
                 </Link>

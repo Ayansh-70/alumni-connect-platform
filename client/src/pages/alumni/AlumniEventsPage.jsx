@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import { getAlumniEventsRequest } from '../../api/alumniEvents.js';
 
 function AlumniEventsPage() {
@@ -28,21 +30,24 @@ function AlumniEventsPage() {
   return (
     <div>
       <PageHeader eyebrow="ALUMNI" title="Events" description="View active institute events meant for alumni." />
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        {errorMessage ? <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{errorMessage}</p> : null}
+      <section className="surface-card p-6 md:p-8">
+        {errorMessage ? <p className="alert-error mb-4">{errorMessage}</p> : null}
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">Loading events...</div>
+          <LoadingState message="Loading events..." />
         ) : events.length === 0 ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">No events are available right now.</div>
+          <EmptyState
+            title="No events available"
+            description="Active institute events for alumni will appear here when they are published."
+          />
         ) : (
           <div className="space-y-4">
             {events.map((eventItem) => (
-              <article key={eventItem._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={eventItem._id} className="content-card">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h2 className="text-lg font-semibold text-slate-950">{eventItem.title}</h2>
                   <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700">{eventItem.eventType}</span>
-                    <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700">{eventItem.mode}</span>
+                    <span className="status-badge border-slate-200 bg-white text-slate-700">{eventItem.eventType}</span>
+                    <span className="status-badge border-slate-200 bg-white text-slate-700">{eventItem.mode}</span>
                   </div>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{eventItem.description}</p>

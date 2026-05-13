@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { updateInstituteUserStatusRequest } from '../../api/instituteAdminUsers.js';
+import EmptyState from '../ui/EmptyState.jsx';
+import LoadingState from '../ui/LoadingState.jsx';
+import StatusBadge from '../ui/StatusBadge.jsx';
 
 const STATUS_OPTIONS = ['ACTIVE', 'INACTIVE', 'BLOCKED'];
 
@@ -13,7 +16,7 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
   const [actionMessage, setActionMessage] = useState('');
   const [updatingUserId, setUpdatingUserId] = useState('');
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     setErrorMessage('');
 
@@ -26,11 +29,11 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [loadUsers]);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const handleStatusChange = async (userId, nextStatus) => {
     setUpdatingUserId(userId);
@@ -77,12 +80,10 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
         </div>
 
         {isLoading ? (
-          <div className="empty-state mt-6">
-            Loading users...
-          </div>
+          <LoadingState message="Loading users..." className="mt-6" />
         ) : users.length === 0 ? (
-          <div className="empty-state mt-6">
-            {emptyMessage}
+          <div className="mt-6">
+            <EmptyState title="No users found" description={emptyMessage} />
           </div>
         ) : (
           <>
@@ -110,17 +111,7 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
                       <td className="px-4 py-4 text-slate-600">{user.email}</td>
                       <td className="px-4 py-4 text-slate-600">{user.role}</td>
                       <td className="px-4 py-4">
-                        <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                            user.status === 'ACTIVE'
-                              ? 'bg-emerald-50 text-emerald-700'
-                              : user.status === 'INACTIVE'
-                                ? 'bg-amber-50 text-amber-700'
-                                : 'bg-rose-50 text-rose-700'
-                          }`}
-                        >
-                          {user.status}
-                        </span>
+                        <StatusBadge value={user.status} />
                       </td>
                       <td className="px-4 py-4 text-slate-600">{formatDate(user.createdAt)}</td>
                       <td className="px-4 py-4">
@@ -152,7 +143,7 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
                     <p>Role: {user.role}</p>
                     <p>
                       Status:{' '}
-                      <span className="font-medium text-slate-800">{user.status}</span>
+                      <StatusBadge value={user.status} className="align-middle" />
                     </p>
                     <p>Created: {formatDate(user.createdAt)}</p>
                   </div>

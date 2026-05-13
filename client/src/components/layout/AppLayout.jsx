@@ -130,7 +130,7 @@ function AppLayout() {
     setIsProfileOpen(false);
   }, [location.pathname]);
 
-  const navigationGroups = user ? NAVIGATION_BY_ROLE[user.role] || [] : [];
+  const navigationGroups = useMemo(() => (user ? NAVIGATION_BY_ROLE[user.role] || [] : []), [user]);
   const flatNavigation = useMemo(
     () => navigationGroups.flatMap((group) => group.items.map((item) => ({ ...item, groupLabel: group.label }))),
     [navigationGroups]
@@ -174,7 +174,10 @@ function AppLayout() {
               <Link to="/" className="rounded-full px-4 py-2 transition hover:bg-white hover:text-slate-900">
                 Home
               </Link>
-              <Link to="/institutes/register" className="rounded-full px-4 py-2 transition hover:bg-white hover:text-slate-900">
+              <Link
+                to="/institutes/register"
+                className="hidden rounded-full px-4 py-2 transition hover:bg-white hover:text-slate-900 sm:inline-flex"
+              >
                 Register Institute
               </Link>
               <Link
@@ -209,7 +212,7 @@ function AppLayout() {
         <aside
           className={`fixed inset-y-0 left-0 z-40 flex w-80 max-w-[88vw] flex-col border-r border-white/60 bg-white/90 px-5 pb-5 pt-6 shadow-2xl shadow-slate-900/10 backdrop-blur-xl transition-transform duration-300 lg:static lg:z-auto lg:w-72 lg:translate-x-0 lg:shadow-none ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+          } relative`}
         >
           <Link to={getDashboardPathForRole(user.role)} className="flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-700 text-base font-bold text-white shadow-lg shadow-brand-700/20">
@@ -220,6 +223,15 @@ function AppLayout() {
               <p className="text-sm text-slate-500">Institute Network</p>
             </div>
           </Link>
+
+          <button
+            type="button"
+            aria-label="Close navigation"
+            onClick={() => setIsSidebarOpen(false)}
+            className="absolute right-5 top-6 inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-950 lg:hidden"
+          >
+            <CloseIcon />
+          </button>
 
           <div className="mt-8 overflow-y-auto pr-1">
             {navigationGroups.map((group) => (
@@ -263,6 +275,7 @@ function AppLayout() {
                 <button
                   type="button"
                   onClick={() => setIsSidebarOpen(true)}
+                  aria-expanded={isSidebarOpen}
                   className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-950 lg:hidden"
                 >
                   <MenuIcon />
@@ -299,6 +312,7 @@ function AppLayout() {
                   <button
                     type="button"
                     onClick={() => setIsProfileOpen((current) => !current)}
+                    aria-expanded={isProfileOpen}
                     className="inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition hover:border-slate-300"
                   >
                     <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white">
@@ -506,6 +520,14 @@ function ChevronDownIcon() {
   return (
     <svg {...iconProps()}>
       <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg {...iconProps()}>
+      <path d="M6 6l12 12M18 6L6 18" />
     </svg>
   );
 }

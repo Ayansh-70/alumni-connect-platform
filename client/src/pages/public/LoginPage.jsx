@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { getDashboardPathForRole } from '../../utils/auth.js';
 
@@ -13,11 +14,7 @@ function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isLoading) {
-    return (
-      <div className="mx-auto max-w-md rounded-[2rem] border border-white/70 bg-white/90 p-6 text-sm text-slate-600 shadow-xl shadow-slate-900/5 backdrop-blur">
-        Checking your session...
-      </div>
-    );
+    return <LoadingState message="Checking your session..." className="surface-card mx-auto max-w-md" />;
   }
 
   if (!isLoading && isAuthenticated && user) {
@@ -89,7 +86,7 @@ function LoginPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">Sign in</p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">Access your workspace</h2>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Use your registered institute email and password. You'll be redirected to the right dashboard automatically.
+            Use your registered institute email and password. You&apos;ll be redirected to the right dashboard automatically.
           </p>
         </div>
 
@@ -102,7 +99,7 @@ function LoginPage() {
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            className="field-control mt-2"
             placeholder="you@example.com"
             autoComplete="email"
           />
@@ -115,28 +112,22 @@ function LoginPage() {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            className="field-control mt-2"
             placeholder="Enter your password"
             autoComplete="current-password"
           />
 
           {formError ? (
-            <p className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-              {formError}
-            </p>
+            <p className="alert-error mt-4">{formError}</p>
           ) : null}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="mt-6 w-full rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-70"
-          >
+          <button type="submit" disabled={isSubmitting} className="btn-primary mt-6 w-full py-3">
             {isSubmitting ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
         <Link to="/" className="mt-6 inline-flex text-sm font-medium text-slate-600 transition hover:text-slate-950">
-          {'<-'} Back to home
+          &larr; Back to home
         </Link>
       </section>
     </div>

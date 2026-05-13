@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import { getStudentAnnouncementsRequest } from '../../api/studentAnnouncements.js';
 
 function StudentAnnouncementsPage() {
@@ -28,19 +30,22 @@ function StudentAnnouncementsPage() {
   return (
     <div>
       <PageHeader eyebrow="STUDENT" title="Announcements" description="View active institute announcements meant for students." />
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        {errorMessage ? <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{errorMessage}</p> : null}
+      <section className="surface-card p-6 md:p-8">
+        {errorMessage ? <p className="alert-error mb-4">{errorMessage}</p> : null}
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">Loading announcements...</div>
+          <LoadingState message="Loading announcements..." />
         ) : announcements.length === 0 ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">No announcements are available right now.</div>
+          <EmptyState
+            title="No announcements available"
+            description="Institute announcements for students will appear here when they are active."
+          />
         ) : (
           <div className="space-y-4">
             {announcements.map((announcement) => (
-              <article key={announcement._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={announcement._id} className="content-card">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h2 className="text-lg font-semibold text-slate-950">{announcement.title}</h2>
-                  <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700">{announcement.category}</span>
+                  <span className="status-badge border-slate-200 bg-white text-slate-700">{announcement.category}</span>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{announcement.message}</p>
                 <p className="mt-3 text-xs text-slate-500">Posted on {new Date(announcement.createdAt).toLocaleDateString()}</p>

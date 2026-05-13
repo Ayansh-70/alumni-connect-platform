@@ -16,7 +16,9 @@ function DashboardActionGrid({ actions }) {
             <p className="mt-3 text-sm leading-6 text-slate-600">{action.description}</p>
             <span className="mt-6 inline-flex items-center text-sm font-semibold text-slate-900">
               Open
-              <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
+              <span className="ml-2 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                →
+              </span>
             </span>
           </div>
         </Link>

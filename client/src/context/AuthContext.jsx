@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { getCurrentUserRequest, loginRequest } from '../api/auth.js';
 import { getUnreadNotificationCountRequest } from '../api/notifications.js';
 import { AUTH_STORAGE_KEY } from '../utils/auth.js';
@@ -11,7 +11,7 @@ function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
-  const applyAuthData = ({ user: nextUser, token: nextToken }) => {
+  const applyAuthData = useCallback(({ user: nextUser, token: nextToken }) => {
     setUser(nextUser);
     setToken(nextToken);
 
@@ -21,13 +21,13 @@ function AuthProvider({ children }) {
       localStorage.removeItem(AUTH_STORAGE_KEY);
       setUnreadNotificationCount(0);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     applyAuthData({ user: null, token: null });
-  };
+  }, [applyAuthData]);
 
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     const storedToken = localStorage.getItem(AUTH_STORAGE_KEY);
 
     if (!storedToken) {
@@ -54,23 +54,9 @@ function AuthProvider({ children }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [logout]);
 
-  const login = async (credentials) => {
-    const response = await loginRequest(credentials);
-    const authenticatedUser = response.data?.user;
-    const authenticatedToken = response.data?.token;
-
-    if (!authenticatedUser || !authenticatedToken) {
-      throw new Error('Authentication response is incomplete.');
-    }
-
-    applyAuthData({ user: authenticatedUser, token: authenticatedToken });
-    await refreshNotificationCount();
-    return authenticatedUser;
-  };
-
-  const refreshNotificationCount = async () => {
+  const refreshNotificationCount = useCallback(async () => {
     const storedToken = localStorage.getItem(AUTH_STORAGE_KEY);
 
     if (!storedToken) {
@@ -86,11 +72,34 @@ function AuthProvider({ children }) {
     } catch (error) {
       return 0;
     }
-  };
+  }, []);
+
+  const login = useCallback(async (credentials) => {
+    const response = await loginRequest(credentials);
+    const authenticatedUser = response.data?.user;
+    const authenticatedToken = response.data?.token;
+
+    if (!authenticatedUser || !authenticatedToken) {
+      throw new Error('Authentication response is incomplete.');
+    }
+
+    applyAuthData({ user: authenticatedUser, token: authenticatedToken });
+    await refreshNotificationCount();
+    return authenticatedUser;
+  }, [applyAuthData, refreshNotificationCount]);
 
   useEffect(() => {
     checkAuth().catch(() => null);
-  }, []);
+  }, [checkAuth]);
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      logout();
+    };
+
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+  }, [logout]);
 
   useEffect(() => {
     if (!user || !token) {
@@ -104,7 +113,7 @@ function AuthProvider({ children }) {
     }, 30000);
 
     return () => window.clearInterval(intervalId);
-  }, [user, token]);
+  }, [refreshNotificationCount, token, user]);
 
   const value = {
     user,

@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 import { getStudentConnectionsRequest } from '../../api/studentConnections.js';
-
-const STATUS_STYLES = {
-  PENDING: 'border-amber-200 bg-amber-50 text-amber-700',
-  ACCEPTED: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  REJECTED: 'border-rose-200 bg-rose-50 text-rose-700'
-};
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 
 const formatDate = (value) => new Date(value).toLocaleDateString();
 
@@ -41,25 +38,24 @@ function StudentConnectionsPage() {
         description="Track the connection requests you have sent to verified alumni in your institute."
       />
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card p-6 md:p-8">
         {errorMessage ? (
-          <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-            {errorMessage}
-          </p>
+          <p className="alert-error">{errorMessage}</p>
         ) : null}
 
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading connection requests...
-          </div>
+          <LoadingState message="Loading connection requests..." className="mt-4" />
         ) : requests.length === 0 ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            You have not sent any connection requests yet.
+          <div className="mt-4">
+            <EmptyState
+              title="No connection requests yet"
+              description="Send a request from an alumni profile to start building your network."
+            />
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="mt-4 space-y-4">
             {requests.map((request) => (
-              <article key={request._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={request._id} className="content-card">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h2 className="text-lg font-semibold text-slate-950">{request.alumni?.name}</h2>
@@ -68,13 +64,7 @@ function StudentConnectionsPage() {
                       {request.alumniProfile?.currentCompany || 'Company not provided'}
                     </p>
                   </div>
-                  <span
-                    className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                      STATUS_STYLES[request.status] || STATUS_STYLES.PENDING
-                    }`}
-                  >
-                    {request.status}
-                  </span>
+                  <StatusBadge value={request.status} />
                 </div>
 
                 <div className="mt-4 grid gap-2 text-sm text-slate-600 md:grid-cols-2">

@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout.jsx';
 import ProtectedRoute from './components/routing/ProtectedRoute.jsx';
 import RoleRoute from './components/routing/RoleRoute.jsx';
@@ -25,6 +25,7 @@ import StudentsPage from './pages/instituteAdmin/StudentsPage.jsx';
 import InstituteRegisterPage from './pages/public/InstituteRegisterPage.jsx';
 import LandingPage from './pages/public/LandingPage.jsx';
 import LoginPage from './pages/public/LoginPage.jsx';
+import NotFoundPage from './pages/public/NotFoundPage.jsx';
 import StudentAlumniDetailPage from './pages/student/StudentAlumniDetailPage.jsx';
 import StudentAlumniSearchPage from './pages/student/StudentAlumniSearchPage.jsx';
 import StudentAnnouncementsPage from './pages/student/StudentAnnouncementsPage.jsx';
@@ -89,7 +90,7 @@ function App() {
           </Route>
         </Route>
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import { getStudentOpportunitiesRequest } from '../../api/studentOpportunities.js';
 
 const formatDate = (value) => new Date(value).toLocaleDateString();
@@ -36,25 +38,22 @@ function StudentOpportunitiesPage() {
         description="Browse approved opportunities shared by verified alumni from your institute."
       />
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card p-6 md:p-8">
         {errorMessage ? (
-          <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-            {errorMessage}
-          </p>
+          <p className="alert-error mb-4">{errorMessage}</p>
         ) : null}
 
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading opportunities...
-          </div>
+          <LoadingState message="Loading opportunities..." />
         ) : opportunities.length === 0 ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            No approved opportunities are available right now.
-          </div>
+          <EmptyState
+            title="No opportunities available"
+            description="Approved openings from verified alumni will appear here when your institute has active postings."
+          />
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {opportunities.map((opportunity) => (
-              <article key={opportunity._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={opportunity._id} className="content-card">
                 <h2 className="text-lg font-semibold text-slate-950">{opportunity.title}</h2>
                 <p className="mt-1 text-sm text-slate-600">
                   {opportunity.role} at {opportunity.company}
@@ -68,7 +67,7 @@ function StudentOpportunitiesPage() {
                 </div>
                 <Link
                   to={`/student/opportunities/${opportunity._id}`}
-                  className="mt-4 inline-flex rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900"
+                  className="btn-primary mt-4"
                 >
                   View details
                 </Link>

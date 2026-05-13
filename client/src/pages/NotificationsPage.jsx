@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/ui/PageHeader.jsx';
+import EmptyState from '../components/ui/EmptyState.jsx';
+import LoadingState from '../components/ui/LoadingState.jsx';
+import StatusBadge from '../components/ui/StatusBadge.jsx';
 import {
   deleteNotificationRequest,
   getNotificationsRequest,
@@ -127,13 +130,12 @@ function NotificationsPage() {
         </div>
 
         {isLoading ? (
-          <div className="empty-state">
-            Loading notifications...
-          </div>
+          <LoadingState message="Loading notifications..." />
         ) : notifications.length === 0 ? (
-          <div className="empty-state">
-            No notifications are available right now.
-          </div>
+          <EmptyState
+            title="No notifications yet"
+            description="New connection, guidance, opportunity, announcement, and event updates will appear here."
+          />
         ) : (
           <div className="space-y-4">
             {notifications.map((notification) => (
@@ -151,18 +153,8 @@ function NotificationsPage() {
                     <p className="mt-2 text-sm leading-6 text-slate-600">{notification.message}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700">
-                      {notification.type}
-                    </span>
-                    <span
-                      className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                        notification.isRead
-                          ? 'border-slate-200 bg-slate-100 text-slate-700'
-                          : 'border-amber-200 bg-amber-50 text-amber-700'
-                      }`}
-                    >
-                      {notification.isRead ? 'READ' : 'UNREAD'}
-                    </span>
+                    <span className="status-badge border-slate-200 bg-white text-slate-700">{notification.type}</span>
+                    <StatusBadge value={notification.isRead ? 'READ' : 'PENDING'} />
                   </div>
                 </div>
 
@@ -183,7 +175,7 @@ function NotificationsPage() {
                     type="button"
                     disabled={activeId === notification._id}
                     onClick={() => handleDelete(notification._id)}
-                    className="inline-flex items-center justify-center rounded-2xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="btn-danger"
                   >
                     {activeId === notification._id ? 'Processing...' : 'Delete'}
                   </button>

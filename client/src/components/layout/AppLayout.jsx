@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { getDashboardPathForRole } from '../../utils/auth.js';
@@ -122,19 +122,90 @@ function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, unreadNotificationCount, user, logout } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // Custom futuristic states
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  const [isHubOpen, setIsHubOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const searchInputRef = useRef(null);
+  const hubRef = useRef(null);
+
+  // Sync theme class
   useEffect(() => {
-    setIsSidebarOpen(false);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  // Close menus on page navigation
+  useEffect(() => {
+    setIsHubOpen(false);
     setIsProfileOpen(false);
+    setSearchQuery('');
   }, [location.pathname]);
+
+  // Keyboard shortcut listener (Cmd+K or Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsHubOpen((prev) => !prev);
+      }
+      if (e.key === 'Escape') {
+        setIsHubOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Focus input when hub opens
+  useEffect(() => {
+    if (isHubOpen) {
+      setSelectedIndex(0);
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    }
+  }, [isHubOpen]);
 
   const navigationGroups = useMemo(() => (user ? NAVIGATION_BY_ROLE[user.role] || [] : []), [user]);
   const flatNavigation = useMemo(
     () => navigationGroups.flatMap((group) => group.items.map((item) => ({ ...item, groupLabel: group.label }))),
     [navigationGroups]
   );
+
+  const filteredNavigation = useMemo(() => {
+    if (!searchQuery) return flatNavigation;
+    return flatNavigation.filter(
+      (item) =>
+        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.groupLabel.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [flatNavigation, searchQuery]);
+
+  // Keyboard navigation inside search hub
+  const handleHubKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev + 1) % filteredNavigation.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev - 1 + filteredNavigation.length) % filteredNavigation.length);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (filteredNavigation[selectedIndex]) {
+        navigate(filteredNavigation[selectedIndex].to);
+        setIsHubOpen(false);
+      }
+    }
+  };
 
   const currentPage = useMemo(() => {
     const exactMatch = flatNavigation.find((item) => item.to === location.pathname);
@@ -155,34 +226,49 @@ function AppLayout() {
     navigate('/login', { replace: true });
   };
 
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  // Public Layout
   if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen bg-[linear-gradient(180deg,#f8fbff_0%,#eef4ff_45%,#f8fafc_100%)]">
-        <header className="border-b border-white/60 bg-white/80 backdrop-blur">
+      <div className="min-h-screen bg-[linear-gradient(180deg,#f8fbff_0%,#eef4ff_45%,#f8fafc_100%)] dark:bg-[linear-gradient(180deg,#0a0e1a_0%,#0f172a_50%,#090d16_100%)] transition-colors duration-300">
+        <header className="border-b border-white/40 dark:border-slate-800/40 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50">
           <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 lg:px-6">
             <Link to="/" className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-700 text-sm font-bold text-white shadow-lg shadow-brand-700/20">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-sm font-bold text-white shadow-lg shadow-brand-600/20">
                 AC
               </span>
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">AlumniConnect</p>
-                <p className="text-sm text-slate-500">Institute Network</p>
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-400">AlumniConnect</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Institute Network</p>
               </div>
             </Link>
 
-            <div className="flex items-center gap-3 text-sm font-medium text-slate-600">
-              <Link to="/" className="rounded-full px-4 py-2 transition hover:bg-white hover:text-slate-900">
+            <div className="flex items-center gap-4 text-sm font-medium text-slate-600 dark:text-slate-300">
+              <Link to="/" className="rounded-full px-4 py-2 transition hover:bg-white/40 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-white">
                 Home
               </Link>
               <Link
                 to="/institutes/register"
-                className="hidden rounded-full px-4 py-2 transition hover:bg-white hover:text-slate-900 sm:inline-flex"
+                className="hidden rounded-full px-4 py-2 transition hover:bg-white/40 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-white sm:inline-flex"
               >
                 Register Institute
               </Link>
+              
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm transition"
+                aria-label="Toggle theme"
+              >
+                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+              </button>
+
               <Link
                 to="/login"
-                className="rounded-full bg-brand-700 px-4 py-2 text-white shadow-lg shadow-brand-700/20 transition hover:bg-brand-900"
+                className="rounded-full bg-gradient-to-r from-brand-600 to-indigo-600 px-5 py-2.5 text-white font-semibold shadow-lg shadow-brand-600/20 transition hover:scale-[1.03] active:scale-[0.97]"
               >
                 Sign In
               </Link>
@@ -197,183 +283,270 @@ function AppLayout() {
     );
   }
 
+  // Active Icon for Command Orb
+  const activeIcon = () => {
+    const currentItem = flatNavigation.find((item) => item.to === location.pathname);
+    const Icon = currentItem?.icon || GridIcon;
+    return <Icon />;
+  };
+
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#f6f9ff_0%,#f8fafc_38%,#eef2ff_100%)]">
-      {isSidebarOpen ? (
-        <button
-          type="button"
-          aria-label="Close navigation"
-          onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 z-30 bg-slate-950/40 backdrop-blur-sm lg:hidden"
-        />
-      ) : null}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 pb-24">
+      {/* Top Floating Status Island */}
+      <div className="fixed top-6 right-6 z-40 flex items-center gap-3">
+        <div className="flex items-center gap-2 bg-white/70 dark:bg-slate-900/70 border border-white/40 dark:border-slate-800/40 backdrop-blur-xl px-4 py-2.5 rounded-full shadow-xl shadow-slate-900/5 dark:shadow-black/25">
+          <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md bg-brand-50 dark:bg-brand-950/50 text-[0.7rem] font-bold uppercase tracking-[0.16em] text-brand-700 dark:text-brand-400 border border-brand-100 dark:border-brand-900/30">
+            {currentPage.title}
+          </span>
 
-      <div className="flex min-h-screen">
-        <aside
-          className={`fixed inset-y-0 left-0 z-40 flex w-80 max-w-[88vw] flex-col border-r border-white/60 bg-white/90 px-5 pb-5 pt-6 shadow-2xl shadow-slate-900/10 backdrop-blur-xl transition-transform duration-300 lg:static lg:z-auto lg:w-72 lg:translate-x-0 lg:shadow-none ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } relative`}
-        >
-          <Link to={getDashboardPathForRole(user.role)} className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-700 text-base font-bold text-white shadow-lg shadow-brand-700/20">
-              AC
-            </span>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">AlumniConnect</p>
-              <p className="text-sm text-slate-500">Institute Network</p>
-            </div>
-          </Link>
-
+          {/* Theme switcher */}
           <button
             type="button"
-            aria-label="Close navigation"
-            onClick={() => setIsSidebarOpen(false)}
-            className="absolute right-5 top-6 inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-950 lg:hidden"
+            onClick={toggleTheme}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Toggle Theme"
           >
-            <CloseIcon />
+            {theme === 'light' ? <MoonIcon /> : <SunIcon />}
           </button>
 
-          <div className="mt-8 overflow-y-auto pr-1">
-            {navigationGroups.map((group) => (
-              <div key={group.label} className="mb-6">
-                <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                  {group.label}
-                </p>
-                <div className="space-y-1.5">
-                  {group.items.map((item) => (
-                    <SidebarNavLink key={item.to} item={item} />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Notifications bell */}
+          <Link
+            to="/notifications"
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Notifications"
+          >
+            <BellIcon />
+            {unreadNotificationCount > 0 ? (
+              <span className="absolute -right-0.5 -top-0.5 inline-flex h-2.5 w-2.5 items-center justify-center rounded-full bg-rose-600 shadow-md shadow-rose-600/30" />
+            ) : null}
+          </Link>
 
-          <div className="mt-auto rounded-3xl border border-slate-200 bg-slate-50/90 p-4">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white">
-                {getInitials(user.name)}
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-slate-900">{user.name}</p>
-                <p className="truncate text-xs uppercase tracking-[0.16em] text-slate-500">{user.role}</p>
-              </div>
-            </div>
+          {/* Profile Trigger button */}
+          <div className="relative">
             <button
               type="button"
-              onClick={handleLogout}
-              className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700"
+              onClick={() => setIsProfileOpen((current) => !current)}
+              aria-expanded={isProfileOpen}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 dark:bg-slate-800 text-sm font-semibold text-white transition hover:scale-105"
             >
-              Logout
+              {getInitials(user.name)}
             </button>
-          </div>
-        </aside>
 
-        <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-20 border-b border-white/60 bg-white/75 backdrop-blur-xl">
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-              <div className="flex min-w-0 items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsSidebarOpen(true)}
-                  aria-expanded={isSidebarOpen}
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-950 lg:hidden"
-                >
-                  <MenuIcon />
-                </button>
-
-                <div className="min-w-0">
-                  <div className="flex items-center gap-3">
-                    <span className="hidden h-10 w-10 items-center justify-center rounded-2xl bg-brand-700 text-sm font-bold text-white shadow-lg shadow-brand-700/20 sm:flex">
-                      AC
-                    </span>
-                    <div className="min-w-0">
-                      <p className="truncate text-lg font-semibold text-slate-950">{currentPage.title}</p>
-                      <p className="hidden truncate text-sm text-slate-500 sm:block">{currentPage.description}</p>
-                    </div>
-                  </div>
+            {/* Profile Dropdown panel */}
+            {isProfileOpen ? (
+              <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-64 rounded-3xl border border-white/50 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/95 p-4 shadow-2xl backdrop-blur-xl">
+                <div className="rounded-2xl bg-slate-50 dark:bg-slate-950/60 p-3 border border-slate-100 dark:border-slate-800">
+                  <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{user.name}</p>
+                  <p className="truncate text-xs text-slate-500 dark:text-slate-400 mt-0.5">{user.email}</p>
+                  <p className="mt-2 inline-block text-[0.65rem] font-extrabold uppercase tracking-[0.16em] text-brand-700 dark:text-brand-400">
+                    {user.role}
+                  </p>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Link
-                  to="/notifications"
-                  aria-label="Notifications"
-                  className="relative inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-950"
-                >
-                  <BellIcon />
-                  {unreadNotificationCount > 0 ? (
-                    <span className="absolute -right-1.5 -top-1.5 inline-flex min-h-[1.25rem] min-w-[1.25rem] items-center justify-center rounded-full bg-brand-700 px-1.5 text-[0.7rem] font-semibold text-white shadow-lg shadow-brand-700/25">
-                      {unreadNotificationCount > 99 ? '99+' : unreadNotificationCount}
-                    </span>
-                  ) : null}
-                </Link>
-
-                <div className="relative">
+                <div className="mt-3 space-y-1">
+                  <Link
+                    to={getDashboardPathForRole(user.role)}
+                    onClick={() => setIsProfileOpen(false)}
+                    className="flex w-full items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/30 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-700 dark:hover:text-brand-400 transition"
+                  >
+                    Go to Dashboard
+                  </Link>
                   <button
                     type="button"
-                    onClick={() => setIsProfileOpen((current) => !current)}
-                    aria-expanded={isProfileOpen}
-                    className="inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition hover:border-slate-300"
+                    onClick={handleLogout}
+                    className="inline-flex w-full items-center justify-center rounded-xl bg-rose-600 hover:bg-rose-700 px-3 py-2 text-xs font-semibold text-white transition"
                   >
-                    <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-900 text-sm font-semibold text-white">
-                      {getInitials(user.name)}
-                    </span>
-                    <span className="hidden text-left sm:block">
-                      <span className="block text-sm font-semibold text-slate-900">{user.name}</span>
-                      <span className="block text-xs uppercase tracking-[0.16em] text-slate-500">{user.role}</span>
-                    </span>
-                    <ChevronDownIcon />
+                    Logout
                   </button>
-
-                  {isProfileOpen ? (
-                    <div className="absolute right-0 top-[calc(100%+0.75rem)] z-20 w-64 rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl shadow-slate-900/10">
-                      <div className="rounded-2xl bg-slate-50 p-3">
-                        <p className="truncate text-sm font-semibold text-slate-900">{user.name}</p>
-                        <p className="mt-1 truncate text-sm text-slate-500">{user.email}</p>
-                        <p className="mt-2 text-xs uppercase tracking-[0.18em] text-brand-700">{user.role}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleLogout}
-                        className="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  ) : null}
                 </div>
               </div>
-            </div>
-          </header>
-
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-            <Outlet />
-          </main>
+            ) : null}
+          </div>
         </div>
       </div>
+
+      {/* Main Content Area */}
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 pt-24 animate-fadeIn">
+        {/* Dynamic Back-to-Dashboard breadcrumb navigation */}
+        {isAuthenticated && user && !location.pathname.endsWith('/dashboard') && location.pathname !== '/' && (
+          <div className="mb-8 flex items-center justify-between animate-fadeIn">
+            <div className="flex items-center gap-3">
+              <Link
+                to={getDashboardPathForRole(user.role)}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/60 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-100 dark:hover:border-brand-900/40 hover:bg-white dark:hover:bg-slate-900 transition-all shadow-sm active:scale-95 hover:shadow"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Dashboard</span>
+              </Link>
+              <span className="text-slate-300 dark:text-slate-800 font-light">/</span>
+              <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                {currentPage.title}
+              </span>
+            </div>
+          </div>
+        )}
+        <Outlet />
+      </main>
+
+      {/* Floating Command Orb (Bottom Center) */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <button
+          type="button"
+          onClick={() => setIsHubOpen(true)}
+          className="orb-pulse-effect relative flex items-center gap-3 px-6 py-3.5 rounded-full bg-gradient-to-tr from-brand-600 via-brand-700 to-indigo-600 text-white shadow-2xl shadow-brand-600/35 hover:shadow-brand-600/50 cursor-pointer select-none transition-all duration-300 hover:scale-105 active:scale-95 group"
+        >
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
+            {activeIcon()}
+          </span>
+          <span className="text-sm font-extrabold uppercase tracking-[0.2em]">Menu</span>
+          <span className="hidden md:inline-flex text-[0.65rem] font-bold px-2 py-0.5 bg-black/25 rounded-md border border-white/10 select-none">
+            Ctrl+K
+          </span>
+        </button>
+      </div>
+
+      {/* Bento-Hub Fullscreen Glassmorphic Overlay */}
+      {isHubOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-2xl transition-all duration-300">
+          <div
+            ref={hubRef}
+            className="max-w-4xl w-full bg-white/80 dark:bg-slate-900/80 border border-white/30 dark:border-slate-800/40 rounded-[2.5rem] p-6 md:p-8 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+          >
+            {/* Hub Header & Search Input */}
+            <div className="relative mb-6">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">
+                <SearchIcon />
+              </span>
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleHubKeyDown}
+                placeholder="Type a navigation shortcut or action..."
+                className="field-control pl-12 pr-20 bg-white/60 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/80 w-full text-lg focus:ring-4 focus:ring-brand-500/20"
+              />
+              <button
+                type="button"
+                onClick={() => setIsHubOpen(false)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 transition"
+              >
+                <CloseIcon />
+              </button>
+            </div>
+
+            {/* Hub Content */}
+            <div className="flex-1 overflow-y-auto pr-1">
+              {searchQuery ? (
+                /* Search Results View */
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500 mb-3 px-1">
+                    Matching Shortcuts ({filteredNavigation.length})
+                  </p>
+                  {filteredNavigation.length > 0 ? (
+                    filteredNavigation.map((item, index) => {
+                      const Icon = item.icon;
+                      const isSelected = index === selectedIndex;
+                      return (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          onClick={() => setIsHubOpen(false)}
+                          className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
+                            isSelected
+                              ? 'bg-brand-600 text-white border-brand-500 shadow-lg shadow-brand-600/10'
+                              : 'bg-white/40 dark:bg-slate-950/30 border-slate-100 dark:border-slate-800/50 hover:bg-white dark:hover:bg-slate-950/70 hover:border-slate-200'
+                          }`}
+                        >
+                          <div className="flex items-center gap-4">
+                            <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${isSelected ? 'bg-white/20' : 'bg-brand-50 dark:bg-slate-900 text-brand-600 dark:text-brand-400'}`}>
+                              <Icon />
+                            </span>
+                            <div>
+                              <p className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{item.label}</p>
+                              <p className={`text-xs ${isSelected ? 'text-brand-100' : 'text-slate-400 dark:text-slate-500'}`}>{item.groupLabel}</p>
+                            </div>
+                          </div>
+                          {isSelected && (
+                            <span className="text-[0.65rem] font-bold uppercase tracking-[0.12em] px-2 py-0.5 bg-black/25 rounded-md">
+                              Enter to Go
+                            </span>
+                          )}
+                        </Link>
+                      );
+                    })
+                  ) : (
+                    <div className="empty-state text-center py-10">
+                      <p className="text-slate-500">No navigation shortcuts matched your query.</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Organized Bento Grid Menu View */
+                <div className="grid gap-6 md:grid-cols-2">
+                  {navigationGroups.map((group) => (
+                    <div key={group.label} className="p-5 rounded-[2rem] bg-white/40 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-800/40 backdrop-blur-md">
+                      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-brand-700 dark:text-brand-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
+                        {group.label}
+                      </h3>
+                      <div className="grid gap-2">
+                        {group.items.map((item) => {
+                          const Icon = item.icon;
+                          const isActive = location.pathname === item.to;
+                          return (
+                            <NavLink
+                              key={item.to}
+                              to={item.to}
+                              onClick={() => setIsHubOpen(false)}
+                              className={`group flex items-center gap-3.5 p-3 rounded-xl transition ${
+                                isActive
+                                  ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/10'
+                                  : 'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-950/60 hover:text-slate-950 dark:hover:text-white'
+                              }`}
+                            >
+                              <span className={`flex h-9 w-9 items-center justify-center rounded-lg transition-transform group-hover:scale-105 ${
+                                isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 group-hover:text-brand-600'
+                              }`}>
+                                <Icon />
+                              </span>
+                              <span className="text-xs font-bold uppercase tracking-[0.1em]">{item.label}</span>
+                            </NavLink>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Hub Footer */}
+            <div className="border-t border-slate-200 dark:border-slate-800 pt-5 mt-5 flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 dark:bg-slate-800 text-sm font-bold text-white shadow-lg">
+                  {getInitials(user.name)}
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold text-slate-900 dark:text-white">{user.name}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 tracking-wider">{user.role}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-2xl bg-rose-600 hover:bg-rose-700 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition hover:scale-105 active:scale-95"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
-  );
-}
-
-function SidebarNavLink({ item }) {
-  const Icon = item.icon;
-
-  return (
-    <NavLink
-      to={item.to}
-      className={({ isActive }) =>
-        `group flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition ${
-          isActive
-            ? 'bg-brand-700 text-white shadow-lg shadow-brand-700/20'
-            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
-        }`
-      }
-    >
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ring-1 ring-inset ring-current/10">
-        <Icon />
-      </span>
-      <span>{item.label}</span>
-    </NavLink>
   );
 }
 
@@ -391,7 +564,7 @@ function iconProps() {
     className: 'h-[1.1rem] w-[1.1rem]',
     fill: 'none',
     stroke: 'currentColor',
-    strokeWidth: '1.8',
+    strokeWidth: '2.2',
     viewBox: '0 0 24 24'
   };
 }
@@ -508,26 +681,27 @@ function BellIcon() {
   );
 }
 
-function MenuIcon() {
-  return (
-    <svg {...iconProps()}>
-      <path d="M4 7h16M4 12h16M4 17h16" />
-    </svg>
-  );
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg {...iconProps()}>
-      <path d="M6 9l6 6 6-6" />
-    </svg>
-  );
-}
-
 function CloseIcon() {
   return (
     <svg {...iconProps()}>
       <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg {...iconProps()}>
+      <circle cx="12" cy="12" r="5" />
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg {...iconProps()}>
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
     </svg>
   );
 }

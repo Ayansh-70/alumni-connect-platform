@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getStudentProfileRequest, saveStudentProfileRequest } from '../../api/studentProfiles.js';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 
 const INITIAL_FORM_DATA = {
@@ -111,11 +112,9 @@ function StudentProfilePage() {
         description="Complete your academic and personal profile so your institute can support verified alumni networking later."
       />
 
-      <section className="max-w-3xl rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card max-w-4xl">
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading your profile...
-          </div>
+          <LoadingState message="Loading your profile..." />
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
@@ -125,7 +124,7 @@ function StudentProfilePage() {
                   name="branch"
                   value={formData.branch}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="Computer Science"
                 />
               </label>
@@ -135,7 +134,7 @@ function StudentProfilePage() {
                   name="batch"
                   value={formData.batch}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="2026"
                 />
               </label>
@@ -145,7 +144,7 @@ function StudentProfilePage() {
                   name="semester"
                   value={formData.semester}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="6"
                 />
               </label>
@@ -155,7 +154,7 @@ function StudentProfilePage() {
                   name="rollNumber"
                   value={formData.rollNumber}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="CS2026-014"
                 />
               </label>
@@ -167,7 +166,7 @@ function StudentProfilePage() {
                 name="skills"
                 value={formData.skills}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
                 placeholder="React, Node.js, MongoDB"
               />
             </label>
@@ -178,7 +177,7 @@ function StudentProfilePage() {
                 name="interests"
                 value={formData.interests}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
                 placeholder="Web development, AI, product design"
               />
             </label>
@@ -190,7 +189,7 @@ function StudentProfilePage() {
                 value={formData.careerGoals}
                 onChange={handleChange}
                 rows="3"
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
                 placeholder="Describe the kind of roles or growth you are aiming for."
               />
             </label>
@@ -202,7 +201,7 @@ function StudentProfilePage() {
                 value={formData.bio}
                 onChange={handleChange}
                 rows="4"
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
                 placeholder="Write a short introduction."
               />
             </label>
@@ -214,7 +213,7 @@ function StudentProfilePage() {
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="Bengaluru, India"
                 />
               </label>
@@ -224,7 +223,7 @@ function StudentProfilePage() {
                   name="linkedInUrl"
                   value={formData.linkedInUrl}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="https://linkedin.com/in/username"
                 />
               </label>
@@ -234,7 +233,7 @@ function StudentProfilePage() {
                   name="githubUrl"
                   value={formData.githubUrl}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="https://github.com/username"
                 />
               </label>
@@ -244,20 +243,20 @@ function StudentProfilePage() {
                   name="portfolioUrl"
                   value={formData.portfolioUrl}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="https://yourportfolio.com"
                 />
               </label>
             </div>
 
             {errorMessage ? (
-              <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              <p className="alert-error">
                 {errorMessage}
               </p>
             ) : null}
 
             {successMessage ? (
-              <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+              <p className="alert-success">
                 {successMessage}
               </p>
             ) : null}
@@ -265,7 +264,7 @@ function StudentProfilePage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
+              className="btn-primary"
             >
               {isSubmitting ? 'Saving...' : 'Save profile'}
             </button>

@@ -4,6 +4,8 @@ import {
   rejectAlumniProfileRequest,
   verifyAlumniProfileRequest
 } from '../../api/instituteAdminAlumniProfiles.js';
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 
 function AlumniVerificationPage() {
@@ -82,42 +84,38 @@ function AlumniVerificationPage() {
         description="Review alumni profile submissions from your institute and verify or reject them with a reason."
       />
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-600">Only pending alumni profiles from your institute appear here.</p>
           <button
             type="button"
             onClick={loadProfiles}
-            className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            className="btn-secondary"
           >
             Refresh list
           </button>
         </div>
 
         {errorMessage ? (
-          <p className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+          <p className="alert-error mt-4">
             {errorMessage}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p className="alert-success mt-4">
             {successMessage}
           </p>
         ) : null}
 
         {isLoading ? (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading pending alumni profiles...
-          </div>
+          <LoadingState message="Loading pending alumni profiles..." className="mt-6" />
         ) : profiles.length === 0 ? (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            No pending alumni verification requests are available right now.
-          </div>
+          <EmptyState title="No pending alumni verification" description="Alumni profiles waiting for review will appear here." />
         ) : (
           <div className="mt-6 space-y-4">
             {profiles.map((profile) => (
-              <article key={profile._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={profile._id} className="content-card">
                 <div className="grid gap-2 text-sm text-slate-600 md:grid-cols-2">
                   <p className="text-base font-semibold text-slate-950">{profile.user?.name}</p>
                   <p>{profile.user?.email}</p>
@@ -139,7 +137,7 @@ function AlumniVerificationPage() {
                   value={rejectionReasons[profile._id] || ''}
                   onChange={(event) => handleReasonChange(profile._id, event.target.value)}
                   rows="3"
-                  className="mt-4 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-4"
                   placeholder="Enter a rejection reason if you need to reject this alumni profile."
                 />
 
@@ -148,7 +146,7 @@ function AlumniVerificationPage() {
                     type="button"
                     disabled={activeProfileId === profile._id}
                     onClick={() => handleVerify(profile._id)}
-                    className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="btn-success"
                   >
                     {activeProfileId === profile._id ? 'Processing...' : 'Verify'}
                   </button>
@@ -156,7 +154,7 @@ function AlumniVerificationPage() {
                     type="button"
                     disabled={activeProfileId === profile._id}
                     onClick={() => handleReject(profile._id)}
-                    className="rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="btn-danger"
                   >
                     {activeProfileId === profile._id ? 'Processing...' : 'Reject'}
                   </button>

@@ -88,7 +88,7 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
         ) : (
           <>
             <div className="mt-6 hidden overflow-hidden rounded-[1.5rem] border border-slate-200 lg:block">
-              <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+              <table className="data-table">
                 <thead className="bg-slate-50/80 text-slate-600">
                   <tr>
                     <th className="px-4 py-3.5 font-medium">Name</th>

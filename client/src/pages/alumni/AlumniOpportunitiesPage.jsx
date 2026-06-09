@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 import { closeAlumniOpportunityRequest, getAlumniOpportunitiesRequest } from '../../api/alumniOpportunities.js';
-
-const STATUS_STYLES = {
-  PENDING: 'border-amber-200 bg-amber-50 text-amber-700',
-  APPROVED: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  REJECTED: 'border-rose-200 bg-rose-50 text-rose-700',
-  CLOSED: 'border-slate-200 bg-slate-100 text-slate-700'
-};
 
 const formatDate = (value) => new Date(value).toLocaleDateString();
 
@@ -71,37 +67,33 @@ function AlumniOpportunitiesPage() {
       <div className="mb-6">
         <Link
           to="/alumni/opportunities/create"
-          className="inline-flex rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900"
+          className="btn-primary"
         >
           Post Opportunity
         </Link>
       </div>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card">
         {errorMessage ? (
-          <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+          <p className="alert-error mb-4">
             {errorMessage}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p className="alert-success mb-4">
             {successMessage}
           </p>
         ) : null}
 
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading opportunities...
-          </div>
+          <LoadingState message="Loading opportunities..." />
         ) : opportunities.length === 0 ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            You have not posted any opportunities yet.
-          </div>
+          <EmptyState title="No opportunities posted yet" description="Opportunities you post for institute approval will appear here." />
         ) : (
           <div className="space-y-4">
             {opportunities.map((opportunity) => (
-              <article key={opportunity._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={opportunity._id} className="content-card">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h2 className="text-lg font-semibold text-slate-950">{opportunity.title}</h2>
@@ -109,13 +101,7 @@ function AlumniOpportunitiesPage() {
                       {opportunity.role} at {opportunity.company}
                     </p>
                   </div>
-                  <span
-                    className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                      STATUS_STYLES[opportunity.status] || STATUS_STYLES.PENDING
-                    }`}
-                  >
-                    {opportunity.status}
-                  </span>
+                  <StatusBadge value={opportunity.status} />
                 </div>
 
                 <div className="mt-4 grid gap-2 text-sm text-slate-600 md:grid-cols-2">
@@ -134,7 +120,7 @@ function AlumniOpportunitiesPage() {
                     type="button"
                     disabled={activeOpportunityId === opportunity._id}
                     onClick={() => handleClose(opportunity._id)}
-                    className="mt-4 rounded-md bg-slate-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="btn-secondary mt-4"
                   >
                     {activeOpportunityId === opportunity._id ? 'Closing...' : 'Close Opportunity'}
                   </button>

@@ -1,19 +1,14 @@
 import { useEffect, useState } from 'react';
+import EmptyState from '../../components/ui/EmptyState.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 import {
   acceptAlumniGuidanceRequest,
   completeAlumniGuidanceRequest,
   getAlumniGuidanceRequestsRequest,
   rejectAlumniGuidanceRequest
 } from '../../api/alumniGuidanceRequests.js';
-
-const STATUS_STYLES = {
-  PENDING: 'border-amber-200 bg-amber-50 text-amber-700',
-  ACCEPTED: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  REJECTED: 'border-rose-200 bg-rose-50 text-rose-700',
-  COMPLETED: 'border-sky-200 bg-sky-50 text-sky-700',
-  CANCELLED: 'border-slate-200 bg-slate-100 text-slate-700'
-};
 
 function AlumniGuidanceRequestsPage() {
   const [requests, setRequests] = useState([]);
@@ -87,43 +82,33 @@ function AlumniGuidanceRequestsPage() {
         description="Review student guidance and referral requests and manage their progress."
       />
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card">
         {errorMessage ? (
-          <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+          <p className="alert-error mb-4">
             {errorMessage}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p className="alert-success mb-4">
             {successMessage}
           </p>
         ) : null}
 
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading guidance requests...
-          </div>
+          <LoadingState message="Loading guidance requests..." />
         ) : requests.length === 0 ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            No guidance requests are available yet.
-          </div>
+          <EmptyState title="No guidance requests yet" description="Student mentorship and referral requests will appear here." />
         ) : (
           <div className="space-y-4">
             {requests.map((request) => (
-              <article key={request._id} className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+              <article key={request._id} className="content-card">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h2 className="text-lg font-semibold text-slate-950">{request.student?.name}</h2>
                     <p className="mt-1 text-sm text-slate-600">{request.student?.email}</p>
                   </div>
-                  <span
-                    className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                      STATUS_STYLES[request.status] || STATUS_STYLES.PENDING
-                    }`}
-                  >
-                    {request.status}
-                  </span>
+                  <StatusBadge value={request.status} />
                 </div>
 
                 <div className="mt-4 grid gap-2 text-sm text-slate-600 md:grid-cols-2">
@@ -151,7 +136,7 @@ function AlumniGuidanceRequestsPage() {
                     value={responseMessages[request._id] ?? request.responseMessage ?? ''}
                     onChange={(event) => handleResponseChange(request._id, event.target.value)}
                     rows="3"
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="Optional response message"
                   />
                 </label>
@@ -162,7 +147,7 @@ function AlumniGuidanceRequestsPage() {
                       type="button"
                       disabled={activeRequestId === request._id}
                       onClick={() => handleAction(request._id, 'accept')}
-                      className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="btn-success"
                     >
                       {activeRequestId === request._id ? 'Processing...' : 'Accept'}
                     </button>
@@ -170,7 +155,7 @@ function AlumniGuidanceRequestsPage() {
                       type="button"
                       disabled={activeRequestId === request._id}
                       onClick={() => handleAction(request._id, 'reject')}
-                      className="rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="btn-danger"
                     >
                       {activeRequestId === request._id ? 'Processing...' : 'Reject'}
                     </button>
@@ -182,7 +167,7 @@ function AlumniGuidanceRequestsPage() {
                     type="button"
                     disabled={activeRequestId === request._id}
                     onClick={() => handleAction(request._id, 'complete')}
-                    className="mt-4 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="btn-info mt-4"
                   >
                     {activeRequestId === request._id ? 'Processing...' : 'Mark Completed'}
                   </button>

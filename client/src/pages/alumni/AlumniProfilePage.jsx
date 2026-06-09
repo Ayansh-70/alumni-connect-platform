@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getAlumniProfileRequest, saveAlumniProfileRequest } from '../../api/alumniProfiles.js';
+import LoadingState from '../../components/ui/LoadingState.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 
 const INITIAL_FORM_DATA = {
   branch: '',
@@ -17,12 +19,6 @@ const INITIAL_FORM_DATA = {
   bio: '',
   canProvideReferral: false,
   canMentor: false
-};
-
-const STATUS_STYLES = {
-  PENDING: 'border-amber-200 bg-amber-50 text-amber-700',
-  VERIFIED: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  REJECTED: 'border-rose-200 bg-rose-50 text-rose-700'
 };
 
 const formatList = (value) => (Array.isArray(value) ? value.join(', ') : '');
@@ -132,20 +128,17 @@ function AlumniProfilePage() {
         description="Keep your professional details up to date so your institute can review and verify your alumni identity."
       />
 
-      <section className="max-w-3xl rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card max-w-4xl">
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Loading your profile...
-          </div>
+          <LoadingState message="Loading your profile..." />
         ) : (
           <>
-            <div
-              className={`mb-6 rounded-md border px-4 py-3 text-sm font-medium ${
-                STATUS_STYLES[verificationStatus] || STATUS_STYLES.PENDING
-              }`}
-            >
-              Verification status: {verificationStatus}
-              {verificationReason ? <p className="mt-2 font-normal">Reason: {verificationReason}</p> : null}
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/40">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Verification status</p>
+                {verificationReason ? <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Reason: {verificationReason}</p> : null}
+              </div>
+              <StatusBadge value={verificationStatus} />
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -156,7 +149,7 @@ function AlumniProfilePage() {
                     name="branch"
                     value={formData.branch}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="Electronics and Communication"
                   />
                 </label>
@@ -166,7 +159,7 @@ function AlumniProfilePage() {
                     name="batch"
                     value={formData.batch}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="2019"
                   />
                 </label>
@@ -176,7 +169,7 @@ function AlumniProfilePage() {
                     name="currentCompany"
                     value={formData.currentCompany}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="Acme Technologies"
                   />
                 </label>
@@ -186,7 +179,7 @@ function AlumniProfilePage() {
                     name="currentRole"
                     value={formData.currentRole}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="Software Engineer"
                   />
                 </label>
@@ -199,7 +192,7 @@ function AlumniProfilePage() {
                     step="0.1"
                     value={formData.experienceYears}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="3"
                   />
                 </label>
@@ -209,7 +202,7 @@ function AlumniProfilePage() {
                     name="domain"
                     value={formData.domain}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="Backend, Data, Product"
                   />
                 </label>
@@ -221,7 +214,7 @@ function AlumniProfilePage() {
                   name="skills"
                   value={formData.skills}
                   onChange={handleChange}
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="Java, Spring Boot, AWS"
                 />
               </label>
@@ -233,7 +226,7 @@ function AlumniProfilePage() {
                   value={formData.bio}
                   onChange={handleChange}
                   rows="4"
-                  className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                  className="field-control mt-2"
                   placeholder="Share your experience and the kind of support you can offer."
                 />
               </label>
@@ -245,7 +238,7 @@ function AlumniProfilePage() {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="Hyderabad, India"
                   />
                 </label>
@@ -255,7 +248,7 @@ function AlumniProfilePage() {
                     name="linkedInUrl"
                     value={formData.linkedInUrl}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="https://linkedin.com/in/username"
                   />
                 </label>
@@ -265,7 +258,7 @@ function AlumniProfilePage() {
                     name="githubUrl"
                     value={formData.githubUrl}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="https://github.com/username"
                   />
                 </label>
@@ -275,14 +268,14 @@ function AlumniProfilePage() {
                     name="portfolioUrl"
                     value={formData.portfolioUrl}
                     onChange={handleChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="field-control mt-2"
                     placeholder="https://yourportfolio.com"
                   />
                 </label>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <label className="flex items-center gap-3 rounded-md border border-slate-200 px-4 py-3 text-sm text-slate-700">
+                <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/60 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-300">
                   <input
                     type="checkbox"
                     name="canProvideReferral"
@@ -292,7 +285,7 @@ function AlumniProfilePage() {
                   />
                   I can provide referrals
                 </label>
-                <label className="flex items-center gap-3 rounded-md border border-slate-200 px-4 py-3 text-sm text-slate-700">
+                <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/60 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-300">
                   <input
                     type="checkbox"
                     name="canMentor"
@@ -305,13 +298,13 @@ function AlumniProfilePage() {
               </div>
 
               {errorMessage ? (
-                <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <p className="alert-error">
                   {errorMessage}
                 </p>
               ) : null}
 
               {successMessage ? (
-                <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                <p className="alert-success">
                   {successMessage}
                 </p>
               ) : null}
@@ -319,7 +312,7 @@ function AlumniProfilePage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
+                className="btn-primary"
               >
                 {isSubmitting ? 'Saving...' : 'Save profile'}
               </button>

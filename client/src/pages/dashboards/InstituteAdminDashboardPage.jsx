@@ -1,4 +1,5 @@
 import DashboardActionGrid from '../../components/ui/DashboardActionGrid.jsx';
+import DashboardMetricGrid from '../../components/ui/DashboardMetricGrid.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 
 function InstituteAdminDashboardPage() {
@@ -52,6 +53,12 @@ function InstituteAdminDashboardPage() {
       to: '/institute-admin/events'
     }
   ];
+  const metrics = [
+    { label: 'People', value: '04', caption: 'Tools' },
+    { label: 'Approvals', value: '02', caption: 'Queues' },
+    { label: 'Broadcasts', value: '02', caption: 'Channels' },
+    { label: 'Institute', value: 'One', caption: 'Scoped' }
+  ];
 
   return (
     <div>
@@ -60,6 +67,7 @@ function InstituteAdminDashboardPage() {
         title="Institute admin dashboard"
         description="Oversee people, approvals, and institute-wide communication from one organized workspace."
       />
+      <DashboardMetricGrid metrics={metrics} />
       <DashboardActionGrid actions={actions} />
     </div>
   );

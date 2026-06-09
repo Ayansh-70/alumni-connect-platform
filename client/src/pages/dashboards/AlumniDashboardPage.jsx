@@ -1,4 +1,5 @@
 import DashboardActionGrid from '../../components/ui/DashboardActionGrid.jsx';
+import DashboardMetricGrid from '../../components/ui/DashboardMetricGrid.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 
 function AlumniDashboardPage() {
@@ -46,6 +47,12 @@ function AlumniDashboardPage() {
       to: '/alumni/events'
     }
   ];
+  const metrics = [
+    { label: 'Profile', value: '01', caption: 'Verified' },
+    { label: 'Requests', value: '02', caption: 'Queues' },
+    { label: 'Sharing', value: '02', caption: 'Tools' },
+    { label: 'Campus', value: '02', caption: 'Feeds' }
+  ];
 
   return (
     <div>
@@ -54,6 +61,7 @@ function AlumniDashboardPage() {
         title="Alumni dashboard"
         description="Manage your profile, respond to student outreach, and contribute opportunities and guidance from one polished hub."
       />
+      <DashboardMetricGrid metrics={metrics} />
       <DashboardActionGrid actions={actions} />
     </div>
   );

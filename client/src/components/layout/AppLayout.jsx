@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { getDashboardPathForRole } from '../../utils/auth.js';
@@ -22,8 +22,8 @@ const NAVIGATION_BY_ROLE = {
     {
       label: 'People',
       items: [
-        { label: 'Manage Students', to: '/institute-admin/students', icon: UsersIcon },
-        { label: 'Manage Alumni', to: '/institute-admin/alumni', icon: CommunityIcon },
+        { label: 'Students', to: '/institute-admin/students', icon: UsersIcon },
+        { label: 'Alumni', to: '/institute-admin/alumni', icon: CommunityIcon },
         { label: 'Create Student', to: '/institute-admin/students/create', icon: PlusCircleIcon },
         { label: 'Create Alumni', to: '/institute-admin/alumni/create', icon: PlusCircleIcon }
       ]
@@ -32,7 +32,7 @@ const NAVIGATION_BY_ROLE = {
       label: 'Approvals',
       items: [
         { label: 'Alumni Verification', to: '/institute-admin/alumni-verification', icon: CheckBadgeIcon },
-        { label: 'Opportunity Approvals', to: '/institute-admin/opportunities', icon: BriefcaseIcon }
+        { label: 'Opportunities', to: '/institute-admin/opportunities', icon: BriefcaseIcon }
       ]
     },
     {
@@ -79,7 +79,7 @@ const NAVIGATION_BY_ROLE = {
     {
       label: 'Requests',
       items: [
-        { label: 'Connection Requests', to: '/alumni/connection-requests', icon: LinkIcon },
+        { label: 'Connections', to: '/alumni/connection-requests', icon: LinkIcon },
         { label: 'Guidance Requests', to: '/alumni/guidance-requests', icon: CompassIcon }
       ]
     },
@@ -122,18 +122,11 @@ function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, unreadNotificationCount, user, logout } = useAuth();
-  
-  // Custom futuristic states
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
-  const [isHubOpen, setIsHubOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const searchInputRef = useRef(null);
-  const hubRef = useRef(null);
-
-  // Sync theme class
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -143,37 +136,10 @@ function AppLayout() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // Close menus on page navigation
   useEffect(() => {
-    setIsHubOpen(false);
+    setIsMobileNavOpen(false);
     setIsProfileOpen(false);
-    setSearchQuery('');
   }, [location.pathname]);
-
-  // Keyboard shortcut listener (Cmd+K or Ctrl+K)
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsHubOpen((prev) => !prev);
-      }
-      if (e.key === 'Escape') {
-        setIsHubOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Focus input when hub opens
-  useEffect(() => {
-    if (isHubOpen) {
-      setSelectedIndex(0);
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 100);
-    }
-  }, [isHubOpen]);
 
   const navigationGroups = useMemo(() => (user ? NAVIGATION_BY_ROLE[user.role] || [] : []), [user]);
   const flatNavigation = useMemo(
@@ -181,44 +147,18 @@ function AppLayout() {
     [navigationGroups]
   );
 
-  const filteredNavigation = useMemo(() => {
-    if (!searchQuery) return flatNavigation;
-    return flatNavigation.filter(
-      (item) =>
-        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.groupLabel.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [flatNavigation, searchQuery]);
-
-  // Keyboard navigation inside search hub
-  const handleHubKeyDown = (e) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % filteredNavigation.length);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + filteredNavigation.length) % filteredNavigation.length);
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (filteredNavigation[selectedIndex]) {
-        navigate(filteredNavigation[selectedIndex].to);
-        setIsHubOpen(false);
-      }
-    }
-  };
-
   const currentPage = useMemo(() => {
     const exactMatch = flatNavigation.find((item) => item.to === location.pathname);
 
     if (exactMatch) {
       return {
         title: exactMatch.label,
-        description: `Browse ${exactMatch.groupLabel.toLowerCase()} tools for your role.`
+        description: exactMatch.groupLabel
       };
     }
 
     const detailMatch = DETAIL_ROUTE_META.find((item) => item.match(location.pathname));
-    return detailMatch || { title: 'Workspace', description: 'Manage your institute network with role-based tools.' };
+    return detailMatch || { title: 'Workspace', description: 'Institute network' };
   }, [flatNavigation, location.pathname]);
 
   const handleLogout = () => {
@@ -227,326 +167,235 @@ function AppLayout() {
   };
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    setTheme((current) => (current === 'light' ? 'dark' : 'light'));
   };
 
-  // Public Layout
   if (!isAuthenticated || !user) {
+    const isLoginPage = location.pathname === '/login';
+
     return (
-      <div className="min-h-screen bg-[linear-gradient(180deg,#f8fbff_0%,#eef4ff_45%,#f8fafc_100%)] dark:bg-[linear-gradient(180deg,#0a0e1a_0%,#0f172a_50%,#090d16_100%)] transition-colors duration-300">
-        <header className="border-b border-white/40 dark:border-slate-800/40 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50">
-          <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 lg:px-6">
-            <Link to="/" className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-sm font-bold text-white shadow-lg shadow-brand-600/20">
-                AC
-              </span>
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-400">AlumniConnect</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Institute Network</p>
+      <div className="min-h-screen bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-slate-100">
+        {isLoginPage ? null : (
+          <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/75">
+            <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 lg:px-6">
+              <Link to="/" className="flex items-center gap-3">
+                <LogoMark />
+                <div>
+                  <p className="text-sm font-black tracking-tight text-slate-950 dark:text-white">AlumniConnect</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Institute Network</p>
+                </div>
+              </Link>
+
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                <Link to="/" className="rounded-xl px-3 py-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900">
+                  Home
+                </Link>
+                <Link
+                  to="/institutes/register"
+                  className="hidden rounded-xl px-3 py-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900 sm:inline-flex"
+                >
+                  Register
+                </Link>
+                <button type="button" onClick={toggleTheme} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300" aria-label="Toggle theme">
+                  {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                </button>
+                <Link to="/login" className="btn-primary px-4 py-2.5">
+                  Sign In
+                </Link>
               </div>
-            </Link>
+            </nav>
+          </header>
+        )}
 
-            <div className="flex items-center gap-4 text-sm font-medium text-slate-600 dark:text-slate-300">
-              <Link to="/" className="rounded-full px-4 py-2 transition hover:bg-white/40 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-white">
-                Home
-              </Link>
-              <Link
-                to="/institutes/register"
-                className="hidden rounded-full px-4 py-2 transition hover:bg-white/40 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-white sm:inline-flex"
-              >
-                Register Institute
-              </Link>
-              
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm transition"
-                aria-label="Toggle theme"
-              >
-                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
-              </button>
-
-              <Link
-                to="/login"
-                className="rounded-full bg-gradient-to-r from-brand-600 to-indigo-600 px-5 py-2.5 text-white font-semibold shadow-lg shadow-brand-600/20 transition hover:scale-[1.03] active:scale-[0.97]"
-              >
-                Sign In
-              </Link>
-            </div>
-          </nav>
-        </header>
-
-        <main className="mx-auto max-w-6xl px-4 py-10 lg:px-6">
+        <main className={isLoginPage ? '' : 'mx-auto max-w-6xl px-4 py-10 lg:px-6'}>
           <Outlet />
         </main>
       </div>
     );
   }
 
-  // Active Icon for Command Orb
-  const activeIcon = () => {
-    const currentItem = flatNavigation.find((item) => item.to === location.pathname);
-    const Icon = currentItem?.icon || GridIcon;
-    return <Icon />;
-  };
+  const sidebar = (
+    <Sidebar
+      groups={navigationGroups}
+      isCollapsed={isCollapsed}
+      onToggle={() => setIsCollapsed((current) => !current)}
+      user={user}
+    />
+  );
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 pb-24">
-      {/* Top Floating Status Island */}
-      <div className="fixed top-6 right-6 z-40 flex items-center gap-3">
-        <div className="flex items-center gap-2 bg-white/70 dark:bg-slate-900/70 border border-white/40 dark:border-slate-800/40 backdrop-blur-xl px-4 py-2.5 rounded-full shadow-xl shadow-slate-900/5 dark:shadow-black/25">
-          <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md bg-brand-50 dark:bg-brand-950/50 text-[0.7rem] font-bold uppercase tracking-[0.16em] text-brand-700 dark:text-brand-400 border border-brand-100 dark:border-brand-900/30">
-            {currentPage.title}
-          </span>
+    <div className="min-h-screen bg-slate-100 text-slate-950 dark:bg-slate-950 dark:text-slate-100">
+      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,#f8fafc_0%,#eaf1ff_52%,#f8fafc_100%)] dark:bg-[linear-gradient(180deg,#020617_0%,#0f172a_50%,#020617_100%)]" />
 
-          {/* Theme switcher */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-            aria-label="Toggle Theme"
-          >
-            {theme === 'light' ? <MoonIcon /> : <SunIcon />}
-          </button>
+      <aside className={`fixed inset-y-0 left-0 z-40 hidden border-r border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:block ${isCollapsed ? 'w-24' : 'w-72'}`}>
+        {sidebar}
+      </aside>
 
-          {/* Notifications bell */}
-          <Link
-            to="/notifications"
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-            aria-label="Notifications"
-          >
-            <BellIcon />
-            {unreadNotificationCount > 0 ? (
-              <span className="absolute -right-0.5 -top-0.5 inline-flex h-2.5 w-2.5 items-center justify-center rounded-full bg-rose-600 shadow-md shadow-rose-600/30" />
-            ) : null}
-          </Link>
-
-          {/* Profile Trigger button */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setIsProfileOpen((current) => !current)}
-              aria-expanded={isProfileOpen}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 dark:bg-slate-800 text-sm font-semibold text-white transition hover:scale-105"
-            >
-              {getInitials(user.name)}
-            </button>
-
-            {/* Profile Dropdown panel */}
-            {isProfileOpen ? (
-              <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-64 rounded-3xl border border-white/50 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/95 p-4 shadow-2xl backdrop-blur-xl">
-                <div className="rounded-2xl bg-slate-50 dark:bg-slate-950/60 p-3 border border-slate-100 dark:border-slate-800">
-                  <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{user.name}</p>
-                  <p className="truncate text-xs text-slate-500 dark:text-slate-400 mt-0.5">{user.email}</p>
-                  <p className="mt-2 inline-block text-[0.65rem] font-extrabold uppercase tracking-[0.16em] text-brand-700 dark:text-brand-400">
-                    {user.role}
-                  </p>
-                </div>
-                <div className="mt-3 space-y-1">
-                  <Link
-                    to={getDashboardPathForRole(user.role)}
-                    onClick={() => setIsProfileOpen(false)}
-                    className="flex w-full items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/30 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-700 dark:hover:text-brand-400 transition"
-                  >
-                    Go to Dashboard
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="inline-flex w-full items-center justify-center rounded-xl bg-rose-600 hover:bg-rose-700 px-3 py-2 text-xs font-semibold text-white transition"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
-            ) : null}
-          </div>
+      {isMobileNavOpen ? (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <button type="button" className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" onClick={() => setIsMobileNavOpen(false)} aria-label="Close navigation" />
+          <aside className="relative h-full w-[min(22rem,88vw)] border-r border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-950">
+            <Sidebar groups={navigationGroups} isCollapsed={false} onToggle={() => setIsMobileNavOpen(false)} user={user} isMobile />
+          </aside>
         </div>
-      </div>
+      ) : null}
 
-      {/* Main Content Area */}
-      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 pt-24 animate-fadeIn">
-        {/* Dynamic Back-to-Dashboard breadcrumb navigation */}
-        {isAuthenticated && user && !location.pathname.endsWith('/dashboard') && location.pathname !== '/' && (
-          <div className="mb-8 flex items-center justify-between animate-fadeIn">
-            <div className="flex items-center gap-3">
-              <Link
-                to={getDashboardPathForRole(user.role)}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/60 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-100 dark:hover:border-brand-900/40 hover:bg-white dark:hover:bg-slate-900 transition-all shadow-sm active:scale-95 hover:shadow"
+      <div className={isCollapsed ? 'lg:pl-24' : 'lg:pl-72'}>
+        <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80">
+          <div className="flex h-20 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+            <div className="flex min-w-0 items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsMobileNavOpen(true)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 lg:hidden"
+                aria-label="Open navigation"
               >
-                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                <span>Dashboard</span>
+                <MenuIcon />
+              </button>
+              <div className="min-w-0">
+                <p className="truncate text-lg font-black tracking-tight text-slate-950 dark:text-white">{currentPage.title}</p>
+                <p className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">{currentPage.description}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={toggleTheme} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Toggle theme">
+                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+              </button>
+
+              <Link to="/notifications" className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Notifications">
+                <BellIcon />
+                {unreadNotificationCount > 0 ? (
+                  <span className="absolute -right-1 -top-1 min-w-5 rounded-full bg-rose-600 px-1.5 py-0.5 text-center text-[0.65rem] font-black text-white shadow-lg shadow-rose-600/25">
+                    {unreadNotificationCount > 9 ? '9+' : unreadNotificationCount}
+                  </span>
+                ) : null}
               </Link>
-              <span className="text-slate-300 dark:text-slate-800 font-light">/</span>
-              <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                {currentPage.title}
-              </span>
+
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsProfileOpen((current) => !current)}
+                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5 pr-3 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
+                  aria-expanded={isProfileOpen}
+                >
+                  <Avatar name={user.name} />
+                  <span className="hidden max-w-32 truncate text-xs font-bold text-slate-700 dark:text-slate-200 sm:inline">{user.name}</span>
+                </button>
+
+                {isProfileOpen ? (
+                  <div className="absolute right-0 top-[calc(100%+0.75rem)] w-72 rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-2xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95">
+                    <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 dark:bg-slate-950/60">
+                      <Avatar name={user.name} />
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold text-slate-950 dark:text-white">{user.name}</p>
+                        <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
+                        <p className="mt-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-brand-700 dark:text-brand-400">{user.role}</p>
+                      </div>
+                    </div>
+                    <div className="mt-3 grid gap-2">
+                      <Link to={getDashboardPathForRole(user.role)} className="btn-secondary justify-center py-2.5">
+                        Dashboard
+                      </Link>
+                      <button type="button" onClick={handleLogout} className="btn-danger justify-center py-2.5">
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
-        )}
-        <Outlet />
-      </main>
+        </header>
 
-      {/* Floating Command Orb (Bottom Center) */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-        <button
-          type="button"
-          onClick={() => setIsHubOpen(true)}
-          className="orb-pulse-effect relative flex items-center gap-3 px-6 py-3.5 rounded-full bg-gradient-to-tr from-brand-600 via-brand-700 to-indigo-600 text-white shadow-2xl shadow-brand-600/35 hover:shadow-brand-600/50 cursor-pointer select-none transition-all duration-300 hover:scale-105 active:scale-95 group"
-        >
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
-            {activeIcon()}
-          </span>
-          <span className="text-sm font-extrabold uppercase tracking-[0.2em]">Menu</span>
-          <span className="hidden md:inline-flex text-[0.65rem] font-bold px-2 py-0.5 bg-black/25 rounded-md border border-white/10 select-none">
-            Ctrl+K
-          </span>
+        <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function Sidebar({ groups, isCollapsed, onToggle, user, isMobile = false }) {
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex h-20 items-center justify-between gap-3 px-4">
+        <Link to={getDashboardPathForRole(user.role)} className="flex min-w-0 items-center gap-3">
+          <LogoMark />
+          {!isCollapsed ? (
+            <div className="min-w-0">
+              <p className="truncate text-sm font-black tracking-tight text-slate-950 dark:text-white">AlumniConnect</p>
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">Institute Network</p>
+            </div>
+          ) : null}
+        </Link>
+        <button type="button" onClick={onToggle} className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300" aria-label={isMobile ? 'Close navigation' : 'Collapse navigation'}>
+          {isMobile ? <CloseIcon /> : <PanelIcon />}
         </button>
       </div>
 
-      {/* Bento-Hub Fullscreen Glassmorphic Overlay */}
-      {isHubOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-2xl transition-all duration-300">
-          <div
-            ref={hubRef}
-            className="max-w-4xl w-full bg-white/80 dark:bg-slate-900/80 border border-white/30 dark:border-slate-800/40 rounded-[2.5rem] p-6 md:p-8 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
-          >
-            {/* Hub Header & Search Input */}
-            <div className="relative mb-6">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">
-                <SearchIcon />
-              </span>
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleHubKeyDown}
-                placeholder="Type a navigation shortcut or action..."
-                className="field-control pl-12 pr-20 bg-white/60 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/80 w-full text-lg focus:ring-4 focus:ring-brand-500/20"
-              />
-              <button
-                type="button"
-                onClick={() => setIsHubOpen(false)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 transition"
-              >
-                <CloseIcon />
-              </button>
-            </div>
-
-            {/* Hub Content */}
-            <div className="flex-1 overflow-y-auto pr-1">
-              {searchQuery ? (
-                /* Search Results View */
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500 mb-3 px-1">
-                    Matching Shortcuts ({filteredNavigation.length})
-                  </p>
-                  {filteredNavigation.length > 0 ? (
-                    filteredNavigation.map((item, index) => {
-                      const Icon = item.icon;
-                      const isSelected = index === selectedIndex;
-                      return (
-                        <Link
-                          key={item.to}
-                          to={item.to}
-                          onClick={() => setIsHubOpen(false)}
-                          className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
-                            isSelected
-                              ? 'bg-brand-600 text-white border-brand-500 shadow-lg shadow-brand-600/10'
-                              : 'bg-white/40 dark:bg-slate-950/30 border-slate-100 dark:border-slate-800/50 hover:bg-white dark:hover:bg-slate-950/70 hover:border-slate-200'
-                          }`}
-                        >
-                          <div className="flex items-center gap-4">
-                            <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${isSelected ? 'bg-white/20' : 'bg-brand-50 dark:bg-slate-900 text-brand-600 dark:text-brand-400'}`}>
-                              <Icon />
-                            </span>
-                            <div>
-                              <p className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{item.label}</p>
-                              <p className={`text-xs ${isSelected ? 'text-brand-100' : 'text-slate-400 dark:text-slate-500'}`}>{item.groupLabel}</p>
-                            </div>
-                          </div>
-                          {isSelected && (
-                            <span className="text-[0.65rem] font-bold uppercase tracking-[0.12em] px-2 py-0.5 bg-black/25 rounded-md">
-                              Enter to Go
-                            </span>
-                          )}
-                        </Link>
-                      );
-                    })
-                  ) : (
-                    <div className="empty-state text-center py-10">
-                      <p className="text-slate-500">No navigation shortcuts matched your query.</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                /* Organized Bento Grid Menu View */
-                <div className="grid gap-6 md:grid-cols-2">
-                  {navigationGroups.map((group) => (
-                    <div key={group.label} className="p-5 rounded-[2rem] bg-white/40 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-800/40 backdrop-blur-md">
-                      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-brand-700 dark:text-brand-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                        {group.label}
-                      </h3>
-                      <div className="grid gap-2">
-                        {group.items.map((item) => {
-                          const Icon = item.icon;
-                          const isActive = location.pathname === item.to;
-                          return (
-                            <NavLink
-                              key={item.to}
-                              to={item.to}
-                              onClick={() => setIsHubOpen(false)}
-                              className={`group flex items-center gap-3.5 p-3 rounded-xl transition ${
-                                isActive
-                                  ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/10'
-                                  : 'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-950/60 hover:text-slate-950 dark:hover:text-white'
-                              }`}
-                            >
-                              <span className={`flex h-9 w-9 items-center justify-center rounded-lg transition-transform group-hover:scale-105 ${
-                                isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 group-hover:text-brand-600'
-                              }`}>
-                                <Icon />
-                              </span>
-                              <span className="text-xs font-bold uppercase tracking-[0.1em]">{item.label}</span>
-                            </NavLink>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Hub Footer */}
-            <div className="border-t border-slate-200 dark:border-slate-800 pt-5 mt-5 flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 dark:bg-slate-800 text-sm font-bold text-white shadow-lg">
-                  {getInitials(user.name)}
-                </span>
-                <div>
-                  <p className="text-sm font-extrabold text-slate-900 dark:text-white">{user.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 tracking-wider">{user.role}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="rounded-2xl bg-rose-600 hover:bg-rose-700 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition hover:scale-105 active:scale-95"
-                >
-                  Sign Out
-                </button>
-              </div>
+      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+        {groups.map((group) => (
+          <div key={group.label} className="mb-5">
+            {!isCollapsed ? (
+              <p className="mb-2 px-3 text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                {group.label}
+              </p>
+            ) : null}
+            <div className="grid gap-1">
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    title={isCollapsed ? item.label : undefined}
+                    className={({ isActive }) =>
+                      `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
+                        isActive
+                          ? 'bg-slate-950 text-white shadow-lg shadow-slate-950/10 dark:bg-white dark:text-slate-950'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white'
+                      } ${isCollapsed ? 'justify-center' : ''}`
+                    }
+                  >
+                    <Icon />
+                    {!isCollapsed ? <span className="truncate">{item.label}</span> : null}
+                  </NavLink>
+                );
+              })}
             </div>
           </div>
+        ))}
+      </nav>
+
+      <div className="border-t border-slate-200/70 p-4 dark:border-slate-800/80">
+        <div className={`flex items-center gap-3 rounded-2xl bg-slate-100/80 p-3 dark:bg-slate-900/70 ${isCollapsed ? 'justify-center' : ''}`}>
+          <Avatar name={user.name} />
+          {!isCollapsed ? (
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-slate-950 dark:text-white">{user.name}</p>
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user.role}</p>
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </div>
+  );
+}
+
+function LogoMark() {
+  return (
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-slate-950 text-sm font-black text-white shadow-lg shadow-brand-700/20">
+      AC
+    </span>
+  );
+}
+
+function Avatar({ name }) {
+  return (
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-xs font-black text-white shadow-sm dark:bg-white dark:text-slate-950">
+      {getInitials(name)}
+    </span>
   );
 }
 
@@ -561,7 +410,7 @@ function getInitials(name = '') {
 
 function iconProps() {
   return {
-    className: 'h-[1.1rem] w-[1.1rem]',
+    className: 'h-[1.1rem] w-[1.1rem] shrink-0',
     fill: 'none',
     stroke: 'currentColor',
     strokeWidth: '2.2',
@@ -685,6 +534,22 @@ function CloseIcon() {
   return (
     <svg {...iconProps()}>
       <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg {...iconProps()}>
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+function PanelIcon() {
+  return (
+    <svg {...iconProps()}>
+      <path d="M4 5h16v14H4zM9 5v14" />
     </svg>
   );
 }

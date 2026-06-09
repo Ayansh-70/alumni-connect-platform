@@ -1,4 +1,5 @@
 import DashboardActionGrid from '../../components/ui/DashboardActionGrid.jsx';
+import DashboardMetricGrid from '../../components/ui/DashboardMetricGrid.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
 
 function StudentDashboardPage() {
@@ -46,6 +47,12 @@ function StudentDashboardPage() {
       to: '/student/events'
     }
   ];
+  const metrics = [
+    { label: 'Profile', value: '01', caption: 'Identity' },
+    { label: 'Network', value: '03', caption: 'Actions' },
+    { label: 'Campus', value: '03', caption: 'Feeds' },
+    { label: 'Visibility', value: 'Verified', caption: 'Alumni' }
+  ];
 
   return (
     <div>
@@ -54,6 +61,7 @@ function StudentDashboardPage() {
         title="Student dashboard"
         description="Use this workspace to build your profile, explore alumni, and stay on top of opportunities and institute updates."
       />
+      <DashboardMetricGrid metrics={metrics} />
       <DashboardActionGrid actions={actions} />
     </div>
   );

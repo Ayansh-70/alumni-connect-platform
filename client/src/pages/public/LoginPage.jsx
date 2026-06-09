@@ -14,7 +14,11 @@ function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isLoading) {
-    return <LoadingState message="Checking your session..." className="surface-card mx-auto max-w-md" />;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
+        <LoadingState message="Checking your session..." className="mx-auto max-w-md border-slate-800 bg-slate-900/70" />
+      </div>
+    );
   }
 
   if (!isLoading && isAuthenticated && user) {
@@ -51,47 +55,25 @@ function LoginPage() {
   };
 
   return (
-    <div className="grid min-h-[calc(100vh-11rem)] gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-      <section className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(135deg,#0f172a_0%,#1d4ed8_52%,#38bdf8_100%)] p-8 text-white shadow-2xl shadow-brand-900/15 sm:p-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.22),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.14),transparent_30%)]" />
-        <div className="relative max-w-xl">
-          <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-100">
-            Verified institute network
-          </p>
-          <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
-            Welcome back to the trusted alumni-student community.
-          </h1>
-          <p className="mt-5 max-w-lg text-base leading-7 text-sky-50/90">
-            Sign in to continue building verified alumni relationships, manage requests, and stay connected with institute
-            opportunities, announcements, and events.
-          </p>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(145deg,#020617_0%,#0f172a_48%,#111827_100%)] px-4 py-10 text-white">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/60 to-transparent" />
+      <div className="absolute left-1/2 top-0 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-brand-500/20 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {[
-              { title: 'Verified people', text: 'Institute-scoped profiles and role-based access keep networking reliable.' },
-              { title: 'Career support', text: 'Connections, guidance, and referrals stay organized in one place.' },
-              { title: 'Campus updates', text: 'Opportunities, announcements, and events remain easy to discover.' }
-            ].map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
-                <p className="text-sm font-semibold">{item.title}</p>
-                <p className="mt-2 text-sm leading-6 text-sky-50/80">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto w-full max-w-md rounded-[2rem] border border-white/70 bg-white/92 p-8 shadow-2xl shadow-slate-900/10 backdrop-blur">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">Sign in</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">Access your workspace</h2>
-          <p className="mt-3 text-sm leading-6 text-slate-600">
-            Use your registered institute email and password. You&apos;ll be redirected to the right dashboard automatically.
+      <section className="relative w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.08] p-8 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-10">
+        <div className="text-center">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sm font-black text-slate-950 shadow-xl shadow-brand-500/20">
+            AC
+          </span>
+          <p className="mt-5 text-sm font-black uppercase tracking-[0.22em] text-brand-200">AlumniConnect</p>
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-white">Sign in to your workspace</h1>
+          <p className="mt-3 text-sm leading-6 text-slate-300">
+            Verified institute networking for students, alumni, and administrators.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8">
-          <label className="block text-sm font-medium text-slate-700" htmlFor="email">
+          <label htmlFor="email" className="text-slate-300">
             Email address
           </label>
           <input
@@ -99,12 +81,12 @@ function LoginPage() {
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="field-control mt-2"
+            className="field-control mt-2 border-white/10 bg-white/10 text-white placeholder:text-slate-500 focus:bg-white/15"
             placeholder="you@example.com"
             autoComplete="email"
           />
 
-          <label className="mt-5 block text-sm font-medium text-slate-700" htmlFor="password">
+          <label className="mt-5 text-slate-300" htmlFor="password">
             Password
           </label>
           <input
@@ -112,7 +94,7 @@ function LoginPage() {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="field-control mt-2"
+            className="field-control mt-2 border-white/10 bg-white/10 text-white placeholder:text-slate-500 focus:bg-white/15"
             placeholder="Enter your password"
             autoComplete="current-password"
           />
@@ -121,13 +103,13 @@ function LoginPage() {
             <p className="alert-error mt-4">{formError}</p>
           ) : null}
 
-          <button type="submit" disabled={isSubmitting} className="btn-primary mt-6 w-full py-3">
+          <button type="submit" disabled={isSubmitting} className="btn-primary mt-6 w-full py-3.5">
             {isSubmitting ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <Link to="/" className="mt-6 inline-flex text-sm font-medium text-slate-600 transition hover:text-slate-950">
-          &larr; Back to home
+        <Link to="/" className="mt-6 inline-flex w-full justify-center text-sm font-semibold text-slate-400 transition hover:text-white">
+          Back to home
         </Link>
       </section>
     </div>

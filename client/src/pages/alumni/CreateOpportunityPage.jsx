@@ -65,7 +65,7 @@ function CreateOpportunityPage() {
         description="Share an opportunity with your institute. It will stay pending until an institute admin reviews it."
       />
 
-      <section className="max-w-3xl rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="surface-card max-w-4xl">
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block text-sm font-medium text-slate-700">
             Title
@@ -73,7 +73,7 @@ function CreateOpportunityPage() {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="Software Engineering Internship"
             />
           </label>
@@ -85,7 +85,7 @@ function CreateOpportunityPage() {
               value={formData.description}
               onChange={handleChange}
               rows="4"
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="Describe the opportunity and the role."
             />
           </label>
@@ -97,7 +97,7 @@ function CreateOpportunityPage() {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
               >
                 {OPPORTUNITY_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -112,7 +112,7 @@ function CreateOpportunityPage() {
                 name="mode"
                 value={formData.mode}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
               >
                 {OPPORTUNITY_MODES.map((mode) => (
                   <option key={mode} value={mode}>
@@ -127,7 +127,7 @@ function CreateOpportunityPage() {
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
                 placeholder="Tech Company"
               />
             </label>
@@ -137,7 +137,7 @@ function CreateOpportunityPage() {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
                 placeholder="Backend Intern"
               />
             </label>
@@ -147,7 +147,7 @@ function CreateOpportunityPage() {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
                 placeholder="Bengaluru"
               />
             </label>
@@ -158,7 +158,7 @@ function CreateOpportunityPage() {
                 type="date"
                 value={formData.deadline}
                 onChange={handleChange}
-                className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                className="field-control mt-2"
               />
             </label>
           </div>
@@ -170,7 +170,7 @@ function CreateOpportunityPage() {
               value={formData.eligibility}
               onChange={handleChange}
               rows="3"
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="Eligible branches, batches, or qualifications"
             />
           </label>
@@ -181,7 +181,7 @@ function CreateOpportunityPage() {
               name="skillsRequired"
               value={formData.skillsRequired}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="React, Node.js, SQL"
             />
           </label>
@@ -192,19 +192,19 @@ function CreateOpportunityPage() {
               name="applicationLink"
               value={formData.applicationLink}
               onChange={handleChange}
-              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+              className="field-control mt-2"
               placeholder="https://company.com/apply"
             />
           </label>
 
           {errorMessage ? (
-            <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+            <p className="alert-error">
               {errorMessage}
             </p>
           ) : null}
 
           {successMessage ? (
-            <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            <p className="alert-success">
               {successMessage}
             </p>
           ) : null}
@@ -212,7 +212,7 @@ function CreateOpportunityPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
+            className="btn-primary"
           >
             {isSubmitting ? 'Posting...' : 'Post Opportunity'}
           </button>

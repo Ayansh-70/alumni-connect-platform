@@ -12,7 +12,8 @@ export const USER_STATUSES = Object.freeze({
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
   PENDING: 'PENDING',
-  BLOCKED: 'BLOCKED'
+  BLOCKED: 'BLOCKED',
+  SUSPENDED: 'SUSPENDED'
 });
 
 const userSchema = new mongoose.Schema(
@@ -45,10 +46,31 @@ const userSchema = new mongoose.Schema(
       ref: 'Institute',
       default: null
     },
+    designation: {
+      type: String,
+      trim: true,
+      default: ''
+    },
     status: {
       type: String,
       enum: Object.values(USER_STATUSES),
       default: USER_STATUSES.ACTIVE
+    },
+    resetPasswordToken: {
+      type: String,
+      default: null
+    },
+    resetPasswordExpires: {
+      type: Date,
+      default: null
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false
+    },
+    emailVerificationToken: {
+      type: String,
+      default: null
     }
   },
   {

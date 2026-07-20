@@ -74,7 +74,26 @@ const loginUser = async ({ email, password }) => {
     throw error;
   }
 
-  if (user.status !== USER_STATUSES.ACTIVE) {
+  if (user.status === USER_STATUSES.PENDING && user.role === USER_ROLES.INSTITUTE_ADMIN) {
+    const error = new Error('Your institute registration is awaiting approval.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  if (user.status === USER_STATUSES.REJECTED) {
+    const error = new Error('Your institute application was rejected. Please contact support.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  if (user.status === USER_STATUSES.SUSPENDED) {
+    const error = new Error('Your account has been suspended.');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  // Preserve existing login behavior for other roles/statuses if not actively restricted
+  if (user.status !== USER_STATUSES.ACTIVE && user.status !== USER_STATUSES.PENDING) {
     const error = new Error('Your account is not active.');
     error.statusCode = 403;
     throw error;

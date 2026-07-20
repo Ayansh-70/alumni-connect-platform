@@ -13,8 +13,10 @@ const register = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: 'Institute registration submitted successfully.',
-    data: { institute }
+    message: 'Institute registration submitted successfully. Your application is awaiting approval.',
+    data: { 
+      applicationStatus: institute.status 
+    }
   });
 });
 

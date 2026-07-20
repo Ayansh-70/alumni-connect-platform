@@ -13,6 +13,11 @@ const instituteSchema = new mongoose.Schema(
       required: [true, 'Institute name is required'],
       trim: true
     },
+    type: {
+      type: String,
+      trim: true,
+      default: ''
+    },
     email: {
       type: String,
       required: [true, 'Institute email is required'],
@@ -66,6 +71,11 @@ const instituteSchema = new mongoose.Schema(
       default: ''
     },
     approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null
+    },
+    reviewedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       default: null

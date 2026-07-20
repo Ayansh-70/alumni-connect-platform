@@ -212,7 +212,7 @@ function StudentAlumniDetailPage() {
                   onChange={(event) => setMessage(event.target.value)}
                   rows="4"
                   disabled={Boolean(alumni.connectionRequest)}
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-not-allowed disabled:bg-slate-100"
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-not-allowed disabled:bg-slate-100 dark:bg-slate-900 dark:border-slate-700"
                   placeholder="Write an optional message about why you want to connect."
                 />
 
@@ -262,7 +262,7 @@ function StudentAlumniDetailPage() {
                     name="type"
                     value={guidanceForm.type}
                     onChange={handleGuidanceChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700"
                   >
                     {GUIDANCE_REQUEST_TYPES.map((type) => (
                       <option key={type} value={type}>
@@ -278,7 +278,7 @@ function StudentAlumniDetailPage() {
                     name="title"
                     value={guidanceForm.title}
                     onChange={handleGuidanceChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700"
                     placeholder="Need help with internship preparation"
                   />
                 </label>
@@ -290,7 +290,7 @@ function StudentAlumniDetailPage() {
                     value={guidanceForm.message}
                     onChange={handleGuidanceChange}
                     rows="4"
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700"
                     placeholder="Explain what kind of help you need and any context that would help the alumni respond."
                   />
                 </label>

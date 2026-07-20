@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Institute, { INSTITUTE_STATUSES } from '../models/Institute.js';
+import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -10,34 +11,62 @@ const buildValidationError = (message, statusCode = 400) => {
 };
 
 const sanitizeInstitutePayload = (payload) => ({
-  name: payload.name.trim(),
-  email: normalizeEmail(payload.email),
-  phone: payload.phone.trim(),
+  name: payload.instituteName?.trim() || '',
+  type: payload.instituteType?.trim() || '',
+  email: normalizeEmail(payload.officialEmail || ''),
+  phone: payload.phone?.trim() || '',
   website: payload.website?.trim() || '',
-  address: payload.address.trim(),
-  city: payload.city.trim(),
-  state: payload.state.trim(),
-  country: payload.country.trim(),
-  description: payload.description.trim()
+  address: payload.address?.trim() || '',
+  city: payload.city?.trim() || '',
+  state: payload.state?.trim() || '',
+  country: payload.country?.trim() || '',
+  description: payload.description?.trim() || `Registration for ${payload.instituteName?.trim() || ''}`
 });
 
-const validateInstituteInput = (payload) => {
-  const requiredFields = [
+const sanitizeUserPayload = (payload) => ({
+  name: payload.adminName?.trim() || '',
+  designation: payload.designation?.trim() || '',
+  email: normalizeEmail(payload.adminEmail || payload.officialEmail || ''),
+  password: payload.password || '',
+  confirmPassword: payload.confirmPassword || ''
+});
+
+const validateRegistrationInput = (institutePayload, userPayload) => {
+  const requiredInstituteFields = [
     ['name', 'Institute name is required.'],
-    ['email', 'Institute email is required.'],
+    ['email', 'Official email is required.'],
     ['phone', 'Phone number is required.'],
     ['address', 'Address is required.'],
     ['city', 'City is required.'],
     ['state', 'State is required.'],
-    ['country', 'Country is required.'],
-    ['description', 'Description is required.']
+    ['country', 'Country is required.']
   ];
 
-  requiredFields.forEach(([field, message]) => {
-    if (!payload[field] || !String(payload[field]).trim()) {
+  requiredInstituteFields.forEach(([field, message]) => {
+    if (!institutePayload[field]) {
       throw buildValidationError(message);
     }
   });
+
+  const requiredUserFields = [
+    ['name', 'Administrator name is required.'],
+    ['email', 'Administrator email is required.'],
+    ['password', 'Password is required.']
+  ];
+
+  requiredUserFields.forEach(([field, message]) => {
+    if (!userPayload[field]) {
+      throw buildValidationError(message);
+    }
+  });
+
+  if (userPayload.password.length < 6) {
+    throw buildValidationError('Password must be at least 6 characters.');
+  }
+
+  if (userPayload.password !== userPayload.confirmPassword) {
+    throw buildValidationError('Passwords do not match.');
+  }
 };
 
 const ensureValidInstituteId = (instituteId) => {
@@ -47,16 +76,51 @@ const ensureValidInstituteId = (instituteId) => {
 };
 
 const registerInstitute = async (payload) => {
-  validateInstituteInput(payload);
+  const institutePayload = sanitizeInstitutePayload(payload);
+  const userPayload = sanitizeUserPayload(payload);
 
-  const sanitizedPayload = sanitizeInstitutePayload(payload);
-  const existingInstitute = await Institute.findOne({ email: sanitizedPayload.email });
+  validateRegistrationInput(institutePayload, userPayload);
 
-  if (existingInstitute) {
-    throw buildValidationError('Institute already exists with this email.', 409);
+  const existingInstituteName = await Institute.findOne({ name: { $regex: new RegExp(`^${institutePayload.name}$`, 'i') } });
+  if (existingInstituteName) {
+    throw buildValidationError('An institute with this name already exists.', 409);
   }
 
-  const institute = await Institute.create(sanitizedPayload);
+  const existingInstituteEmail = await Institute.findOne({ email: institutePayload.email });
+  if (existingInstituteEmail) {
+    throw buildValidationError('An institute with this official email already exists.', 409);
+  }
+
+  const existingUser = await User.findOne({ email: userPayload.email });
+  if (existingUser) {
+    throw buildValidationError('A user with this email already exists.', 409);
+  }
+
+  let institute;
+  try {
+    institute = await Institute.create({
+      ...institutePayload,
+      status: INSTITUTE_STATUSES.PENDING
+    });
+  } catch (error) {
+    throw buildValidationError(error.message, 500);
+  }
+
+  try {
+    await User.create({
+      name: userPayload.name,
+      email: userPayload.email,
+      password: userPayload.password,
+      designation: userPayload.designation,
+      role: USER_ROLES.INSTITUTE_ADMIN,
+      status: USER_STATUSES.PENDING,
+      institute: institute._id
+    });
+  } catch (error) {
+    await Institute.findByIdAndDelete(institute._id);
+    throw buildValidationError(error.message, 500);
+  }
+
   return institute;
 };
 

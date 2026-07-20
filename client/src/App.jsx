@@ -43,7 +43,7 @@ function App() {
       <Route element={<AppLayout />}>
         <Route index element={<LandingPage />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="institutes/register" element={<InstituteRegisterPage />} />
+        <Route path="register-institute" element={<InstituteRegisterPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="notifications" element={<NotificationsPage />} />

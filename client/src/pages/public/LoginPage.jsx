@@ -108,9 +108,14 @@ function LoginPage() {
           </button>
         </form>
 
-        <Link to="/" className="mt-6 inline-flex w-full justify-center text-sm font-semibold text-slate-400 transition hover:text-white">
-          Back to home
-        </Link>
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <Link to="/register-institute" className="inline-flex w-full justify-center text-sm font-semibold text-slate-400 transition hover:text-white">
+            Register your institute
+          </Link>
+          <Link to="/" className="inline-flex w-full justify-center text-sm font-medium text-slate-500 transition hover:text-white">
+            Back to home
+          </Link>
+        </div>
       </section>
     </div>
   );

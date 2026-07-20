@@ -37,7 +37,7 @@ function LandingPage() {
           Sign in
         </Link>
         <Link
-          to="/institutes/register"
+          to="/register-institute"
           className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
         >
           Register institute

@@ -86,9 +86,14 @@ function LoginPage() {
             autoComplete="email"
           />
 
-          <label className="mt-5 text-slate-300" htmlFor="password">
-            Password
-          </label>
+          <div className="mt-5 flex items-center justify-between">
+            <label className="text-slate-300" htmlFor="password">
+              Password
+            </label>
+            <Link to="/forgot-password" className="text-[0.8rem] font-medium text-brand-400 hover:text-brand-300 transition-colors">
+              Forgot password?
+            </Link>
+          </div>
           <input
             id="password"
             type="password"

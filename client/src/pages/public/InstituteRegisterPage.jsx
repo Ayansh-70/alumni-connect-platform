@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { registerInstituteRequest } from '../../api/institutes.js';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import PasswordChecklist, { validatePasswordStrength } from '../../components/ui/PasswordChecklist.jsx';
 import StatusBadge from '../../components/ui/StatusBadge.jsx';
 
 const STEPS = [
@@ -32,14 +33,7 @@ function InstituteRegisterPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const passwordCriteria = {
-    length: formData.password.length >= 8,
-    uppercase: /[A-Z]/.test(formData.password),
-    lowercase: /[a-z]/.test(formData.password),
-    number: /[0-9]/.test(formData.password),
-    special: /[^A-Za-z0-9]/.test(formData.password)
-  };
-  const isPasswordValid = Object.values(passwordCriteria).every(Boolean);
+  const isPasswordValid = validatePasswordStrength(formData.password);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -266,24 +260,7 @@ function InstituteRegisterPage() {
                 </div>
                 <input id="password" name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange} className="field-control mt-2" />
                 
-                {/* Live Password Checklist */}
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[0.7rem] font-medium tracking-wide">
-                  <div className={`flex items-center gap-2 transition-colors ${passwordCriteria.length ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
-                    <span className="text-sm">{passwordCriteria.length ? '✓' : '•'}</span> At least 8 characters
-                  </div>
-                  <div className={`flex items-center gap-2 transition-colors ${passwordCriteria.uppercase ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
-                    <span className="text-sm">{passwordCriteria.uppercase ? '✓' : '•'}</span> One uppercase letter
-                  </div>
-                  <div className={`flex items-center gap-2 transition-colors ${passwordCriteria.lowercase ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
-                    <span className="text-sm">{passwordCriteria.lowercase ? '✓' : '•'}</span> One lowercase letter
-                  </div>
-                  <div className={`flex items-center gap-2 transition-colors ${passwordCriteria.number ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
-                    <span className="text-sm">{passwordCriteria.number ? '✓' : '•'}</span> One number
-                  </div>
-                  <div className={`flex items-center gap-2 transition-colors ${passwordCriteria.special ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
-                    <span className="text-sm">{passwordCriteria.special ? '✓' : '•'}</span> One special character
-                  </div>
-                </div>
+                <PasswordChecklist password={formData.password} />
               </div>
               
               <div className="sm:col-span-2">

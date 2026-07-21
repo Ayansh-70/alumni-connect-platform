@@ -36,6 +36,8 @@ import StudentOpportunityDetailPage from './pages/student/StudentOpportunityDeta
 import StudentOpportunitiesPage from './pages/student/StudentOpportunitiesPage.jsx';
 import StudentProfilePage from './pages/student/StudentProfilePage.jsx';
 import InstituteRequestsPage from './pages/superAdmin/InstituteRequestsPage.jsx';
+import ForgotPasswordPage from './pages/public/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './pages/public/ResetPasswordPage.jsx';
 
 function App() {
   return (
@@ -44,6 +46,8 @@ function App() {
         <Route index element={<LandingPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register-institute" element={<InstituteRegisterPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password/:token" element={<ResetPasswordPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="notifications" element={<NotificationsPage />} />

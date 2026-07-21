@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+import emailService from './email/emailService.js';
 import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
 
 const sanitizeUser = (user) => {
@@ -114,4 +116,91 @@ const getUserById = async (userId) => {
   return sanitizeUser(user);
 };
 
-export { getUserById, loginUser, registerUser };
+const forgotPassword = async (email) => {
+  if (!email) {
+    const error = new Error('Email is required.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const normalizedEmail = normalizeEmail(email);
+  const user = await User.findOne({ email: normalizedEmail });
+
+  // If user doesn't exist, we return true silently to prevent email enumeration.
+  if (!user) {
+    return true;
+  }
+
+  // Generate a random raw token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  
+  // Hash the token and set expiration (1 hour)
+  user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  user.resetPasswordExpires = Date.now() + 60 * 60 * 1000;
+  await user.save({ validateBeforeSave: false });
+
+  // Generate the frontend reset link containing the RAW token
+  const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
+
+  try {
+    await emailService.sendForgotPasswordEmail(user.email, resetUrl);
+    return true;
+  } catch (err) {
+    // If email sending fails, clear the tokens so they can't be exploited
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    
+    const error = new Error('There was an error sending the password reset email. Please try again later.');
+    error.statusCode = 500;
+    throw error;
+  }
+};
+
+const resetPassword = async (resetToken, newPassword) => {
+  if (!resetToken || !newPassword) {
+    const error = new Error('Token and new password are required.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (newPassword.trim().length < 8) {
+    const error = new Error('Password must be at least 8 characters.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Hash the incoming raw token to find it in the DB
+  const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+  // Find user by hashed token AND ensure it has not expired
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    const error = new Error('Password reset token is invalid or has expired.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Set the new password and clear the reset fields
+  user.password = newPassword.trim();
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  // Send a confirmation email that the password was changed
+  try {
+    await emailService.sendPasswordChangedEmail(user.email);
+  } catch (err) {
+    // We don't fail the reset process if the confirmation email fails, 
+    // but we can log it (silently ignored for user).
+    console.error('Failed to send password changed confirmation email', err);
+  }
+
+  return true;
+};
+
+export { forgotPassword, getUserById, loginUser, registerUser, resetPassword };

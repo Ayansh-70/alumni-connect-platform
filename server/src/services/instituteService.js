@@ -157,6 +157,13 @@ const approveInstitute = async (instituteId, approvedByUserId) => {
   institute.approvedAt = new Date();
 
   await institute.save();
+
+  // Also activate the associated admin user
+  await User.updateMany(
+    { institute: instituteId, role: USER_ROLES.INSTITUTE_ADMIN },
+    { $set: { status: USER_STATUSES.ACTIVE } }
+  );
+
   return institute.populate('approvedBy', 'name email role');
 };
 
@@ -177,6 +184,13 @@ const rejectInstitute = async (instituteId, rejectionReason) => {
   institute.approvedAt = null;
 
   await institute.save();
+
+  // Also reject the associated admin user
+  await User.updateMany(
+    { institute: instituteId, role: USER_ROLES.INSTITUTE_ADMIN },
+    { $set: { status: USER_STATUSES.REJECTED } }
+  );
+
   return institute;
 };
 

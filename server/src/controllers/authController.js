@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { getUserById, loginUser, registerUser } from '../services/authService.js';
+import { forgotPassword as forgotPasswordService, getUserById, loginUser, registerUser, resetPassword as resetPasswordService } from '../services/authService.js';
 import generateToken from '../utils/generateToken.js';
 
 const buildAuthResponse = (message, user) => ({
@@ -33,4 +33,22 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
-export { getMe, login, register };
+const forgotPassword = asyncHandler(async (req, res) => {
+  await forgotPasswordService(req.body.email);
+
+  res.status(200).json({
+    success: true,
+    message: 'If an account exists with that email, password reset instructions have been sent.'
+  });
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  await resetPasswordService(req.params.token, req.body.password);
+
+  res.status(200).json({
+    success: true,
+    message: 'Password updated successfully.'
+  });
+});
+
+export { forgotPassword, getMe, login, register, resetPassword };

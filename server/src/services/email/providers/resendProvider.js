@@ -35,16 +35,22 @@ class ResendProvider {
     }
 
     try {
-      const data = await this.resend.emails.send({
+      const response = await this.resend.emails.send({
         from,
         to,
         subject,
         html
       });
-      return { success: true, data };
+      
+      if (response.error) {
+        console.error('Resend API returned an error:', response.error);
+        throw new Error(response.error.message);
+      }
+      
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error('Failed to send email via Resend:', error);
-      throw new Error('Email sending failed');
+      console.error('Failed to send email via Resend:', error.message);
+      throw error;
     }
   }
 }

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Institute, { INSTITUTE_STATUSES } from '../models/Institute.js';
 import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
+import emailService from './email/emailService.js';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -121,6 +122,13 @@ const registerInstitute = async (payload) => {
     throw buildValidationError(error.message, 500);
   }
 
+  // Send Application Received Email non-blockingly
+  try {
+    await emailService.sendApplicationReceivedEmail(userPayload.email, institute.name);
+  } catch (err) {
+    console.error('Failed to send application received email:', err);
+  }
+
   return institute;
 };
 
@@ -164,6 +172,18 @@ const approveInstitute = async (instituteId, approvedByUserId) => {
     { $set: { status: USER_STATUSES.ACTIVE } }
   );
 
+  const adminUser = await User.findOne({ institute: instituteId, role: USER_ROLES.INSTITUTE_ADMIN });
+
+  // Send Application Approved Email non-blockingly
+  if (adminUser) {
+    try {
+      const loginUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/login`;
+      await emailService.sendApplicationApprovedEmail(adminUser.email, institute.name, loginUrl);
+    } catch (err) {
+      console.error('Failed to send application approved email:', err);
+    }
+  }
+
   return institute.populate('approvedBy', 'name email role');
 };
 
@@ -190,6 +210,17 @@ const rejectInstitute = async (instituteId, rejectionReason) => {
     { institute: instituteId, role: USER_ROLES.INSTITUTE_ADMIN },
     { $set: { status: USER_STATUSES.REJECTED } }
   );
+
+  const adminUser = await User.findOne({ institute: instituteId, role: USER_ROLES.INSTITUTE_ADMIN });
+
+  // Send Application Rejected Email non-blockingly
+  if (adminUser) {
+    try {
+      await emailService.sendApplicationRejectedEmail(adminUser.email, institute.name, institute.rejectionReason);
+    } catch (err) {
+      console.error('Failed to send application rejected email:', err);
+    }
+  }
 
   return institute;
 };

@@ -1,8 +1,12 @@
 import dotenv from 'dotenv';
 import app from './src/app.js';
 import connectDB from './src/config/db.js';
+import { validateEnv } from './src/config/envValidator.js';
 
 dotenv.config();
+
+// Validate critical environment variables before starting
+validateEnv();
 
 const PORT = process.env.PORT || 5000;
 

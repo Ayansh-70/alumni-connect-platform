@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
 import alumniProfileRoutes from './routes/alumniProfileRoutes.js';
 import alumniConnectionRoutes from './routes/alumniConnectionRoutes.js';
 import alumniAnnouncementRoutes from './routes/alumniAnnouncementRoutes.js';
@@ -26,9 +27,23 @@ import studentProfileRoutes from './routes/studentProfileRoutes.js';
 
 const app = express();
 
+// Trust reverse proxy for rate limiting and IP detection (e.g. Render, Railway, Heroku)
+app.set('trust proxy', 1);
+
+// Disable X-Powered-By header for security
+app.disable('x-powered-by');
+
+// Configure Helmet for security, keeping compatibility with the Vite frontend
+app.use(helmet({ crossOriginResourcePolicy: false }));
+
+// Multi-origin CORS support
+const corsOrigins = process.env.CLIENT_URL 
+  ? process.env.CLIENT_URL.split(',').map(url => url.trim())
+  : ['http://localhost:5173'];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: corsOrigins,
     credentials: true
   })
 );

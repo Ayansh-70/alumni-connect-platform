@@ -1,4 +1,4 @@
-import resendProvider from './providers/resendProvider.js';
+import smtpProvider from './providers/smtpProvider.js';
 import {
   applicationApprovedTemplate,
   applicationReceivedTemplate,
@@ -58,6 +58,5 @@ class EmailService {
   }
 }
 
-// Export a singleton instance using Resend as the default provider
-// To switch providers in the future, just swap resendProvider with another provider
-export default new EmailService(resendProvider);
+// Export a singleton instance using SMTP as the provider
+export default new EmailService(smtpProvider);

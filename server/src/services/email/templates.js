@@ -140,3 +140,22 @@ export const applicationRejectedTemplate = (instituteName, reason) => {
   `;
   return baseTemplate('Institute Application Update', content);
 };
+
+export const welcomeEmailTemplate = (name, role, instituteName, email, password, loginUrl) => {
+  const content = `
+    <h2>Welcome to AlumniConnect!</h2>
+    <p>Hello <strong>${name}</strong>,</p>
+    <p>An administrator at <strong>${instituteName}</strong> has created a new <strong>${role}</strong> account for you on AlumniConnect.</p>
+    <p>You can use the following credentials to log in for the first time:</p>
+    <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; margin: 16px 0;">
+      <p style="margin: 4px 0;"><strong>Email:</strong> ${email}</p>
+      <p style="margin: 4px 0;"><strong>Temporary Password:</strong> ${password}</p>
+    </div>
+    <div style="text-align: center;">
+      <a href="${loginUrl}" class="button">Log In to Your Account</a>
+    </div>
+    <p style="color: #b91c1c; font-weight: 600; margin-top: 24px;">Security Notice: You will be required to change your temporary password immediately upon your first successful login.</p>
+    <p>We look forward to seeing you on the platform!</p>
+  `;
+  return baseTemplate('Welcome to AlumniConnect', content);
+};

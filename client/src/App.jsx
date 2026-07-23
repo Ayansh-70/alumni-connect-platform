@@ -38,6 +38,7 @@ import StudentProfilePage from './pages/student/StudentProfilePage.jsx';
 import InstituteRequestsPage from './pages/superAdmin/InstituteRequestsPage.jsx';
 import ForgotPasswordPage from './pages/public/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/public/ResetPasswordPage.jsx';
+import ForcePasswordChangePage from './pages/public/ForcePasswordChangePage.jsx';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
         <Route path="reset-password/:token" element={<ResetPasswordPage />} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="force-password-change" element={<ForcePasswordChangePage />} />
           <Route path="notifications" element={<NotificationsPage />} />
 
           <Route element={<RoleRoute allowedRoles={['SUPER_ADMIN']} />}>

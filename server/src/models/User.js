@@ -56,6 +56,10 @@ const userSchema = new mongoose.Schema(
       enum: Object.values(USER_STATUSES),
       default: USER_STATUSES.ACTIVE
     },
+    mustChangePassword: {
+      type: Boolean,
+      default: false
+    },
     resetPasswordToken: {
       type: String,
       default: null

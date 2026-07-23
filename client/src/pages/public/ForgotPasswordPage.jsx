@@ -60,7 +60,7 @@ function ForgotPasswordPage() {
           ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>
               {errorMessage && (
-                <div className="animate-fadeInUp alert-error">
+                <div className="animate-fadeInUp alert-error" role="alert" aria-live="polite">
                   {errorMessage}
                 </div>
               )}
@@ -81,6 +81,7 @@ function ForgotPasswordPage() {
                       setEmail(e.target.value);
                       if (errorMessage) setErrorMessage('');
                     }}
+                    disabled={isSubmitting}
                     className="field-control"
                     placeholder="Enter your registered email"
                   />

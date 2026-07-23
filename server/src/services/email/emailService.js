@@ -4,7 +4,8 @@ import {
   applicationReceivedTemplate,
   applicationRejectedTemplate,
   forgotPasswordTemplate,
-  passwordChangedTemplate
+  passwordChangedTemplate,
+  welcomeEmailTemplate
 } from './templates.js';
 
 class EmailService {
@@ -53,6 +54,22 @@ class EmailService {
     return this.provider.sendEmail({
       to: email,
       subject: 'AlumniConnect - Institute Application Update',
+      html
+    });
+  }
+
+  async sendWelcomeEmail(user, temporaryPassword, loginUrl) {
+    const html = welcomeEmailTemplate(
+      user.name,
+      user.role,
+      user.institute?.name || 'your institute',
+      user.email,
+      temporaryPassword,
+      loginUrl
+    );
+    return this.provider.sendEmail({
+      to: user.email,
+      subject: 'Welcome to AlumniConnect - Your Account Details',
       html
     });
   }

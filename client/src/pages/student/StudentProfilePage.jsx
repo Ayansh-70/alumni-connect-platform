@@ -124,6 +124,7 @@ function StudentProfilePage() {
                   name="branch"
                   value={formData.branch}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="Computer Science"
                 />
@@ -134,6 +135,7 @@ function StudentProfilePage() {
                   name="batch"
                   value={formData.batch}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="2026"
                 />
@@ -144,6 +146,7 @@ function StudentProfilePage() {
                   name="semester"
                   value={formData.semester}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="6"
                 />
@@ -154,6 +157,7 @@ function StudentProfilePage() {
                   name="rollNumber"
                   value={formData.rollNumber}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="CS2026-014"
                 />
@@ -166,6 +170,7 @@ function StudentProfilePage() {
                 name="skills"
                 value={formData.skills}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
                 placeholder="React, Node.js, MongoDB"
               />
@@ -177,6 +182,7 @@ function StudentProfilePage() {
                 name="interests"
                 value={formData.interests}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
                 placeholder="Web development, AI, product design"
               />
@@ -188,6 +194,7 @@ function StudentProfilePage() {
                 name="careerGoals"
                 value={formData.careerGoals}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 rows="3"
                 className="field-control mt-2"
                 placeholder="Describe the kind of roles or growth you are aiming for."
@@ -200,6 +207,7 @@ function StudentProfilePage() {
                 name="bio"
                 value={formData.bio}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 rows="4"
                 className="field-control mt-2"
                 placeholder="Write a short introduction."
@@ -213,6 +221,7 @@ function StudentProfilePage() {
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="Bengaluru, India"
                 />
@@ -223,6 +232,7 @@ function StudentProfilePage() {
                   name="linkedInUrl"
                   value={formData.linkedInUrl}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="https://linkedin.com/in/username"
                 />
@@ -233,6 +243,7 @@ function StudentProfilePage() {
                   name="githubUrl"
                   value={formData.githubUrl}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="https://github.com/username"
                 />
@@ -243,23 +254,15 @@ function StudentProfilePage() {
                   name="portfolioUrl"
                   value={formData.portfolioUrl}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="https://yourportfolio.com"
                 />
               </label>
             </div>
 
-            {errorMessage ? (
-              <p className="alert-error">
-                {errorMessage}
-              </p>
-            ) : null}
-
-            {successMessage ? (
-              <p className="alert-success">
-                {successMessage}
-              </p>
-            ) : null}
+            {errorMessage && <p className="alert-error" role="alert" aria-live="polite">{errorMessage}</p>}
+            {successMessage && <p className="alert-success" role="alert" aria-live="polite">{successMessage}</p>}
 
             <button
               type="submit"

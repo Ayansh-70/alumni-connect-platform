@@ -11,6 +11,7 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -66,6 +67,7 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
             type="text"
             value={formData.name}
             onChange={handleChange}
+            disabled={isSubmitting}
             className="field-control mt-2"
             placeholder="Enter full name"
           />
@@ -81,32 +83,39 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
             type="email"
             value={formData.email}
             onChange={handleChange}
+            disabled={isSubmitting}
             className="field-control mt-2"
             placeholder="user@institute.edu"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700" htmlFor="password">
-            Temporary password
-          </label>
+          <div className="flex justify-between items-center">
+            <label className="block text-sm font-medium text-slate-700" htmlFor="password">
+              Temporary password
+            </label>
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
           <input
             id="password"
             name="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={formData.password}
             onChange={handleChange}
+            disabled={isSubmitting}
             className="field-control mt-2"
             placeholder="Minimum 6 characters"
           />
         </div>
 
         {formError ? (
-          <p className="alert-error">{formError}</p>
+          <p className="alert-error" role="alert" aria-live="polite">{formError}</p>
         ) : null}
 
         {successMessage ? (
-          <p className="alert-success">{successMessage}</p>
+          <p className="alert-success" role="alert" aria-live="polite">{successMessage}</p>
         ) : null}
 
         <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-2">

@@ -78,7 +78,7 @@ function ResetPasswordPage() {
           ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>
               {errorMessage && (
-                <div className="animate-fadeInUp alert-error">
+                <div className="animate-fadeInUp alert-error" role="alert" aria-live="polite">
                   {errorMessage}
                 </div>
               )}
@@ -100,6 +100,7 @@ function ResetPasswordPage() {
                     required
                     value={formData.password}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control"
                   />
                 </div>
@@ -118,6 +119,7 @@ function ResetPasswordPage() {
                     required
                     value={formData.confirmPassword}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control"
                   />
                 </div>

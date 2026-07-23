@@ -20,4 +20,9 @@ const resetPasswordRequest = async (token, password) => {
   return response.data;
 };
 
-export { forgotPasswordRequest, getCurrentUserRequest, loginRequest, resetPasswordRequest };
+const changePasswordRequest = async (payload) => {
+  const response = await httpClient.post('/auth/change-password', payload);
+  return response.data;
+};
+
+export { changePasswordRequest, forgotPasswordRequest, getCurrentUserRequest, loginRequest, resetPasswordRequest };

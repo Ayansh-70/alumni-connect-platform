@@ -129,6 +129,7 @@ function OpportunityApprovalsPage() {
                 <textarea
                   value={rejectionReasons[opportunity._id] || ''}
                   onChange={(event) => handleReasonChange(opportunity._id, event.target.value)}
+                  disabled={activeOpportunityId === opportunity._id}
                   rows="3"
                   className="field-control mt-4"
                   placeholder="Enter a rejection reason if needed."

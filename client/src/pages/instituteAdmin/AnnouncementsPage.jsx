@@ -155,6 +155,7 @@ function AnnouncementsPage() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
+                disabled={Boolean(activeId)}
                 className="field-control mt-2"
               />
             </label>
@@ -164,6 +165,7 @@ function AnnouncementsPage() {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
+                disabled={Boolean(activeId)}
                 className="field-control mt-2"
               >
                 {CATEGORIES.map((category) => (
@@ -179,6 +181,7 @@ function AnnouncementsPage() {
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
+                disabled={Boolean(activeId)}
                 rows="4"
                 className="field-control mt-2"
               />
@@ -189,6 +192,7 @@ function AnnouncementsPage() {
                 name="audience"
                 value={formData.audience}
                 onChange={handleChange}
+                disabled={Boolean(activeId)}
                 className="field-control mt-2"
               >
                 {AUDIENCES.map((audience) => (
@@ -201,11 +205,11 @@ function AnnouncementsPage() {
           </div>
 
           {errorMessage ? (
-            <p className="alert-error">{errorMessage}</p>
+            <p className="alert-error" role="alert" aria-live="polite">{errorMessage}</p>
           ) : null}
 
           {successMessage ? (
-            <p className="alert-success">{successMessage}</p>
+            <p className="alert-success" role="alert" aria-live="polite">{successMessage}</p>
           ) : null}
 
           <div className="flex flex-wrap gap-3">
@@ -213,7 +217,7 @@ function AnnouncementsPage() {
               {activeId === 'creating' || editingId ? 'Saving...' : 'Create Announcement'}
             </button>
             {editingId ? (
-              <button type="button" onClick={resetForm} className="btn-secondary">
+              <button type="button" onClick={resetForm} disabled={Boolean(activeId)} className="btn-secondary">
                 Cancel Edit
               </button>
             ) : null}
@@ -246,12 +250,12 @@ function AnnouncementsPage() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-3">
-                  <button type="button" onClick={() => handleEdit(announcement)} className="btn-secondary">
+                  <button type="button" onClick={() => handleEdit(announcement)} disabled={Boolean(activeId)} className="btn-secondary">
                     Edit
                   </button>
                   <button
                     type="button"
-                    disabled={activeId === announcement._id}
+                    disabled={activeId === announcement._id || Boolean(activeId)}
                     onClick={() => handleToggle(announcement._id)}
                     className="btn-secondary"
                   >
@@ -259,7 +263,7 @@ function AnnouncementsPage() {
                   </button>
                   <button
                     type="button"
-                    disabled={activeId === announcement._id}
+                    disabled={activeId === announcement._id || Boolean(activeId)}
                     onClick={() => handleDelete(announcement._id)}
                     className="btn-danger"
                   >

@@ -155,7 +155,7 @@ function InstituteRegisterPage() {
       </div>
 
       {errorMessage && (
-        <div className="animate-fadeInUp alert-error mb-6">
+        <div className="animate-fadeInUp alert-error mb-6" role="alert" aria-live="polite">
           {errorMessage}
         </div>
       )}
@@ -169,13 +169,13 @@ function InstituteRegisterPage() {
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="instituteName">
                   Institute Name *
                 </label>
-                <input id="instituteName" name="instituteName" value={formData.instituteName} onChange={handleChange} className="field-control mt-2" placeholder="e.g. Global Tech University" />
+                <input id="instituteName" name="instituteName" value={formData.instituteName} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" placeholder="e.g. Global Tech University" />
               </div>
               <div>
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="instituteType">
                   Institute Type *
                 </label>
-                <select id="instituteType" name="instituteType" value={formData.instituteType} onChange={handleChange} className="field-control mt-2">
+                <select id="instituteType" name="instituteType" value={formData.instituteType} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2">
                   <option value="">Select type...</option>
                   <option value="University">University</option>
                   <option value="College">College</option>
@@ -187,31 +187,31 @@ function InstituteRegisterPage() {
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="website">
                   Website
                 </label>
-                <input id="website" name="website" value={formData.website} onChange={handleChange} className="field-control mt-2" placeholder="https://" />
+                <input id="website" name="website" value={formData.website} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" placeholder="https://" />
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="address">
                   Address *
                 </label>
-                <input id="address" name="address" value={formData.address} onChange={handleChange} className="field-control mt-2" />
+                <input id="address" name="address" value={formData.address} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
               <div>
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="city">
                   City *
                 </label>
-                <input id="city" name="city" value={formData.city} onChange={handleChange} className="field-control mt-2" />
+                <input id="city" name="city" value={formData.city} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
               <div>
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="state">
                   State/Province *
                 </label>
-                <input id="state" name="state" value={formData.state} onChange={handleChange} className="field-control mt-2" />
+                <input id="state" name="state" value={formData.state} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="country">
                   Country *
                 </label>
-                <input id="country" name="country" value={formData.country} onChange={handleChange} className="field-control mt-2" />
+                <input id="country" name="country" value={formData.country} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
             </div>
             <div className="mt-8 flex justify-end">
@@ -228,25 +228,25 @@ function InstituteRegisterPage() {
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="adminName">
                   Full Name *
                 </label>
-                <input id="adminName" name="adminName" value={formData.adminName} onChange={handleChange} className="field-control mt-2" />
+                <input id="adminName" name="adminName" value={formData.adminName} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
               <div>
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="designation">
                   Designation *
                 </label>
-                <input id="designation" name="designation" value={formData.designation} onChange={handleChange} className="field-control mt-2" placeholder="e.g. Dean of Alumni" />
+                <input id="designation" name="designation" value={formData.designation} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" placeholder="e.g. Dean of Alumni" />
               </div>
               <div>
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="officialEmail">
                   Official Email *
                 </label>
-                <input id="officialEmail" name="officialEmail" type="email" value={formData.officialEmail} onChange={handleChange} className="field-control mt-2" />
+                <input id="officialEmail" name="officialEmail" type="email" value={formData.officialEmail} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
               <div>
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="phone">
                   Phone Number *
                 </label>
-                <input id="phone" name="phone" value={formData.phone} onChange={handleChange} className="field-control mt-2" />
+                <input id="phone" name="phone" value={formData.phone} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
               
               <div className="sm:col-span-2 mt-4">
@@ -258,7 +258,7 @@ function InstituteRegisterPage() {
                     {showPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
-                <input id="password" name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange} className="field-control mt-2" />
+                <input id="password" name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
                 
                 <PasswordChecklist password={formData.password} />
               </div>
@@ -267,7 +267,7 @@ function InstituteRegisterPage() {
                 <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="confirmPassword">
                   Confirm Password *
                 </label>
-                <input id="confirmPassword" name="confirmPassword" type={showPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={handleChange} className="field-control mt-2" />
+                <input id="confirmPassword" name="confirmPassword" type={showPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={handleChange} disabled={isSubmitting} className="field-control mt-2" />
               </div>
             </div>
             
@@ -287,7 +287,7 @@ function InstituteRegisterPage() {
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/50">
                 <div className="flex justify-between items-center mb-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">Institute Information</h4>
-                  <button type="button" onClick={() => setCurrentStep(1)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">Edit</button>
+                  <button type="button" onClick={() => setCurrentStep(1)} disabled={isSubmitting} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Edit</button>
                 </div>
                 <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 text-sm">
                   <div>
@@ -314,7 +314,7 @@ function InstituteRegisterPage() {
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/50">
                 <div className="flex justify-between items-center mb-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">Administrator Information</h4>
-                  <button type="button" onClick={() => setCurrentStep(2)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">Edit</button>
+                  <button type="button" onClick={() => setCurrentStep(2)} disabled={isSubmitting} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Edit</button>
                 </div>
                 <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 text-sm">
                   <div>

@@ -136,6 +136,7 @@ function AlumniVerificationPage() {
                 <textarea
                   value={rejectionReasons[profile._id] || ''}
                   onChange={(event) => handleReasonChange(profile._id, event.target.value)}
+                  disabled={activeProfileId === profile._id}
                   rows="3"
                   className="field-control mt-4"
                   placeholder="Enter a rejection reason if you need to reject this alumni profile."

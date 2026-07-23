@@ -10,6 +10,11 @@ const getInstituteRequestsRequest = async () => {
   return response.data;
 };
 
+const getInstitutesRequest = async () => {
+  const response = await httpClient.get('/institutes');
+  return response.data;
+};
+
 const approveInstituteRequest = async (instituteId) => {
   const response = await httpClient.patch(`/institutes/${instituteId}/approve`);
   return response.data;
@@ -25,6 +30,7 @@ const rejectInstituteRequest = async (instituteId, rejectionReason) => {
 export {
   approveInstituteRequest,
   getInstituteRequestsRequest,
+  getInstitutesRequest,
   registerInstituteRequest,
   rejectInstituteRequest
 };

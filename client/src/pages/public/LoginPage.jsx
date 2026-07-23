@@ -12,6 +12,7 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   if (isLoading) {
     return (
@@ -80,6 +81,7 @@ function LoginPage() {
             id="email"
             type="email"
             value={email}
+            disabled={isSubmitting}
             onChange={(event) => setEmail(event.target.value)}
             className="field-control mt-2 border-white/10 bg-white/10 text-white placeholder:text-slate-500 focus:bg-white/15"
             placeholder="you@example.com"
@@ -90,14 +92,20 @@ function LoginPage() {
             <label className="text-slate-300" htmlFor="password">
               Password
             </label>
-            <Link to="/forgot-password" className="text-[0.8rem] font-medium text-brand-400 hover:text-brand-300 transition-colors">
-              Forgot password?
-            </Link>
+            <div className="flex gap-4">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-400 hover:text-brand-300 transition-colors">
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+              <Link to="/forgot-password" className="text-[0.8rem] font-medium text-brand-400 hover:text-brand-300 transition-colors">
+                Forgot password?
+              </Link>
+            </div>
           </div>
           <input
             id="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={password}
+            disabled={isSubmitting}
             onChange={(event) => setPassword(event.target.value)}
             className="field-control mt-2 border-white/10 bg-white/10 text-white placeholder:text-slate-500 focus:bg-white/15"
             placeholder="Enter your password"
@@ -105,7 +113,7 @@ function LoginPage() {
           />
 
           {formError ? (
-            <p className="alert-error mt-4">{formError}</p>
+            <p className="alert-error mt-4" role="alert" aria-live="polite">{formError}</p>
           ) : null}
 
           <button type="submit" disabled={isSubmitting} className="btn-primary mt-6 w-full py-3.5">

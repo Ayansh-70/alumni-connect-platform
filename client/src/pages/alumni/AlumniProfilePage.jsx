@@ -159,6 +159,7 @@ function AlumniProfilePage() {
                     name="batch"
                     value={formData.batch}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="2019"
                   />
@@ -169,6 +170,7 @@ function AlumniProfilePage() {
                     name="currentCompany"
                     value={formData.currentCompany}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="Acme Technologies"
                   />
@@ -179,6 +181,7 @@ function AlumniProfilePage() {
                     name="currentRole"
                     value={formData.currentRole}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="Software Engineer"
                   />
@@ -192,6 +195,7 @@ function AlumniProfilePage() {
                     step="0.1"
                     value={formData.experienceYears}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="3"
                   />
@@ -202,6 +206,7 @@ function AlumniProfilePage() {
                     name="domain"
                     value={formData.domain}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="Backend, Data, Product"
                   />
@@ -214,6 +219,7 @@ function AlumniProfilePage() {
                   name="skills"
                   value={formData.skills}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   className="field-control mt-2"
                   placeholder="Java, Spring Boot, AWS"
                 />
@@ -225,6 +231,7 @@ function AlumniProfilePage() {
                   name="bio"
                   value={formData.bio}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   rows="4"
                   className="field-control mt-2"
                   placeholder="Share your experience and the kind of support you can offer."
@@ -238,6 +245,7 @@ function AlumniProfilePage() {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="Hyderabad, India"
                   />
@@ -248,6 +256,7 @@ function AlumniProfilePage() {
                     name="linkedInUrl"
                     value={formData.linkedInUrl}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="https://linkedin.com/in/username"
                   />
@@ -258,6 +267,7 @@ function AlumniProfilePage() {
                     name="githubUrl"
                     value={formData.githubUrl}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="https://github.com/username"
                   />
@@ -268,6 +278,7 @@ function AlumniProfilePage() {
                     name="portfolioUrl"
                     value={formData.portfolioUrl}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="field-control mt-2"
                     placeholder="https://yourportfolio.com"
                   />
@@ -281,6 +292,7 @@ function AlumniProfilePage() {
                     name="canProvideReferral"
                     checked={formData.canProvideReferral}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-200"
                   />
                   I can provide referrals
@@ -291,6 +303,7 @@ function AlumniProfilePage() {
                     name="canMentor"
                     checked={formData.canMentor}
                     onChange={handleChange}
+                    disabled={isSubmitting}
                     className="h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-200"
                   />
                   I can mentor students
@@ -298,13 +311,13 @@ function AlumniProfilePage() {
               </div>
 
               {errorMessage ? (
-                <p className="alert-error">
+                <p className="alert-error" role="alert" aria-live="polite">
                   {errorMessage}
                 </p>
               ) : null}
 
               {successMessage ? (
-                <p className="alert-success">
+                <p className="alert-success" role="alert" aria-live="polite">
                   {successMessage}
                 </p>
               ) : null}

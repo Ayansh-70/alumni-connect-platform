@@ -164,49 +164,49 @@ function EventsPage() {
           <div className="grid gap-4 md:grid-cols-2">
             <label className="text-sm font-medium text-slate-700">
               Title
-              <input name="title" value={formData.title} onChange={handleChange} className="field-control mt-2" />
+              <input name="title" disabled={Boolean(activeId)} value={formData.title} onChange={handleChange} className="field-control mt-2" />
             </label>
             <label className="text-sm font-medium text-slate-700">
               Event type
-              <select name="eventType" value={formData.eventType} onChange={handleChange} className="field-control mt-2">
+              <select name="eventType" disabled={Boolean(activeId)} value={formData.eventType} onChange={handleChange} className="field-control mt-2">
                 {EVENT_TYPES.map((eventType) => <option key={eventType} value={eventType}>{eventType}</option>)}
               </select>
             </label>
             <label className="text-sm font-medium text-slate-700 md:col-span-2">
               Description
-              <textarea name="description" value={formData.description} onChange={handleChange} rows="4" className="field-control mt-2" />
+              <textarea name="description" disabled={Boolean(activeId)} value={formData.description} onChange={handleChange} rows="4" className="field-control mt-2" />
             </label>
             <label className="text-sm font-medium text-slate-700">
               Date
-              <input name="date" type="date" value={formData.date} onChange={handleChange} className="field-control mt-2" />
+              <input name="date" type="date" disabled={Boolean(activeId)} value={formData.date} onChange={handleChange} className="field-control mt-2" />
             </label>
             <label className="text-sm font-medium text-slate-700">
               Start time
-              <input name="startTime" value={formData.startTime} onChange={handleChange} className="field-control mt-2" placeholder="10:00 AM" />
+              <input name="startTime" disabled={Boolean(activeId)} value={formData.startTime} onChange={handleChange} className="field-control mt-2" placeholder="10:00 AM" />
             </label>
             <label className="text-sm font-medium text-slate-700">
               End time
-              <input name="endTime" value={formData.endTime} onChange={handleChange} className="field-control mt-2" placeholder="12:00 PM" />
+              <input name="endTime" disabled={Boolean(activeId)} value={formData.endTime} onChange={handleChange} className="field-control mt-2" placeholder="12:00 PM" />
             </label>
             <label className="text-sm font-medium text-slate-700">
               Location
-              <input name="location" value={formData.location} onChange={handleChange} className="field-control mt-2" />
+              <input name="location" disabled={Boolean(activeId)} value={formData.location} onChange={handleChange} className="field-control mt-2" />
             </label>
             <label className="text-sm font-medium text-slate-700">
               Mode
-              <select name="mode" value={formData.mode} onChange={handleChange} className="field-control mt-2">
+              <select name="mode" disabled={Boolean(activeId)} value={formData.mode} onChange={handleChange} className="field-control mt-2">
                 {MODES.map((mode) => <option key={mode} value={mode}>{mode}</option>)}
               </select>
             </label>
             <label className="text-sm font-medium text-slate-700">
               Audience
-              <select name="audience" value={formData.audience} onChange={handleChange} className="field-control mt-2">
+              <select name="audience" disabled={Boolean(activeId)} value={formData.audience} onChange={handleChange} className="field-control mt-2">
                 {AUDIENCES.map((audience) => <option key={audience} value={audience}>{audience}</option>)}
               </select>
             </label>
             <label className="text-sm font-medium text-slate-700 md:col-span-2">
               Meeting link
-              <input name="meetingLink" value={formData.meetingLink} onChange={handleChange} className="field-control mt-2" placeholder="https://meet.example.com" />
+              <input name="meetingLink" disabled={Boolean(activeId)} value={formData.meetingLink} onChange={handleChange} className="field-control mt-2" placeholder="https://meet.example.com" />
             </label>
           </div>
 
@@ -215,10 +215,10 @@ function EventsPage() {
 
           <div className="flex flex-wrap gap-3">
             <button type="submit" disabled={Boolean(activeId)} className="btn-primary">
-              {activeId === 'creating' || editingId ? 'Saving...' : 'Create Event'}
+              {isSubmitting ? 'Saving...' : (editingId ? 'Update Event' : 'Create Event')}
             </button>
             {editingId ? (
-              <button type="button" onClick={resetForm} className="btn-secondary">
+              <button type="button" disabled={Boolean(activeId)} onClick={resetForm} className="btn-secondary">
                 Cancel Edit
               </button>
             ) : null}
@@ -259,13 +259,13 @@ function EventsPage() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-3">
-                  <button type="button" onClick={() => handleEdit(eventItem)} className="btn-secondary">
+                  <button type="button" disabled={Boolean(activeId)} onClick={() => handleEdit(eventItem)} className="btn-secondary">
                     Edit
                   </button>
-                  <button type="button" disabled={activeId === eventItem._id} onClick={() => handleToggle(eventItem._id)} className="btn-secondary">
+                  <button type="button" disabled={activeId === eventItem._id || Boolean(activeId)} onClick={() => handleToggle(eventItem._id)} className="btn-secondary">
                     {eventItem.isActive ? 'Deactivate' : 'Activate'}
                   </button>
-                  <button type="button" disabled={activeId === eventItem._id} onClick={() => handleDelete(eventItem._id)} className="btn-danger">
+                  <button type="button" disabled={activeId === eventItem._id || Boolean(activeId)} onClick={() => handleDelete(eventItem._id)} className="btn-danger">
                     Delete
                   </button>
                 </div>

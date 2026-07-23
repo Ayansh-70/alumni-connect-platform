@@ -12,6 +12,7 @@ import instituteAdminAlumniProfileRoutes from './routes/instituteAdminAlumniProf
 import instituteAdminAnnouncementRoutes from './routes/instituteAdminAnnouncementRoutes.js';
 import instituteAdminEventRoutes from './routes/instituteAdminEventRoutes.js';
 import instituteAdminOpportunityRoutes from './routes/instituteAdminOpportunityRoutes.js';
+import instituteAdminDashboardRoutes from './routes/instituteAdminDashboardRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
@@ -72,6 +73,7 @@ app.use('/api/institute-admin/alumni-profiles', instituteAdminAlumniProfileRoute
 app.use('/api/institute-admin/announcements', instituteAdminAnnouncementRoutes);
 app.use('/api/institute-admin/events', instituteAdminEventRoutes);
 app.use('/api/institute-admin/opportunities', instituteAdminOpportunityRoutes);
+app.use('/api/institute-admin/dashboard', instituteAdminDashboardRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

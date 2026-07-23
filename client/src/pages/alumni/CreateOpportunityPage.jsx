@@ -73,8 +73,9 @@ function CreateOpportunityPage() {
               name="title"
               value={formData.title}
               onChange={handleChange}
+              disabled={isSubmitting}
               className="field-control mt-2"
-              placeholder="Software Engineering Internship"
+              placeholder="e.g. Frontend Developer"
             />
           </label>
 
@@ -84,9 +85,10 @@ function CreateOpportunityPage() {
               name="description"
               value={formData.description}
               onChange={handleChange}
+              disabled={isSubmitting}
               rows="4"
               className="field-control mt-2"
-              placeholder="Describe the opportunity and the role."
+              placeholder="Detail the responsibilities and requirements..."
             />
           </label>
 
@@ -97,6 +99,7 @@ function CreateOpportunityPage() {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
               >
                 {OPPORTUNITY_TYPES.map((type) => (
@@ -112,6 +115,7 @@ function CreateOpportunityPage() {
                 name="mode"
                 value={formData.mode}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
               >
                 {OPPORTUNITY_MODES.map((mode) => (
@@ -127,8 +131,9 @@ function CreateOpportunityPage() {
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
-                placeholder="Tech Company"
+                placeholder="e.g. Google"
               />
             </label>
             <label className="text-sm font-medium text-slate-700">
@@ -137,8 +142,9 @@ function CreateOpportunityPage() {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
-                placeholder="Backend Intern"
+                placeholder="e.g. SDE-1"
               />
             </label>
             <label className="text-sm font-medium text-slate-700">
@@ -147,8 +153,9 @@ function CreateOpportunityPage() {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
-                placeholder="Bengaluru"
+                placeholder="e.g. Bangalore"
               />
             </label>
             <label className="text-sm font-medium text-slate-700">
@@ -158,6 +165,7 @@ function CreateOpportunityPage() {
                 type="date"
                 value={formData.deadline}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="field-control mt-2"
               />
             </label>
@@ -169,9 +177,10 @@ function CreateOpportunityPage() {
               name="eligibility"
               value={formData.eligibility}
               onChange={handleChange}
-              rows="3"
+              disabled={isSubmitting}
+              rows="2"
               className="field-control mt-2"
-              placeholder="Eligible branches, batches, or qualifications"
+              placeholder="e.g. 2024 graduates with minimum 7.5 CGPA"
             />
           </label>
 
@@ -181,8 +190,9 @@ function CreateOpportunityPage() {
               name="skillsRequired"
               value={formData.skillsRequired}
               onChange={handleChange}
+              disabled={isSubmitting}
               className="field-control mt-2"
-              placeholder="React, Node.js, SQL"
+              placeholder="React, Node.js, MongoDB"
             />
           </label>
 
@@ -192,22 +202,14 @@ function CreateOpportunityPage() {
               name="applicationLink"
               value={formData.applicationLink}
               onChange={handleChange}
+              disabled={isSubmitting}
               className="field-control mt-2"
               placeholder="https://company.com/apply"
             />
           </label>
 
-          {errorMessage ? (
-            <p className="alert-error">
-              {errorMessage}
-            </p>
-          ) : null}
-
-          {successMessage ? (
-            <p className="alert-success">
-              {successMessage}
-            </p>
-          ) : null}
+          {errorMessage && <p className="alert-error" role="alert" aria-live="polite">{errorMessage}</p>}
+          {successMessage && <p className="alert-success" role="alert" aria-live="polite">{successMessage}</p>}
 
           <button
             type="submit"

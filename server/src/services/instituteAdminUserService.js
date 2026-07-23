@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
+import emailService from './email/emailService.js';
 
 const MANAGEABLE_ROLES = [USER_ROLES.STUDENT, USER_ROLES.ALUMNI];
 const MANAGEABLE_STATUSES = [
@@ -73,8 +74,21 @@ const createInstituteUser = async (adminUser, payload, role) => {
     password: payload.password.trim(),
     role,
     institute: adminUser.institute,
-    status: USER_STATUSES.ACTIVE
+    status: USER_STATUSES.ACTIVE,
+    mustChangePassword: true
   });
+
+  // Populate institute name for the email
+  const userWithInstitute = await User.findById(user._id).populate('institute', 'name');
+  
+  const loginUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/login`;
+  
+  try {
+    await emailService.sendWelcomeEmail(userWithInstitute, payload.password.trim(), loginUrl);
+  } catch (error) {
+    console.error(`Failed to send welcome email to ${normalizedEmail}:`, error);
+    // Non-fatal error, continue user creation
+  }
 
   return sanitizeUser(user);
 };

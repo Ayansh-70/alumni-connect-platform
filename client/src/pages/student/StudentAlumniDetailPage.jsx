@@ -150,7 +150,7 @@ function StudentAlumniDetailPage() {
             Loading alumni details...
           </div>
         ) : errorMessage ? (
-          <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+          <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" role="alert" aria-live="polite">
             {errorMessage}
           </p>
         ) : alumni ? (
@@ -211,19 +211,19 @@ function StudentAlumniDetailPage() {
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                   rows="4"
-                  disabled={Boolean(alumni.connectionRequest)}
+                  disabled={isSubmitting || Boolean(alumni.connectionRequest)}
                   className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-not-allowed disabled:bg-slate-100 dark:bg-slate-900 dark:border-slate-700"
                   placeholder="Write an optional message about why you want to connect."
                 />
 
                 {errorMessage ? (
-                  <p className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                  <p className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" role="alert" aria-live="polite">
                     {errorMessage}
                   </p>
                 ) : null}
 
                 {successMessage ? (
-                  <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                  <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700" role="alert" aria-live="polite">
                     {successMessage}
                   </p>
                 ) : null}
@@ -262,7 +262,8 @@ function StudentAlumniDetailPage() {
                     name="type"
                     value={guidanceForm.type}
                     onChange={handleGuidanceChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700"
+                    disabled={isGuidanceSubmitting}
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100"
                   >
                     {GUIDANCE_REQUEST_TYPES.map((type) => (
                       <option key={type} value={type}>
@@ -278,7 +279,8 @@ function StudentAlumniDetailPage() {
                     name="title"
                     value={guidanceForm.title}
                     onChange={handleGuidanceChange}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700"
+                    disabled={isGuidanceSubmitting}
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100"
                     placeholder="Need help with internship preparation"
                   />
                 </label>
@@ -289,20 +291,21 @@ function StudentAlumniDetailPage() {
                     name="message"
                     value={guidanceForm.message}
                     onChange={handleGuidanceChange}
+                    disabled={isGuidanceSubmitting}
                     rows="4"
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700"
+                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100"
                     placeholder="Explain what kind of help you need and any context that would help the alumni respond."
                   />
                 </label>
 
                 {guidanceErrorMessage ? (
-                  <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                  <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" role="alert" aria-live="polite">
                     {guidanceErrorMessage}
                   </p>
                 ) : null}
 
                 {guidanceSuccessMessage ? (
-                  <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                  <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700" role="alert" aria-live="polite">
                     {guidanceSuccessMessage}
                   </p>
                 ) : null}

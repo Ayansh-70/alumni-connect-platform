@@ -203,4 +203,32 @@ const resetPassword = async (resetToken, newPassword) => {
   return true;
 };
 
-export { forgotPassword, getUserById, loginUser, registerUser, resetPassword };
+const changePassword = async (userId, currentPassword, newPassword) => {
+  if (!currentPassword || !newPassword) {
+    const error = new Error('Current password and new password are required.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (newPassword.trim().length < 6) {
+    const error = new Error('New password must be at least 6 characters.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const user = await User.findById(userId).select('+password');
+
+  if (!user || !(await user.matchPassword(currentPassword))) {
+    const error = new Error('Invalid current password.');
+    error.statusCode = 401;
+    throw error;
+  }
+
+  user.password = newPassword.trim();
+  user.mustChangePassword = false;
+  await user.save();
+
+  return sanitizeUser(user);
+};
+
+export { changePassword, forgotPassword, getUserById, loginUser, registerUser, resetPassword };

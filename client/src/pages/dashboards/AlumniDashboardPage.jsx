@@ -1,6 +1,14 @@
+import { useState, useEffect } from 'react';
 import DashboardActionGrid from '../../components/ui/DashboardActionGrid.jsx';
 import DashboardMetricGrid from '../../components/ui/DashboardMetricGrid.jsx';
 import PageHeader from '../../components/ui/PageHeader.jsx';
+import LoadingState from '../../components/ui/LoadingState.jsx';
+import { getAlumniProfileRequest } from '../../api/alumniProfiles.js';
+import { getAlumniConnectionRequestsRequest } from '../../api/alumniConnections.js';
+import { getAlumniGuidanceRequestsRequest } from '../../api/alumniGuidanceRequests.js';
+import { getAlumniOpportunitiesRequest } from '../../api/alumniOpportunities.js';
+import { getAlumniAnnouncementsRequest } from '../../api/alumniAnnouncements.js';
+import { getAlumniEventsRequest } from '../../api/alumniEvents.js';
 
 function AlumniDashboardPage() {
   const actions = [
@@ -47,12 +55,67 @@ function AlumniDashboardPage() {
       to: '/alumni/events'
     }
   ];
-  const metrics = [
-    { label: 'Profile', value: '01', caption: 'Verified' },
-    { label: 'Requests', value: '02', caption: 'Queues' },
-    { label: 'Sharing', value: '02', caption: 'Tools' },
-    { label: 'Campus', value: '02', caption: 'Feeds' }
-  ];
+  const [stats, setStats] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const refreshDashboardStats = async () => {
+    setIsLoading(true);
+    setErrorMessage('');
+    try {
+      const [profileRes, connectionsRes, guidanceRes, oppsRes, announcementsRes, eventsRes] = await Promise.all([
+        getAlumniProfileRequest(),
+        getAlumniConnectionRequestsRequest(),
+        getAlumniGuidanceRequestsRequest(),
+        getAlumniOpportunitiesRequest(),
+        getAlumniAnnouncementsRequest(),
+        getAlumniEventsRequest()
+      ]);
+
+      const profile = profileRes.data?.profile;
+      const connections = connectionsRes.data?.requests || [];
+      const guidance = guidanceRes.data?.requests || [];
+      const opps = oppsRes.data?.opportunities || [];
+      const announcements = announcementsRes.data?.announcements || [];
+      const events = eventsRes.data?.events || [];
+
+      setStats({
+        verificationStatus: profile?.verificationStatus || 'PENDING',
+        pendingRequests: connections.filter(c => c.status === 'PENDING').length + guidance.filter(g => g.status === 'PENDING').length,
+        opportunities: opps.length,
+        campusUpdates: announcements.length + events.length
+      });
+    } catch (error) {
+      if (error.response?.status !== 404) {
+        setErrorMessage(error.userMessage || 'Unable to load dashboard statistics.');
+      }
+      setStats({ verificationStatus: 'PENDING', pendingRequests: 0, opportunities: 0, campusUpdates: 0 });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshDashboardStats();
+  }, []);
+
+  const formatCount = (count) => {
+    if (errorMessage) return '--';
+    if (count === 0) return '00';
+    return count.toString().padStart(2, '0');
+  };
+
+  const getMetrics = () => {
+    if (!stats) return [];
+    return [
+      { label: 'Profile', value: stats.verificationStatus, caption: 'Status' },
+      { label: 'Pending Requests', value: formatCount(stats.pendingRequests), caption: 'Connections & Guidance' },
+      { label: 'My Opportunities', value: formatCount(stats.opportunities), caption: 'Posted' },
+      { label: 'Campus Updates', value: formatCount(stats.campusUpdates), caption: 'Announcements & Events' }
+    ];
+  };
+
+  const metrics = getMetrics();
 
   return (
     <div>
@@ -61,7 +124,20 @@ function AlumniDashboardPage() {
         title="Alumni dashboard"
         description="Manage your profile, respond to student outreach, and contribute opportunities and guidance from one polished hub."
       />
-      <DashboardMetricGrid metrics={metrics} />
+      {errorMessage && (
+        <div className="mb-6">
+          <div className="alert-error" role="alert" aria-live="polite">
+            {errorMessage}
+          </div>
+        </div>
+      )}
+      {isLoading ? (
+        <div className="py-12">
+          <LoadingState message="Loading dashboard statistics..." />
+        </div>
+      ) : (
+        <DashboardMetricGrid metrics={metrics} />
+      )}
       <DashboardActionGrid actions={actions} />
     </div>
   );

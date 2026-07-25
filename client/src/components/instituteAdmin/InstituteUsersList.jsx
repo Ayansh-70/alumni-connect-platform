@@ -60,14 +60,14 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
       <section className="surface-card p-6 md:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
+            <p className="inline-flex rounded-full border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
               Institute Members
             </p>
             <h2 className="mt-4 text-2xl font-semibold text-slate-950">{title}</h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">{description}</p>
           </div>
           {pagination ? (
-            <p className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-500">
+            <p className="rounded-full border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 px-3 py-1 text-sm text-slate-500">
               {pagination.total} total {pagination.total === 1 ? 'user' : 'users'}
             </p>
           ) : null}
@@ -89,7 +89,7 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
           <>
             <div className="mt-6 hidden overflow-hidden rounded-[1.5rem] border border-slate-200 lg:block">
               <table className="data-table">
-                <thead className="bg-slate-50/80 text-slate-600">
+                <thead className="bg-slate-50/80 dark:bg-slate-900/80 dark:border-slate-800 text-slate-600">
                   <tr>
                     <th className="px-4 py-3.5 font-medium">Name</th>
                     <th className="px-4 py-3.5 font-medium">Email</th>
@@ -99,9 +99,9 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
                     <th className="px-4 py-3.5 font-medium">Update status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 bg-white">
+                <tbody className="divide-y divide-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800">
                   {users.map((user) => (
-                    <tr key={user._id} className="transition hover:bg-slate-50/80">
+                    <tr key={user._id} className="transition hover:bg-slate-50/80 dark:bg-slate-900/80 dark:border-slate-800">
                       <td className="px-4 py-4">
                         <div>
                           <p className="font-medium text-slate-900">{user.name}</p>

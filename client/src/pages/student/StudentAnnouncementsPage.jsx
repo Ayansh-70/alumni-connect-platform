@@ -45,7 +45,7 @@ function StudentAnnouncementsPage() {
               <article key={announcement._id} className="content-card">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h2 className="text-lg font-semibold text-slate-950">{announcement.title}</h2>
-                  <span className="status-badge border-slate-200 bg-white text-slate-700">{announcement.category}</span>
+                  <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{announcement.category}</span>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{announcement.message}</p>
                 <p className="mt-3 text-xs text-slate-500">Posted on {new Date(announcement.createdAt).toLocaleDateString()}</p>

@@ -174,7 +174,7 @@ function AppLayout() {
     const isLoginPage = location.pathname === '/login';
 
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-slate-100">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 text-slate-950 dark:bg-slate-950 dark:text-slate-100">
         {isLoginPage ? null : (
           <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/75">
             <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 lg:px-6">
@@ -187,16 +187,16 @@ function AppLayout() {
               </Link>
 
               <div className="flex items-center gap-2 text-sm font-semibold">
-                <Link to="/" className="rounded-xl px-3 py-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900">
+                <Link to="/" className="rounded-xl px-3 py-2 text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900">
                   Home
                 </Link>
                 <Link
                   to="/register-institute"
-                  className="hidden rounded-xl px-3 py-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900 sm:inline-flex"
+                  className="hidden rounded-xl px-3 py-2 text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900 sm:inline-flex"
                 >
                   Register
                 </Link>
-                <button type="button" onClick={toggleTheme} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300" aria-label="Toggle theme">
+                <button type="button" onClick={toggleTheme} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300" aria-label="Toggle theme">
                   {theme === 'light' ? <MoonIcon /> : <SunIcon />}
                 </button>
                 <Link to="/login" className="btn-primary px-4 py-2.5">
@@ -224,30 +224,30 @@ function AppLayout() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-950 dark:bg-slate-950 dark:text-slate-100">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-800 dark:border-slate-700 text-slate-950 dark:bg-slate-950 dark:text-slate-100">
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,#f8fafc_0%,#eaf1ff_52%,#f8fafc_100%)] dark:bg-[linear-gradient(180deg,#020617_0%,#0f172a_50%,#020617_100%)]" />
 
-      <aside className={`fixed inset-y-0 left-0 z-40 hidden border-r border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:block ${isCollapsed ? 'w-24' : 'w-72'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-40 hidden border-r border-slate-200/70 bg-white/80 dark:bg-slate-900/80 dark:border-slate-800 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:block ${isCollapsed ? 'w-24' : 'w-72'}`}>
         {sidebar}
       </aside>
 
       {isMobileNavOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <button type="button" className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" onClick={() => setIsMobileNavOpen(false)} aria-label="Close navigation" />
-          <aside className="relative h-full w-[min(22rem,88vw)] border-r border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-950">
+          <aside className="relative h-full w-[min(22rem,88vw)] border-r border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 shadow-2xl dark:border-slate-800 dark:bg-slate-950">
             <Sidebar groups={navigationGroups} isCollapsed={false} onToggle={() => setIsMobileNavOpen(false)} user={user} isMobile />
           </aside>
         </div>
       ) : null}
 
       <div className={isCollapsed ? 'lg:pl-24' : 'lg:pl-72'}>
-        <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80">
+        <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 dark:bg-slate-900/80 dark:border-slate-800 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80">
           <div className="flex h-20 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <button
                 type="button"
                 onClick={() => setIsMobileNavOpen(true)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 lg:hidden"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 lg:hidden"
                 aria-label="Open navigation"
               >
                 <MenuIcon />
@@ -259,11 +259,11 @@ function AppLayout() {
             </div>
 
             <div className="flex items-center gap-2">
-              <button type="button" onClick={toggleTheme} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Toggle theme">
+              <button type="button" onClick={toggleTheme} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Toggle theme">
                 {theme === 'light' ? <MoonIcon /> : <SunIcon />}
               </button>
 
-              <Link to="/notifications" className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Notifications">
+              <Link to="/notifications" className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Notifications">
                 <BellIcon />
                 {unreadNotificationCount > 0 ? (
                   <span className="absolute -right-1 -top-1 min-w-5 rounded-full bg-rose-600 px-1.5 py-0.5 text-center text-[0.65rem] font-black text-white shadow-lg shadow-rose-600/25">
@@ -276,7 +276,7 @@ function AppLayout() {
                 <button
                   type="button"
                   onClick={() => setIsProfileOpen((current) => !current)}
-                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5 pr-3 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
+                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 p-1.5 pr-3 shadow-sm hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
                   aria-expanded={isProfileOpen}
                 >
                   <Avatar name={user.name} />
@@ -284,8 +284,8 @@ function AppLayout() {
                 </button>
 
                 {isProfileOpen ? (
-                  <div className="absolute right-0 top-[calc(100%+0.75rem)] w-72 rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-2xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95">
-                    <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 dark:bg-slate-950/60">
+                  <div className="absolute right-0 top-[calc(100%+0.75rem)] w-72 rounded-2xl border border-slate-200 bg-white/95 dark:bg-slate-900/95 dark:border-slate-800 p-4 shadow-2xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95">
+                    <div className="flex items-center gap-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-3 dark:bg-slate-950/60">
                       <Avatar name={user.name} />
                       <div className="min-w-0">
                         <p className="truncate text-sm font-bold text-slate-950 dark:text-white">{user.name}</p>
@@ -329,7 +329,7 @@ function Sidebar({ groups, isCollapsed, onToggle, user, isMobile = false }) {
             </div>
           ) : null}
         </Link>
-        <button type="button" onClick={onToggle} className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300" aria-label={isMobile ? 'Close navigation' : 'Collapse navigation'}>
+        <button type="button" onClick={onToggle} className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300" aria-label={isMobile ? 'Close navigation' : 'Collapse navigation'}>
           {isMobile ? <CloseIcon /> : <PanelIcon />}
         </button>
       </div>
@@ -354,7 +354,7 @@ function Sidebar({ groups, isCollapsed, onToggle, user, isMobile = false }) {
                       `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
                         isActive
                           ? 'bg-slate-950 text-white shadow-lg shadow-slate-950/10 dark:bg-white dark:text-slate-950'
-                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white'
+                          : 'text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white'
                       } ${isCollapsed ? 'justify-center' : ''}`
                     }
                   >

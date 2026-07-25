@@ -243,8 +243,8 @@ function AnnouncementsPage() {
                     <p className="mt-2 text-sm text-slate-600">{announcement.message}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{announcement.category}</span>
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{announcement.audience}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{announcement.category}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{announcement.audience}</span>
                     <StatusBadge value={announcement.isActive ? 'ACTIVE' : 'INACTIVE'} />
                   </div>
                 </div>

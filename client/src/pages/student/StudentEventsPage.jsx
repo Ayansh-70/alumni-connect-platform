@@ -46,8 +46,8 @@ function StudentEventsPage() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h2 className="text-lg font-semibold text-slate-950">{eventItem.title}</h2>
                   <div className="flex flex-wrap gap-2">
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{eventItem.eventType}</span>
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{eventItem.mode}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{eventItem.eventType}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{eventItem.mode}</span>
                   </div>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{eventItem.description}</p>

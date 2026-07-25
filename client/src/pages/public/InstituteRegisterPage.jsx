@@ -142,7 +142,7 @@ function InstituteRegisterPage() {
             const isCompleted = currentStep > step.id;
             return (
               <div key={step.id} className="relative z-10 flex flex-col items-center">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 ${isActive ? 'border-brand-500 bg-brand-500 text-white shadow-lg shadow-brand-500/30' : isCompleted ? 'border-brand-500 bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400' : 'border-slate-200 bg-white text-slate-400 dark:border-slate-700 dark:bg-slate-900'}`}>
+                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 ${isActive ? 'border-brand-500 bg-brand-500 text-white shadow-lg shadow-brand-500/30' : isCompleted ? 'border-brand-500 bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400' : 'border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-400 dark:border-slate-700 dark:bg-slate-900'}`}>
                   {isCompleted ? '✓' : step.id}
                 </div>
                 <span className={`absolute -bottom-7 w-32 text-center text-[0.65rem] font-bold uppercase tracking-wider ${isActive ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400 dark:text-slate-500'}`}>
@@ -284,7 +284,7 @@ function InstituteRegisterPage() {
             <p className="text-sm leading-6 text-slate-500 dark:text-slate-400">Please review your details before submitting your application.</p>
             
             <div className="space-y-4 mt-6">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/50">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-5 dark:border-slate-800 dark:bg-slate-900/50">
                 <div className="flex justify-between items-center mb-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">Institute Information</h4>
                   <button type="button" onClick={() => setCurrentStep(1)} disabled={isSubmitting} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Edit</button>
@@ -311,7 +311,7 @@ function InstituteRegisterPage() {
                 </dl>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/50">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-5 dark:border-slate-800 dark:bg-slate-900/50">
                 <div className="flex justify-between items-center mb-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">Administrator Information</h4>
                   <button type="button" onClick={() => setCurrentStep(2)} disabled={isSubmitting} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Edit</button>

@@ -37,14 +37,14 @@ function StudentOpportunityDetailPage() {
 
       <Link
         to="/student/opportunities"
-        className="mb-6 inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        className="mb-6 inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800"
       >
         Back to opportunities
       </Link>
 
-      <section className="max-w-3xl rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="max-w-3xl rounded-lg border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 p-6 shadow-sm">
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4 text-sm text-slate-600">
             Loading opportunity details...
           </div>
         ) : errorMessage ? (
@@ -98,7 +98,7 @@ function StudentOpportunityDetailPage() {
             </a>
           </div>
         ) : (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4 text-sm text-slate-600">
             Opportunity details are not available.
           </div>
         )}

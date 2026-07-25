@@ -72,7 +72,7 @@ function DashboardActionGrid({ actions }) {
           <Link
             key={action.to}
             to={action.to}
-            className={`group relative overflow-hidden rounded-[2rem] border border-white/60 dark:border-slate-800/40 bg-white/70 dark:bg-slate-900/70 p-6 md:p-8 shadow-xl shadow-slate-900/5 dark:shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-500/10 dark:hover:shadow-brand-900/20 ${spanClass}`}
+            className={`group relative overflow-hidden rounded-[2rem] border border-white/60 dark:border-slate-800/40 bg-white/70 dark:bg-slate-900/70 dark:border-slate-800 dark:bg-slate-900/70 p-6 md:p-8 shadow-xl shadow-slate-900/5 dark:shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-500/10 dark:hover:shadow-brand-900/20 ${spanClass}`}
           >
             {/* Glowing Accent Top border */}
             <div className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r ${gradientBorder}`} />

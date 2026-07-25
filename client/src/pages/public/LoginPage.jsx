@@ -63,7 +63,7 @@ function LoginPage() {
 
       <section className="relative w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.08] p-8 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-10">
         <div className="text-center">
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sm font-black text-slate-950 shadow-xl shadow-brand-500/20">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 text-sm font-black text-slate-950 shadow-xl shadow-brand-500/20">
             AC
           </span>
           <p className="mt-5 text-sm font-black uppercase tracking-[0.22em] text-brand-200">AlumniConnect</p>

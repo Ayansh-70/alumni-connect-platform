@@ -215,7 +215,7 @@ function EventsPage() {
 
           <div className="flex flex-wrap gap-3">
             <button type="submit" disabled={Boolean(activeId)} className="btn-primary">
-              {isSubmitting ? 'Saving...' : (editingId ? 'Update Event' : 'Create Event')}
+              {activeId === 'creating' || (editingId && activeId === editingId) ? 'Saving...' : (editingId ? 'Update Event' : 'Create Event')}
             </button>
             {editingId ? (
               <button type="button" disabled={Boolean(activeId)} onClick={resetForm} className="btn-secondary">
@@ -244,9 +244,9 @@ function EventsPage() {
                     <p className="mt-2 text-sm text-slate-600">{eventItem.description}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{eventItem.eventType}</span>
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{eventItem.mode}</span>
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{eventItem.audience}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{eventItem.eventType}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{eventItem.mode}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{eventItem.audience}</span>
                     <StatusBadge value={eventItem.isActive ? 'ACTIVE' : 'INACTIVE'} />
                   </div>
                 </div>

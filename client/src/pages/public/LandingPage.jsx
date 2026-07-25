@@ -33,12 +33,12 @@ function LandingPage() {
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link to="/login" className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-brand-700">
+        <Link to="/login" className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-brand-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
           Sign in
         </Link>
         <Link
           to="/register-institute"
-          className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
+          className="rounded-2xl border border-slate-300 bg-white dark:bg-slate-900 dark:border-slate-800 px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700"
         >
           Register institute
         </Link>

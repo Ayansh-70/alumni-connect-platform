@@ -143,7 +143,7 @@ function NotificationsPage() {
                 key={notification._id}
                 className={`rounded-[1.5rem] border p-5 transition ${
                   notification.isRead
-                    ? 'border-slate-200 bg-slate-50/80'
+                    ? 'border-slate-200 bg-slate-50/80 dark:bg-slate-900/80 dark:border-slate-800'
                     : 'border-brand-200 bg-gradient-to-br from-brand-50 via-white to-sky-50'
                 }`}
               >
@@ -153,7 +153,7 @@ function NotificationsPage() {
                     <p className="mt-2 text-sm leading-6 text-slate-600">{notification.message}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="status-badge border-slate-200 bg-white text-slate-700">{notification.type}</span>
+                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{notification.type}</span>
                     <StatusBadge value={notification.isRead ? 'READ' : 'PENDING'} />
                   </div>
                 </div>

@@ -106,7 +106,7 @@ function InstituteRequestsPage() {
             const isSubmitting = submittingId === institute._id;
 
             return (
-              <article key={institute._id} className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+              <article key={institute._id} className="rounded-lg border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 p-6 shadow-sm">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="space-y-3">
                     <div>
@@ -144,7 +144,7 @@ function InstituteRequestsPage() {
                     </dl>
                   </div>
 
-                  <div className="w-full max-w-sm rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <div className="w-full max-w-sm rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4">
                     <label className="block text-sm font-medium text-slate-700" htmlFor={`reject-${institute._id}`}>
                       Rejection reason
                     </label>

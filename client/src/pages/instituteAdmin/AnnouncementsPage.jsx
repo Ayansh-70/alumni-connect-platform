@@ -147,26 +147,28 @@ function AnnouncementsPage() {
       />
 
       <section className="surface-card p-6 md:p-8">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-medium text-slate-700">
-              Title
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <label htmlFor="title">Title</label>
               <input
+                id="title"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
                 disabled={Boolean(activeId)}
-                className="field-control mt-2"
+                className="field-control"
               />
-            </label>
-            <label className="text-sm font-medium text-slate-700">
-              Category
+            </div>
+            <div>
+              <label htmlFor="category">Category</label>
               <select
+                id="category"
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
                 disabled={Boolean(activeId)}
-                className="field-control mt-2"
+                className="field-control"
               >
                 {CATEGORIES.map((category) => (
                   <option key={category} value={category}>
@@ -174,26 +176,28 @@ function AnnouncementsPage() {
                   </option>
                 ))}
               </select>
-            </label>
-            <label className="text-sm font-medium text-slate-700 md:col-span-2">
-              Message
+            </div>
+            <div className="md:col-span-2">
+              <label htmlFor="message">Message</label>
               <textarea
+                id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 disabled={Boolean(activeId)}
                 rows="4"
-                className="field-control mt-2"
+                className="field-control"
               />
-            </label>
-            <label className="text-sm font-medium text-slate-700">
-              Audience
+            </div>
+            <div>
+              <label htmlFor="audience">Audience</label>
               <select
+                id="audience"
                 name="audience"
                 value={formData.audience}
                 onChange={handleChange}
                 disabled={Boolean(activeId)}
-                className="field-control mt-2"
+                className="field-control"
               >
                 {AUDIENCES.map((audience) => (
                   <option key={audience} value={audience}>
@@ -201,7 +205,7 @@ function AnnouncementsPage() {
                   </option>
                 ))}
               </select>
-            </label>
+            </div>
           </div>
 
           {errorMessage ? (
@@ -212,7 +216,7 @@ function AnnouncementsPage() {
             <p className="alert-success" role="alert" aria-live="polite">{successMessage}</p>
           ) : null}
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 pt-2">
             <button type="submit" disabled={Boolean(activeId)} className="btn-primary">
               {activeId === 'creating' || editingId ? 'Saving...' : 'Create Announcement'}
             </button>
@@ -236,15 +240,15 @@ function AnnouncementsPage() {
         ) : (
           <div className="space-y-4">
             {announcements.map((announcement) => (
-              <article key={announcement._id} className="content-card">
+              <article key={announcement._id} className="content-card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-950">{announcement.title}</h2>
-                    <p className="mt-2 text-sm text-slate-600">{announcement.message}</p>
+                    <h2 className="text-section font-semibold text-text-primary">{announcement.title}</h2>
+                    <p className="mt-2 text-body text-text-secondary">{announcement.message}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{announcement.category}</span>
-                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{announcement.audience}</span>
+                    <span className="inline-flex rounded-full border border-border bg-bg-secondary px-3 py-1 text-caption font-semibold uppercase tracking-wider text-text-primary">{announcement.category}</span>
+                    <span className="inline-flex rounded-full border border-border bg-bg-secondary px-3 py-1 text-caption font-semibold uppercase tracking-wider text-text-primary">{announcement.audience}</span>
                     <StatusBadge value={announcement.isActive ? 'ACTIVE' : 'INACTIVE'} />
                   </div>
                 </div>

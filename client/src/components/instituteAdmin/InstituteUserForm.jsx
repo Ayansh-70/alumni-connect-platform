@@ -49,16 +49,16 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
   return (
     <section className="surface-card max-w-2xl p-8">
       <div className="mb-6">
-        <p className="inline-flex rounded-full border border-brand-100 bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-brand-700">
+        <p className="inline-flex rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-badge font-semibold uppercase tracking-wider text-primary">
           Quick Create
         </p>
-        <h2 className="mt-4 text-2xl font-semibold text-slate-950">{title}</h2>
-        <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">{description}</p>
+        <h2 className="mt-4 text-section font-bold text-text-primary">{title}</h2>
+        <p className="mt-2 max-w-xl text-body leading-6 text-text-secondary">{description}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-slate-700" htmlFor="name">
+          <label htmlFor="name">
             Name
           </label>
           <input
@@ -74,7 +74,7 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700" htmlFor="email">
+          <label htmlFor="email">
             Email
           </label>
           <input
@@ -90,11 +90,11 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
         </div>
 
         <div>
-          <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium text-slate-700" htmlFor="password">
+          <div className="flex justify-between items-center mb-2">
+            <label htmlFor="password" className="mb-0">
               Temporary password
             </label>
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-badge font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
               {showPassword ? 'Hide' : 'Show'}
             </button>
           </div>
@@ -118,8 +118,8 @@ function InstituteUserForm({ title, description, submitLabel, onSubmit }) {
           <p className="alert-success" role="alert" aria-live="polite">{successMessage}</p>
         ) : null}
 
-        <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-2">
-          <p className="text-xs text-slate-500">New accounts inherit institute access automatically.</p>
+        <div className="flex items-center justify-between gap-3 border-t border-border pt-4">
+          <p className="text-caption text-text-muted">New accounts inherit institute access automatically.</p>
           <button type="submit" disabled={isSubmitting} className="btn-primary min-w-36">
             {isSubmitting ? 'Submitting...' : submitLabel}
           </button>

@@ -86,7 +86,7 @@ function AlumniVerificationPage() {
 
       <section className="surface-card">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-slate-600">Only pending alumni profiles from your institute appear here.</p>
+          <p className="text-body text-text-secondary">Only pending alumni profiles from your institute appear here.</p>
           <button
             type="button"
             onClick={loadProfiles}
@@ -97,13 +97,13 @@ function AlumniVerificationPage() {
         </div>
 
         {errorMessage ? (
-          <p className="alert-error mt-4">
+          <p className="alert-error mt-4" role="alert" aria-live="polite">
             {errorMessage}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p className="alert-success mt-4">
+          <p className="alert-success mt-4" role="alert" aria-live="polite">
             {successMessage}
           </p>
         ) : null}
@@ -111,27 +111,32 @@ function AlumniVerificationPage() {
         {isLoading ? (
           <LoadingState message="Loading pending alumni profiles..." className="mt-6" />
         ) : profiles.length === 0 ? (
-          <EmptyState title="No pending alumni verification" description="Alumni profiles waiting for review will appear here." />
+          <div className="mt-6">
+            <EmptyState title="No pending alumni verification" description="Alumni profiles waiting for review will appear here." />
+          </div>
         ) : (
           <div className="mt-6 space-y-4">
             {profiles.map((profile) => (
-              <article key={profile._id} className="content-card">
-                <div className="grid gap-2 text-sm text-slate-600 md:grid-cols-2">
-                  <p className="text-base font-semibold text-slate-950">{profile.user?.name}</p>
-                  <p>{profile.user?.email}</p>
-                  <p>Branch: {profile.branch}</p>
-                  <p>Batch: {profile.batch}</p>
-                  <p>Company: {profile.currentCompany}</p>
-                  <p>Role: {profile.currentRole}</p>
-                  <p>Experience: {profile.experienceYears} years</p>
-                  <p>Domain: {profile.domain || 'Not provided'}</p>
-                  <p>Location: {profile.location || 'Not provided'}</p>
-                  <p>Referral support: {profile.canProvideReferral ? 'Yes' : 'No'}</p>
-                  <p>Mentoring: {profile.canMentor ? 'Yes' : 'No'}</p>
-                  <p>Skills: {profile.skills?.join(', ') || 'Not provided'}</p>
+              <article key={profile._id} className="content-card p-6">
+                <div className="grid gap-4 text-body text-text-secondary md:grid-cols-2">
+                  <p className="text-section font-semibold text-text-primary col-span-full">{profile.user?.name}</p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Email</span> <span className="font-medium text-text-primary">{profile.user?.email}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Branch</span> <span className="font-medium text-text-primary">{profile.branch}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Batch</span> <span className="font-medium text-text-primary">{profile.batch}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Company</span> <span className="font-medium text-text-primary">{profile.currentCompany}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Role</span> <span className="font-medium text-text-primary">{profile.currentRole}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Experience</span> <span className="font-medium text-text-primary">{profile.experienceYears} years</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Domain</span> <span className="font-medium text-text-primary">{profile.domain || 'Not provided'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Location</span> <span className="font-medium text-text-primary">{profile.location || 'Not provided'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Referral support</span> <span className="font-medium text-text-primary">{profile.canProvideReferral ? 'Yes' : 'No'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Mentoring</span> <span className="font-medium text-text-primary">{profile.canMentor ? 'Yes' : 'No'}</span></p>
+                  <p className="col-span-full"><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Skills</span> <span className="font-medium text-text-primary">{profile.skills?.join(', ') || 'Not provided'}</span></p>
                 </div>
 
-                <p className="mt-3 text-sm text-slate-600">{profile.bio || 'No bio provided yet.'}</p>
+                <div className="mt-4">
+                  <span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Bio</span>
+                  <p className="text-body font-medium text-text-primary">{profile.bio || 'No bio provided yet.'}</p>
+                </div>
 
                 <textarea
                   value={rejectionReasons[profile._id] || ''}

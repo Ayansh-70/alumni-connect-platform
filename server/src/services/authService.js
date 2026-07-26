@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import emailService from './email/emailService.js';
 import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
+import { getFrontendUrl } from '../utils/urlBuilder.js';
 
 const sanitizeUser = (user) => {
   const userObject = user.toObject ? user.toObject() : { ...user };
@@ -140,7 +141,7 @@ const forgotPassword = async (email) => {
   await user.save({ validateBeforeSave: false });
 
   // Generate the frontend reset link containing the RAW token
-  const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
+  const resetUrl = getFrontendUrl(`reset-password/${resetToken}`);
 
   try {
     await emailService.sendForgotPasswordEmail(user.email, resetUrl);

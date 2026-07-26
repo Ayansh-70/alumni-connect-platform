@@ -31,12 +31,12 @@ function ForgotPasswordPage() {
   return (
     <div className="flex min-h-[80vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h2 className="mt-6 text-center text-display font-bold tracking-tight text-text-primary">
           Reset your password
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-center text-body text-text-secondary">
           Or{' '}
-          <Link to="/login" className="font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400">
+          <Link to="/login" className="font-medium text-primary hover:text-primary/80 transition-colors">
             return to login
           </Link>
         </p>
@@ -46,11 +46,11 @@ function ForgotPasswordPage() {
         <div className="surface-card p-8">
           {isSuccess ? (
             <div className="animate-fadeInUp text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-600 shadow-lg shadow-emerald-500/20 mb-6">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-2xl text-success">
                 ✓
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Check your inbox</h3>
-              <p className="text-sm leading-6 text-slate-600 dark:text-slate-400 mb-6">
+              <h3 className="mb-2 text-section font-bold text-text-primary">Check your inbox</h3>
+              <p className="mb-6 text-body text-text-secondary">
                 If an account exists with that email, we have sent password reset instructions to your inbox. The link will expire in 1 hour.
               </p>
               <Link to="/login" className="btn-primary w-full text-center py-2.5">
@@ -66,10 +66,10 @@ function ForgotPasswordPage() {
               )}
 
               <div>
-                <label htmlFor="email" className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500">
+                <label htmlFor="email">
                   Email address
                 </label>
-                <div className="mt-2">
+                <div>
                   <input
                     id="email"
                     name="email"

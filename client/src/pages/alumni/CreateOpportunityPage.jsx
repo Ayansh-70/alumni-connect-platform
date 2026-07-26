@@ -65,42 +65,46 @@ function CreateOpportunityPage() {
         description="Share an opportunity with your institute. It will stay pending until an institute admin reviews it."
       />
 
-      <section className="surface-card max-w-4xl">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label className="block text-sm font-medium text-slate-700">
-            Title
+      <section className="surface-card max-w-4xl p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          
+          <div>
+            <label htmlFor="title">Title</label>
             <input
+              id="title"
               name="title"
               value={formData.title}
               onChange={handleChange}
               disabled={isSubmitting}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="e.g. Frontend Developer"
             />
-          </label>
+          </div>
 
-          <label className="block text-sm font-medium text-slate-700">
-            Description
+          <div>
+            <label htmlFor="description">Description</label>
             <textarea
+              id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
               disabled={isSubmitting}
               rows="4"
-              className="field-control mt-2"
+              className="field-control"
               placeholder="Detail the responsibilities and requirements..."
             />
-          </label>
+          </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-medium text-slate-700">
-              Type
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <label htmlFor="type">Type</label>
               <select
+                id="type"
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className="field-control mt-2"
+                className="field-control"
               >
                 {OPPORTUNITY_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -108,15 +112,17 @@ function CreateOpportunityPage() {
                   </option>
                 ))}
               </select>
-            </label>
-            <label className="text-sm font-medium text-slate-700">
-              Mode
+            </div>
+            
+            <div>
+              <label htmlFor="mode">Mode</label>
               <select
+                id="mode"
                 name="mode"
                 value={formData.mode}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className="field-control mt-2"
+                className="field-control"
               >
                 {OPPORTUNITY_MODES.map((mode) => (
                   <option key={mode} value={mode}>
@@ -124,100 +130,113 @@ function CreateOpportunityPage() {
                   </option>
                 ))}
               </select>
-            </label>
-            <label className="text-sm font-medium text-slate-700">
-              Company
+            </div>
+            
+            <div>
+              <label htmlFor="company">Company</label>
               <input
+                id="company"
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className="field-control mt-2"
+                className="field-control"
                 placeholder="e.g. Google"
               />
-            </label>
-            <label className="text-sm font-medium text-slate-700">
-              Role
+            </div>
+            
+            <div>
+              <label htmlFor="role">Role</label>
               <input
+                id="role"
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className="field-control mt-2"
+                className="field-control"
                 placeholder="e.g. SDE-1"
               />
-            </label>
-            <label className="text-sm font-medium text-slate-700">
-              Location
+            </div>
+            
+            <div>
+              <label htmlFor="location">Location</label>
               <input
+                id="location"
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className="field-control mt-2"
+                className="field-control"
                 placeholder="e.g. Bangalore"
               />
-            </label>
-            <label className="text-sm font-medium text-slate-700">
-              Deadline
+            </div>
+            
+            <div>
+              <label htmlFor="deadline">Deadline</label>
               <input
+                id="deadline"
                 name="deadline"
                 type="date"
                 value={formData.deadline}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className="field-control mt-2"
+                className="field-control"
               />
-            </label>
+            </div>
           </div>
 
-          <label className="block text-sm font-medium text-slate-700">
-            Eligibility
+          <div>
+            <label htmlFor="eligibility">Eligibility</label>
             <textarea
+              id="eligibility"
               name="eligibility"
               value={formData.eligibility}
               onChange={handleChange}
               disabled={isSubmitting}
               rows="2"
-              className="field-control mt-2"
+              className="field-control"
               placeholder="e.g. 2024 graduates with minimum 7.5 CGPA"
             />
-          </label>
+          </div>
 
-          <label className="block text-sm font-medium text-slate-700">
-            Skills required
+          <div>
+            <label htmlFor="skillsRequired">Skills required</label>
             <input
+              id="skillsRequired"
               name="skillsRequired"
               value={formData.skillsRequired}
               onChange={handleChange}
               disabled={isSubmitting}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="React, Node.js, MongoDB"
             />
-          </label>
+          </div>
 
-          <label className="block text-sm font-medium text-slate-700">
-            Application link
+          <div>
+            <label htmlFor="applicationLink">Application link</label>
             <input
+              id="applicationLink"
               name="applicationLink"
               value={formData.applicationLink}
               onChange={handleChange}
               disabled={isSubmitting}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="https://company.com/apply"
             />
-          </label>
+          </div>
 
           {errorMessage && <p className="alert-error" role="alert" aria-live="polite">{errorMessage}</p>}
           {successMessage && <p className="alert-success" role="alert" aria-live="polite">{successMessage}</p>}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="btn-primary"
-          >
-            {isSubmitting ? 'Posting...' : 'Post Opportunity'}
-          </button>
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-primary"
+            >
+              {isSubmitting ? 'Posting...' : 'Post Opportunity'}
+            </button>
+          </div>
         </form>
       </section>
     </div>

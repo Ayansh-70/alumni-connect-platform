@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
+import { getFrontendUrl } from '../utils/urlBuilder.js';
 import emailService from './email/emailService.js';
 
 const MANAGEABLE_ROLES = [USER_ROLES.STUDENT, USER_ROLES.ALUMNI];
@@ -81,7 +82,7 @@ const createInstituteUser = async (adminUser, payload, role) => {
   // Populate institute name for the email
   const userWithInstitute = await User.findById(user._id).populate('institute', 'name');
   
-  const loginUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/login`;
+  const loginUrl = getFrontendUrl('login');
   
   try {
     await emailService.sendWelcomeEmail(userWithInstitute, payload.password.trim(), loginUrl);

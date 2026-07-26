@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { AUTH_STORAGE_KEY } from '../utils/auth.js';
+import { validateClientEnv, getApiBaseUrl } from '../config/envValidator.js';
+
+validateClientEnv();
 
 const getStoredToken = () => localStorage.getItem(AUTH_STORAGE_KEY);
 
 const httpClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json'
   }

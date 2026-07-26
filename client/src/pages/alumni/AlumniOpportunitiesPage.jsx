@@ -93,37 +93,39 @@ function AlumniOpportunitiesPage() {
         ) : (
           <div className="space-y-4">
             {opportunities.map((opportunity) => (
-              <article key={opportunity._id} className="content-card">
-                <div className="flex flex-wrap items-start justify-between gap-4">
+              <article key={opportunity._id} className="content-card p-6 flex flex-col">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-950">{opportunity.title}</h2>
-                    <p className="mt-1 text-sm text-slate-600">
+                    <h2 className="text-section font-semibold text-text-primary">{opportunity.title}</h2>
+                    <p className="mt-1 text-caption text-text-secondary">
                       {opportunity.role} at {opportunity.company}
                     </p>
                   </div>
                   <StatusBadge value={opportunity.status} />
                 </div>
 
-                <div className="mt-4 grid gap-2 text-sm text-slate-600 md:grid-cols-2">
-                  <p>Type: {opportunity.type}</p>
-                  <p>Mode: {opportunity.mode}</p>
-                  <p>Location: {opportunity.location}</p>
-                  <p>Deadline: {formatDate(opportunity.deadline)}</p>
+                <div className="grid gap-4 text-body text-text-secondary grow md:grid-cols-2">
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Type</span> <span className="font-medium text-text-primary">{opportunity.type}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Mode</span> <span className="font-medium text-text-primary">{opportunity.mode}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Location</span> <span className="font-medium text-text-primary">{opportunity.location}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Deadline</span> <span className="font-medium text-text-primary">{formatDate(opportunity.deadline)}</span></p>
                 </div>
 
                 {opportunity.rejectionReason ? (
-                  <p className="mt-4 text-sm text-rose-700">Rejection reason: {opportunity.rejectionReason}</p>
+                  <p className="mt-6 border-t border-border pt-4 text-sm font-medium text-error">Rejection reason: {opportunity.rejectionReason}</p>
                 ) : null}
 
                 {opportunity.status === 'APPROVED' ? (
-                  <button
-                    type="button"
-                    disabled={activeOpportunityId === opportunity._id}
-                    onClick={() => handleClose(opportunity._id)}
-                    className="btn-secondary mt-4"
-                  >
-                    {activeOpportunityId === opportunity._id ? 'Closing...' : 'Close Opportunity'}
-                  </button>
+                  <div className="mt-6 pt-2 flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      disabled={activeOpportunityId === opportunity._id}
+                      onClick={() => handleClose(opportunity._id)}
+                      className="btn-secondary"
+                    >
+                      {activeOpportunityId === opportunity._id ? 'Closing...' : 'Close Opportunity'}
+                    </button>
+                  </div>
                 ) : null}
               </article>
             ))}

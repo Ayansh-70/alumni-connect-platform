@@ -56,47 +56,46 @@ function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(145deg,#020617_0%,#0f172a_48%,#111827_100%)] px-4 py-10 text-white">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/60 to-transparent" />
-      <div className="absolute left-1/2 top-0 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-brand-500/20 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
-
-      <section className="relative w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.08] p-8 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-10">
+    <div className="relative flex min-h-[90vh] items-center justify-center bg-bg-base px-4 py-10">
+      <section className="relative w-full max-w-md surface-card p-8 sm:p-10">
         <div className="text-center">
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 text-sm font-black text-slate-950 shadow-xl shadow-brand-500/20">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground shadow-sm">
             AC
           </span>
-          <p className="mt-5 text-sm font-black uppercase tracking-[0.22em] text-brand-200">AlumniConnect</p>
-          <h1 className="mt-3 text-3xl font-black tracking-tight text-white">Sign in to your workspace</h1>
-          <p className="mt-3 text-sm leading-6 text-slate-300">
+          <p className="mt-5 text-badge font-bold uppercase tracking-wider text-primary">AlumniConnect</p>
+          <h1 className="mt-3 text-display font-bold tracking-tight text-text-primary">Sign in to your workspace</h1>
+          <p className="mt-3 text-body text-text-secondary">
             Verified institute networking for students, alumni, and administrators.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-8">
-          <label htmlFor="email" className="text-slate-300">
-            Email address
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            disabled={isSubmitting}
-            onChange={(event) => setEmail(event.target.value)}
-            className="field-control mt-2 border-white/10 bg-white/10 text-white placeholder:text-slate-500 focus:bg-white/15"
-            placeholder="you@example.com"
-            autoComplete="email"
-          />
-
-          <div className="mt-5 flex items-center justify-between">
-            <label className="text-slate-300" htmlFor="password">
-              Password
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <div>
+            <label htmlFor="email">
+              Email address
             </label>
-            <div className="flex gap-4">
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-400 hover:text-brand-300 transition-colors">
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-              <Link to="/forgot-password" className="text-[0.8rem] font-medium text-brand-400 hover:text-brand-300 transition-colors">
+            <input
+              id="email"
+              type="email"
+              value={email}
+              disabled={isSubmitting}
+              onChange={(event) => setEmail(event.target.value)}
+              className="field-control"
+              placeholder="you@example.com"
+              autoComplete="email"
+            />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="password" className="mb-0">
+                Password
+              </label>
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-badge font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+                <Link to="/forgot-password" className="text-caption font-medium text-primary hover:text-primary/80 transition-colors">
                 Forgot password?
               </Link>
             </div>
@@ -107,10 +106,11 @@ function LoginPage() {
             value={password}
             disabled={isSubmitting}
             onChange={(event) => setPassword(event.target.value)}
-            className="field-control mt-2 border-white/10 bg-white/10 text-white placeholder:text-slate-500 focus:bg-white/15"
+            className="field-control"
             placeholder="Enter your password"
             autoComplete="current-password"
           />
+        </div>
 
           {formError ? (
             <p className="alert-error mt-4" role="alert" aria-live="polite">{formError}</p>
@@ -122,10 +122,10 @@ function LoginPage() {
         </form>
 
         <div className="mt-6 flex flex-col items-center gap-3">
-          <Link to="/register-institute" className="inline-flex w-full justify-center text-sm font-semibold text-slate-400 transition hover:text-white">
+          <Link to="/register-institute" className="text-button font-medium text-text-secondary hover:text-text-primary transition-colors">
             Register your institute
           </Link>
-          <Link to="/" className="inline-flex w-full justify-center text-sm font-medium text-slate-500 transition hover:text-white">
+          <Link to="/" className="text-button font-medium text-text-muted hover:text-text-primary transition-colors">
             Back to home
           </Link>
         </div>

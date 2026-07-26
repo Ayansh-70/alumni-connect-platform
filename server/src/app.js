@@ -38,8 +38,13 @@ app.disable('x-powered-by');
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
 // Multi-origin CORS support
-const corsOrigins = process.env.CLIENT_URL 
-  ? process.env.CLIENT_URL.split(',').map(url => url.trim())
+const clientUrl = process.env.CLIENT_URL;
+if (process.env.NODE_ENV === 'production' && !clientUrl) {
+  throw new Error('[FATAL] CLIENT_URL is missing in production environment');
+}
+
+const corsOrigins = clientUrl 
+  ? clientUrl.split(',').map(url => url.trim())
   : ['http://localhost:5173'];
 
 app.use(

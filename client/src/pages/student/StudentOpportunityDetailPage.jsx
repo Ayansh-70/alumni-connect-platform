@@ -37,68 +37,64 @@ function StudentOpportunityDetailPage() {
 
       <Link
         to="/student/opportunities"
-        className="mb-6 inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800"
+        className="btn-secondary mb-6 inline-flex"
       >
         Back to opportunities
       </Link>
 
-      <section className="max-w-3xl rounded-lg border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 p-6 shadow-sm">
+      <section className="max-w-3xl surface-card p-6 md:p-8">
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4 text-sm text-slate-600">
+          <div className="p-4 text-body text-text-secondary">
             Loading opportunity details...
           </div>
         ) : errorMessage ? (
-          <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+          <p className="alert-error">
             {errorMessage}
           </p>
         ) : opportunity ? (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-semibold text-slate-950">{opportunity.title}</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <h2 className="text-display font-semibold text-text-primary">{opportunity.title}</h2>
+              <p className="mt-2 text-body text-text-secondary">
                 {opportunity.role} at {opportunity.company}
               </p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <p className="text-sm text-slate-600">Type: {opportunity.type}</p>
-              <p className="text-sm text-slate-600">Mode: {opportunity.mode}</p>
-              <p className="text-sm text-slate-600">Location: {opportunity.location}</p>
-              <p className="text-sm text-slate-600">
-                Deadline: {new Date(opportunity.deadline).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-slate-600">Posted by: {opportunity.postedBy?.name}</p>
-              <p className="text-sm text-slate-600">
-                Posted on: {new Date(opportunity.createdAt).toLocaleDateString()}
-              </p>
+            <div className="grid gap-4 md:grid-cols-2 text-body text-text-secondary">
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Type</span> <span className="font-medium text-text-primary">{opportunity.type}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Mode</span> <span className="font-medium text-text-primary">{opportunity.mode}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Location</span> <span className="font-medium text-text-primary">{opportunity.location}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Deadline</span> <span className="font-medium text-text-primary">{new Date(opportunity.deadline).toLocaleDateString()}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Posted by</span> <span className="font-medium text-text-primary">{opportunity.postedBy?.name}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Posted on</span> <span className="font-medium text-text-primary">{new Date(opportunity.createdAt).toLocaleDateString()}</span></p>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Description</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{opportunity.description}</p>
+              <h3 className="text-badge font-bold uppercase tracking-wider text-text-muted block">Description</h3>
+              <p className="mt-2 text-body leading-relaxed text-text-secondary">{opportunity.description}</p>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Eligibility</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{opportunity.eligibility}</p>
+              <h3 className="text-badge font-bold uppercase tracking-wider text-text-muted block">Eligibility</h3>
+              <p className="mt-2 text-body leading-relaxed text-text-secondary">{opportunity.eligibility}</p>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Skills required</h3>
-              <p className="mt-2 text-sm text-slate-600">{opportunity.skillsRequired?.join(', ') || 'Not provided'}</p>
+              <h3 className="text-badge font-bold uppercase tracking-wider text-text-muted block">Skills required</h3>
+              <p className="mt-2 text-body font-medium text-text-primary">{opportunity.skillsRequired?.join(', ') || 'Not provided'}</p>
             </div>
 
             <a
               href={opportunity.applicationLink}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900"
+              className="btn-primary inline-flex mt-2"
             >
               Open application link
             </a>
           </div>
         ) : (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4 text-sm text-slate-600">
+          <div className="p-4 text-body text-text-secondary">
             Opportunity details are not available.
           </div>
         )}

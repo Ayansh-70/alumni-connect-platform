@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Institute, { INSTITUTE_STATUSES } from '../models/Institute.js';
 import User, { USER_ROLES, USER_STATUSES } from '../models/User.js';
+import { getFrontendUrl } from '../utils/urlBuilder.js';
 import emailService from './email/emailService.js';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
@@ -177,7 +178,7 @@ const approveInstitute = async (instituteId, approvedByUserId) => {
   // Send Application Approved Email non-blockingly
   if (adminUser) {
     try {
-      const loginUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/login`;
+      const loginUrl = getFrontendUrl('login');
       await emailService.sendApplicationApprovedEmail(adminUser.email, institute.name, loginUrl);
     } catch (err) {
       console.error('Failed to send application approved email:', err);

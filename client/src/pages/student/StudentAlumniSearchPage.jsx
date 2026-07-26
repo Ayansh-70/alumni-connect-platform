@@ -70,69 +70,75 @@ function StudentAlumniSearchPage() {
       />
 
       <section className="surface-card p-6 md:p-8">
-        <form onSubmit={handleSearch} className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <label className="text-sm font-medium text-slate-700">
-            Branch
+        <form onSubmit={handleSearch} className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div>
+            <label htmlFor="branch">Branch</label>
             <input
+              id="branch"
               name="branch"
               value={filters.branch}
               onChange={handleChange}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="CSE"
             />
-          </label>
-          <label className="text-sm font-medium text-slate-700">
-            Batch
+          </div>
+          <div>
+            <label htmlFor="batch">Batch</label>
             <input
+              id="batch"
               name="batch"
               value={filters.batch}
               onChange={handleChange}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="2020"
             />
-          </label>
-          <label className="text-sm font-medium text-slate-700">
-            Company
+          </div>
+          <div>
+            <label htmlFor="company">Company</label>
             <input
+              id="company"
               name="company"
               value={filters.company}
               onChange={handleChange}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="Infosys"
             />
-          </label>
-          <label className="text-sm font-medium text-slate-700">
-            Skill
+          </div>
+          <div>
+            <label htmlFor="skill">Skill</label>
             <input
+              id="skill"
               name="skill"
               value={filters.skill}
               onChange={handleChange}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="React"
             />
-          </label>
-          <label className="text-sm font-medium text-slate-700">
-            Domain
+          </div>
+          <div>
+            <label htmlFor="domain">Domain</label>
             <input
+              id="domain"
               name="domain"
               value={filters.domain}
               onChange={handleChange}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="Web Development"
             />
-          </label>
-          <label className="text-sm font-medium text-slate-700">
-            Location
+          </div>
+          <div>
+            <label htmlFor="location">Location</label>
             <input
+              id="location"
               name="location"
               value={filters.location}
               onChange={handleChange}
-              className="field-control mt-2"
+              className="field-control"
               placeholder="Jaipur"
             />
-          </label>
+          </div>
 
-          <div className="flex flex-wrap gap-3 md:col-span-2 xl:col-span-3">
+          <div className="flex flex-wrap gap-3 md:col-span-2 xl:col-span-3 pt-2">
             <button type="submit" className="btn-primary">
               Search alumni
             </button>
@@ -143,7 +149,7 @@ function StudentAlumniSearchPage() {
         </form>
 
         {errorMessage ? (
-          <p className="mt-6 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+          <p className="alert-error mt-6" role="alert" aria-live="polite">
             {errorMessage}
           </p>
         ) : null}
@@ -158,32 +164,32 @@ function StudentAlumniSearchPage() {
             />
           </div>
         ) : (
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {results.map((alumni) => (
-              <article key={alumni._id} className="content-card">
-                <div className="flex items-start justify-between gap-4">
+              <article key={alumni._id} className="content-card flex flex-col p-6">
+                <div className="flex items-start justify-between gap-4 mb-4">
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-950">{alumni.user?.name}</h2>
-                    <p className="mt-1 text-sm text-slate-600">
+                    <h2 className="text-section font-semibold text-text-primary">{alumni.user?.name}</h2>
+                    <p className="mt-1 text-caption text-text-secondary">
                       {alumni.currentRole} at {alumni.currentCompany}
                     </p>
                   </div>
                   <StatusBadge value={alumni.verificationStatus} />
                 </div>
 
-                <div className="mt-4 grid gap-2 text-sm text-slate-600">
-                  <p>Branch: {alumni.branch}</p>
-                  <p>Batch: {alumni.batch}</p>
-                  <p>Skills: {alumni.skills?.join(', ') || 'Not provided'}</p>
-                  <p>Domain: {alumni.domain || 'Not provided'}</p>
-                  <p>Location: {alumni.location || 'Not provided'}</p>
-                  <p>Referral support: {alumni.canProvideReferral ? 'Yes' : 'No'}</p>
-                  <p>Mentoring: {alumni.canMentor ? 'Yes' : 'No'}</p>
+                <div className="grid gap-3 text-body text-text-secondary grow">
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Branch</span> <span className="font-medium text-text-primary">{alumni.branch}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Batch</span> <span className="font-medium text-text-primary">{alumni.batch}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Domain</span> <span className="font-medium text-text-primary">{alumni.domain || 'Not provided'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Location</span> <span className="font-medium text-text-primary">{alumni.location || 'Not provided'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Referral support</span> <span className="font-medium text-text-primary">{alumni.canProvideReferral ? 'Yes' : 'No'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Mentoring</span> <span className="font-medium text-text-primary">{alumni.canMentor ? 'Yes' : 'No'}</span></p>
+                  <p className="col-span-full"><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Skills</span> <span className="font-medium text-text-primary">{alumni.skills?.join(', ') || 'Not provided'}</span></p>
                 </div>
 
                 <Link
                   to={`/student/alumni/${alumni._id}`}
-                  className="btn-primary mt-4"
+                  className="btn-primary mt-6 w-full justify-center"
                 >
                   View details
                 </Link>

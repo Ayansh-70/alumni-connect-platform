@@ -92,29 +92,29 @@ function AlumniConnectionRequestsPage() {
         ) : (
           <div className="space-y-4">
             {requests.map((request) => (
-              <article key={request._id} className="content-card">
-                <div className="flex flex-wrap items-start justify-between gap-4">
+              <article key={request._id} className="content-card p-6 flex flex-col">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-950">{request.student?.name}</h2>
-                    <p className="mt-1 text-sm text-slate-600">{request.student?.email}</p>
+                    <h2 className="text-section font-semibold text-text-primary">{request.student?.name}</h2>
+                    <p className="mt-1 text-caption text-text-secondary">{request.student?.email}</p>
                   </div>
                   <StatusBadge value={request.status} />
                 </div>
 
-                <div className="mt-4 grid gap-2 text-sm text-slate-600 md:grid-cols-2">
-                  <p>Branch: {request.studentProfile?.branch || 'Not provided'}</p>
-                  <p>Batch: {request.studentProfile?.batch || 'Not provided'}</p>
-                  <p>Semester: {request.studentProfile?.semester || 'Not provided'}</p>
-                  <p>Skills: {request.studentProfile?.skills?.join(', ') || 'Not provided'}</p>
+                <div className="grid gap-4 text-body text-text-secondary grow md:grid-cols-2">
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Branch</span> <span className="font-medium text-text-primary">{request.studentProfile?.branch || 'Not provided'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Batch</span> <span className="font-medium text-text-primary">{request.studentProfile?.batch || 'Not provided'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Semester</span> <span className="font-medium text-text-primary">{request.studentProfile?.semester || 'Not provided'}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Skills</span> <span className="font-medium text-text-primary">{request.studentProfile?.skills?.join(', ') || 'Not provided'}</span></p>
                 </div>
 
-                <div className="mt-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Message</h3>
-                  <p className="mt-2 text-sm text-slate-600">{request.message || 'No message added.'}</p>
+                <div className="mt-6 border-t border-border pt-4">
+                  <span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Message</span>
+                  <p className="mt-2 text-body font-medium text-text-primary">{request.message || 'No message added.'}</p>
                 </div>
 
                 {request.status === 'PENDING' ? (
-                  <div className="mt-4 flex flex-wrap gap-3">
+                  <div className="mt-6 pt-2 flex flex-wrap gap-3">
                     <button
                       type="button"
                       disabled={activeRequestId === request._id}

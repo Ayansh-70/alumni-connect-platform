@@ -106,46 +106,46 @@ function InstituteRequestsPage() {
             const isSubmitting = submittingId === institute._id;
 
             return (
-              <article key={institute._id} className="rounded-lg border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 p-6 shadow-sm">
+              <article key={institute._id} className="content-card p-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="space-y-3">
                     <div>
-                      <h2 className="text-xl font-semibold text-slate-950">{institute.name}</h2>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h2 className="text-section font-semibold text-text-primary">{institute.name}</h2>
+                      <p className="mt-1 text-caption text-text-secondary">
                         {institute.city}, {institute.state}, {institute.country}
                       </p>
                     </div>
 
-                    <dl className="grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
+                    <dl className="grid gap-3 text-body text-text-secondary sm:grid-cols-2">
                       <div>
-                        <dt className="font-medium text-slate-800">Email</dt>
-                        <dd>{institute.email}</dd>
+                        <dt className="text-badge font-bold uppercase tracking-wider text-text-muted">Email</dt>
+                        <dd className="font-medium text-text-primary">{institute.email}</dd>
                       </div>
                       <div>
-                        <dt className="font-medium text-slate-800">Phone</dt>
-                        <dd>{institute.phone}</dd>
+                        <dt className="text-badge font-bold uppercase tracking-wider text-text-muted">Phone</dt>
+                        <dd className="font-medium text-text-primary">{institute.phone}</dd>
                       </div>
                       <div>
-                        <dt className="font-medium text-slate-800">Website</dt>
-                        <dd>{institute.website || 'Not provided'}</dd>
+                        <dt className="text-badge font-bold uppercase tracking-wider text-text-muted">Website</dt>
+                        <dd className="font-medium text-text-primary">{institute.website || 'Not provided'}</dd>
                       </div>
                       <div>
-                        <dt className="font-medium text-slate-800">Submitted</dt>
-                        <dd>{new Date(institute.createdAt).toLocaleString()}</dd>
+                        <dt className="text-badge font-bold uppercase tracking-wider text-text-muted">Submitted</dt>
+                        <dd className="font-medium text-text-primary">{new Date(institute.createdAt).toLocaleString()}</dd>
                       </div>
                       <div className="sm:col-span-2">
-                        <dt className="font-medium text-slate-800">Address</dt>
-                        <dd>{institute.address}</dd>
+                        <dt className="text-badge font-bold uppercase tracking-wider text-text-muted">Address</dt>
+                        <dd className="font-medium text-text-primary">{institute.address}</dd>
                       </div>
                       <div className="sm:col-span-2">
-                        <dt className="font-medium text-slate-800">Description</dt>
-                        <dd className="leading-6">{institute.description}</dd>
+                        <dt className="text-badge font-bold uppercase tracking-wider text-text-muted">Description</dt>
+                        <dd className="leading-6 font-medium text-text-primary">{institute.description}</dd>
                       </div>
                     </dl>
                   </div>
 
-                  <div className="w-full max-w-sm rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4">
-                    <label className="block text-sm font-medium text-slate-700" htmlFor={`reject-${institute._id}`}>
+                  <div className="w-full max-w-sm rounded-lg border border-border bg-bg-secondary p-4">
+                    <label htmlFor={`reject-${institute._id}`}>
                       Rejection reason
                     </label>
                     <textarea
@@ -159,7 +159,7 @@ function InstituteRequestsPage() {
                         }))
                       }
                       disabled={isSubmitting}
-                      className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="field-control mt-2"
                       placeholder="Add a reason if you are rejecting this request"
                     />
 
@@ -168,7 +168,7 @@ function InstituteRequestsPage() {
                         type="button"
                         onClick={() => handleApprove(institute._id)}
                         disabled={isSubmitting}
-                        className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-70"
+                        className="btn-success"
                       >
                         {isSubmitting ? 'Processing...' : 'Approve'}
                       </button>
@@ -176,7 +176,7 @@ function InstituteRequestsPage() {
                         type="button"
                         onClick={() => handleReject(institute._id)}
                         disabled={isSubmitting}
-                        className="rounded-md bg-rose-700 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-800 disabled:cursor-not-allowed disabled:opacity-70"
+                        className="btn-danger"
                       >
                         {isSubmitting ? 'Processing...' : 'Reject'}
                       </button>

@@ -21,6 +21,9 @@ class SmtpProvider {
     const pass = process.env.EMAIL_PASS;
 
     if (!host || !port || !user || !pass) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('[FATAL] SMTP configuration is incomplete in production. Mock provider is strictly forbidden.');
+      }
       console.warn('[SMTP] Environment variables are missing. Email service will run in mock mode.');
       return;
     }

@@ -86,10 +86,10 @@ function ForcePasswordChangePage() {
   return (
     <div className="flex min-h-[80vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h2 className="mt-6 text-center text-display font-bold tracking-tight text-text-primary">
           Update Your Password
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400 px-4">
+        <p className="mt-2 text-center text-body text-text-secondary px-4">
           For your security, please change your temporary password before accessing your account.
         </p>
       </div>
@@ -98,11 +98,11 @@ function ForcePasswordChangePage() {
         <div className="surface-card p-8">
           {isSuccess ? (
             <div className="animate-fadeInUp text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-600 shadow-lg shadow-emerald-500/20 mb-6">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-2xl text-success">
                 ✓
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Password Updated!</h3>
-              <p className="text-sm leading-6 text-slate-600 dark:text-slate-400 mb-6">
+              <h3 className="mb-2 text-section font-bold text-text-primary">Password Updated!</h3>
+              <p className="mb-6 text-body text-text-secondary">
                 Your account is now secure. Redirecting you to your dashboard...
               </p>
             </div>
@@ -115,15 +115,15 @@ function ForcePasswordChangePage() {
               )}
 
               <div>
-                <div className="flex justify-between items-center">
-                  <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="currentPassword">
+                <div className="flex justify-between items-center mb-2">
+                  <label htmlFor="currentPassword" className="mb-0">
                     Current Password
                   </label>
-                  <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">
+                  <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="text-badge font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                     {showCurrentPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
-                <div className="mt-2">
+                <div>
                   <input
                     id="currentPassword"
                     name="currentPassword"
@@ -139,15 +139,15 @@ function ForcePasswordChangePage() {
               </div>
 
               <div>
-                <div className="flex justify-between items-center">
-                  <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="newPassword">
+                <div className="flex justify-between items-center mb-2">
+                  <label htmlFor="newPassword" className="mb-0">
                     New Password
                   </label>
-                  <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">
+                  <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="text-badge font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                     {showNewPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
-                <div className="mt-2">
+                <div>
                   <input
                     id="newPassword"
                     name="newPassword"
@@ -163,10 +163,10 @@ function ForcePasswordChangePage() {
               </div>
 
               <div>
-                <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="confirmPassword">
+                <label htmlFor="confirmPassword">
                   Confirm New Password
                 </label>
-                <div className="mt-2">
+                <div>
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
@@ -194,7 +194,7 @@ function ForcePasswordChangePage() {
                  <button
                    type="button"
                    onClick={handleLogout}
-                   className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline underline-offset-2"
+                   className="text-button text-text-secondary hover:text-text-primary underline underline-offset-2"
                  >
                    Log out and do this later
                  </button>

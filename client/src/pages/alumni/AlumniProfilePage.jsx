@@ -128,67 +128,72 @@ function AlumniProfilePage() {
         description="Keep your professional details up to date so your institute can review and verify your alumni identity."
       />
 
-      <section className="surface-card max-w-4xl">
+      <section className="surface-card max-w-4xl p-6">
         {isLoading ? (
           <LoadingState message="Loading your profile..." />
         ) : (
           <>
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 dark:bg-slate-900/80 dark:border-slate-800 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/40">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-bg-secondary px-4 py-3">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Verification status</p>
-                {verificationReason ? <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Reason: {verificationReason}</p> : null}
+                <p className="text-badge font-bold uppercase tracking-wider text-text-muted">Verification status</p>
+                {verificationReason ? <p className="mt-2 text-body text-text-secondary">Reason: {verificationReason}</p> : null}
               </div>
               <StatusBadge value={verificationStatus} />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="text-sm font-medium text-slate-700">
-                  Branch
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label htmlFor="branch">Branch</label>
                   <input
+                    id="branch"
                     name="branch"
                     value={formData.branch}
                     onChange={handleChange}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="Electronics and Communication"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  Batch
+                </div>
+                <div>
+                  <label htmlFor="batch">Batch</label>
                   <input
+                    id="batch"
                     name="batch"
                     value={formData.batch}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="2019"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  Current company
+                </div>
+                <div>
+                  <label htmlFor="currentCompany">Current company</label>
                   <input
+                    id="currentCompany"
                     name="currentCompany"
                     value={formData.currentCompany}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="Acme Technologies"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  Current role
+                </div>
+                <div>
+                  <label htmlFor="currentRole">Current role</label>
                   <input
+                    id="currentRole"
                     name="currentRole"
                     value={formData.currentRole}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="Software Engineer"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  Experience years
+                </div>
+                <div>
+                  <label htmlFor="experienceYears">Experience years</label>
                   <input
+                    id="experienceYears"
                     name="experienceYears"
                     type="number"
                     min="0"
@@ -196,115 +201,122 @@ function AlumniProfilePage() {
                     value={formData.experienceYears}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="3"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  Domain
+                </div>
+                <div>
+                  <label htmlFor="domain">Domain</label>
                   <input
+                    id="domain"
                     name="domain"
                     value={formData.domain}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="Backend, Data, Product"
                   />
-                </label>
+                </div>
               </div>
 
-              <label className="block text-sm font-medium text-slate-700">
-                Skills
+              <div>
+                <label htmlFor="skills">Skills</label>
                 <input
+                  id="skills"
                   name="skills"
                   value={formData.skills}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="field-control mt-2"
+                  className="field-control"
                   placeholder="Java, Spring Boot, AWS"
                 />
-              </label>
+              </div>
 
-              <label className="block text-sm font-medium text-slate-700">
-                Bio
+              <div>
+                <label htmlFor="bio">Bio</label>
                 <textarea
+                  id="bio"
                   name="bio"
                   value={formData.bio}
                   onChange={handleChange}
                   disabled={isSubmitting}
                   rows="4"
-                  className="field-control mt-2"
+                  className="field-control"
                   placeholder="Share your experience and the kind of support you can offer."
                 />
-              </label>
+              </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="text-sm font-medium text-slate-700">
-                  Location
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label htmlFor="location">Location</label>
                   <input
+                    id="location"
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="Hyderabad, India"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  LinkedIn URL
+                </div>
+                <div>
+                  <label htmlFor="linkedInUrl">LinkedIn URL</label>
                   <input
+                    id="linkedInUrl"
                     name="linkedInUrl"
                     value={formData.linkedInUrl}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="https://linkedin.com/in/username"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  GitHub URL
+                </div>
+                <div>
+                  <label htmlFor="githubUrl">GitHub URL</label>
                   <input
+                    id="githubUrl"
                     name="githubUrl"
                     value={formData.githubUrl}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="https://github.com/username"
                   />
-                </label>
-                <label className="text-sm font-medium text-slate-700">
-                  Portfolio URL
+                </div>
+                <div>
+                  <label htmlFor="portfolioUrl">Portfolio URL</label>
                   <input
+                    id="portfolioUrl"
                     name="portfolioUrl"
                     value={formData.portfolioUrl}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="field-control mt-2"
+                    className="field-control"
                     placeholder="https://yourportfolio.com"
                   />
-                </label>
+                </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/60 dark:bg-slate-900/60 dark:border-slate-800 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-300">
+              <div className="grid gap-6 md:grid-cols-2">
+                <label className="flex items-center gap-3 rounded-lg border border-border bg-bg-secondary px-4 py-3 text-body text-text-primary">
                   <input
                     type="checkbox"
                     name="canProvideReferral"
                     checked={formData.canProvideReferral}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-200"
+                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary/20"
                   />
                   I can provide referrals
                 </label>
-                <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/60 dark:bg-slate-900/60 dark:border-slate-800 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950/30 dark:text-slate-300">
+                <label className="flex items-center gap-3 rounded-lg border border-border bg-bg-secondary px-4 py-3 text-body text-text-primary">
                   <input
                     type="checkbox"
                     name="canMentor"
                     checked={formData.canMentor}
                     onChange={handleChange}
                     disabled={isSubmitting}
-                    className="h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-200"
+                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary/20"
                   />
                   I can mentor students
                 </label>
@@ -322,13 +334,15 @@ function AlumniProfilePage() {
                 </p>
               ) : null}
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-primary"
-              >
-                {isSubmitting ? 'Saving...' : 'Save profile'}
-              </button>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-primary"
+                >
+                  {isSubmitting ? 'Saving...' : 'Save profile'}
+                </button>
+              </div>
             </form>
           </>
         )}

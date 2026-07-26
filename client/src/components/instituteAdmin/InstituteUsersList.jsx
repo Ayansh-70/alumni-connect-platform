@@ -60,14 +60,14 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
       <section className="surface-card p-6 md:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="inline-flex rounded-full border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
+            <p className="inline-flex rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-badge font-semibold uppercase tracking-wider text-primary">
               Institute Members
             </p>
-            <h2 className="mt-4 text-2xl font-semibold text-slate-950">{title}</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">{description}</p>
+            <h2 className="mt-4 text-section font-bold text-text-primary">{title}</h2>
+            <p className="mt-2 max-w-2xl text-body leading-6 text-text-secondary">{description}</p>
           </div>
           {pagination ? (
-            <p className="rounded-full border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 px-3 py-1 text-sm text-slate-500">
+            <p className="rounded-full border border-border bg-bg-secondary px-3 py-1 text-caption text-text-muted">
               {pagination.total} total {pagination.total === 1 ? 'user' : 'users'}
             </p>
           ) : null}
@@ -87,9 +87,9 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
           </div>
         ) : (
           <>
-            <div className="mt-6 hidden overflow-hidden rounded-[1.5rem] border border-slate-200 lg:block">
+            <div className="mt-6 hidden overflow-hidden rounded-lg border border-border lg:block">
               <table className="data-table">
-                <thead className="bg-slate-50/80 dark:bg-slate-900/80 dark:border-slate-800 text-slate-600">
+                <thead className="bg-bg-secondary text-text-muted">
                   <tr>
                     <th className="px-4 py-3.5 font-medium">Name</th>
                     <th className="px-4 py-3.5 font-medium">Email</th>
@@ -99,21 +99,21 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
                     <th className="px-4 py-3.5 font-medium">Update status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800">
+                <tbody className="divide-y divide-border bg-bg-base">
                   {users.map((user) => (
-                    <tr key={user._id} className="transition hover:bg-slate-50/80 dark:bg-slate-900/80 dark:border-slate-800">
+                    <tr key={user._id} className="transition hover:bg-surface">
                       <td className="px-4 py-4">
                         <div>
-                          <p className="font-medium text-slate-900">{user.name}</p>
-                          <p className="mt-1 text-xs uppercase tracking-wide text-slate-400">{user.role}</p>
+                          <p className="font-medium text-text-primary">{user.name}</p>
+                          <p className="mt-1 text-caption uppercase tracking-wide text-text-muted">{user.role}</p>
                         </div>
                       </td>
-                      <td className="px-4 py-4 text-slate-600">{user.email}</td>
-                      <td className="px-4 py-4 text-slate-600">{user.role}</td>
+                      <td className="px-4 py-4 text-text-secondary">{user.email}</td>
+                      <td className="px-4 py-4 text-text-secondary">{user.role}</td>
                       <td className="px-4 py-4">
                         <StatusBadge value={user.status} />
                       </td>
-                      <td className="px-4 py-4 text-slate-600">{formatDate(user.createdAt)}</td>
+                      <td className="px-4 py-4 text-text-secondary">{formatDate(user.createdAt)}</td>
                       <td className="px-4 py-4">
                         <select
                           value={user.status}
@@ -136,9 +136,9 @@ function InstituteUsersList({ title, description, emptyMessage, loadUsers }) {
 
             <div className="mt-6 space-y-4 lg:hidden">
               {users.map((user) => (
-                <article key={user._id} className="surface-muted p-5">
-                  <div className="space-y-2 text-sm text-slate-600">
-                    <p className="text-base font-semibold text-slate-950">{user.name}</p>
+                <article key={user._id} className="content-card p-5">
+                  <div className="space-y-2 text-body text-text-secondary">
+                    <p className="text-section font-semibold text-text-primary">{user.name}</p>
                     <p>{user.email}</p>
                     <p>Role: {user.role}</p>
                     <p>

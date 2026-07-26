@@ -15,12 +15,6 @@ const GUIDANCE_REQUEST_TYPES = [
   'GENERAL_CAREER_ADVICE'
 ];
 
-const STATUS_STYLES = {
-  PENDING: 'border-amber-200 bg-amber-50 text-amber-700',
-  ACCEPTED: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  REJECTED: 'border-rose-200 bg-rose-50 text-rose-700'
-};
-
 function StudentAlumniDetailPage() {
   const { id } = useParams();
   const [alumni, setAlumni] = useState(null);
@@ -139,131 +133,130 @@ function StudentAlumniDetailPage() {
 
       <Link
         to="/student/alumni-search"
-        className="mb-6 inline-flex rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800"
+        className="btn-secondary mb-6 inline-flex"
       >
         Back to search
       </Link>
 
-      <section className="max-w-3xl rounded-lg border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 p-6 shadow-sm">
+      <section className="max-w-3xl surface-card p-6 md:p-8">
         {isLoading ? (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4 text-sm text-slate-600">
+          <div className="p-4 text-body text-text-secondary">
             Loading alumni details...
           </div>
         ) : errorMessage ? (
-          <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" role="alert" aria-live="polite">
+          <p className="alert-error" role="alert" aria-live="polite">
             {errorMessage}
           </p>
         ) : alumni ? (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-semibold text-slate-950">{alumni.user?.name}</h2>
-                <p className="mt-2 text-sm text-slate-600">{alumni.user?.email}</p>
+                <h2 className="text-display font-semibold text-text-primary">{alumni.user?.name}</h2>
+                <p className="mt-2 text-body text-text-secondary">{alumni.user?.email}</p>
               </div>
-              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+              <span className="inline-flex rounded-full border border-border bg-bg-secondary px-3 py-1 text-caption font-semibold uppercase tracking-wider text-text-primary">
                 {alumni.verificationStatus}
               </span>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <p className="text-sm text-slate-600">Branch: {alumni.branch}</p>
-              <p className="text-sm text-slate-600">Batch: {alumni.batch}</p>
-              <p className="text-sm text-slate-600">Company: {alumni.currentCompany}</p>
-              <p className="text-sm text-slate-600">Role: {alumni.currentRole}</p>
-              <p className="text-sm text-slate-600">Experience: {alumni.experienceYears} years</p>
-              <p className="text-sm text-slate-600">Domain: {alumni.domain || 'Not provided'}</p>
-              <p className="text-sm text-slate-600">Location: {alumni.location || 'Not provided'}</p>
-              <p className="text-sm text-slate-600">Referral support: {alumni.canProvideReferral ? 'Yes' : 'No'}</p>
-              <p className="text-sm text-slate-600">Mentoring: {alumni.canMentor ? 'Yes' : 'No'}</p>
+            <div className="grid gap-4 md:grid-cols-2 text-body text-text-secondary">
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Branch</span> <span className="font-medium text-text-primary">{alumni.branch}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Batch</span> <span className="font-medium text-text-primary">{alumni.batch}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Company</span> <span className="font-medium text-text-primary">{alumni.currentCompany}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Role</span> <span className="font-medium text-text-primary">{alumni.currentRole}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Experience</span> <span className="font-medium text-text-primary">{alumni.experienceYears} years</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Domain</span> <span className="font-medium text-text-primary">{alumni.domain || 'Not provided'}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Location</span> <span className="font-medium text-text-primary">{alumni.location || 'Not provided'}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Referral support</span> <span className="font-medium text-text-primary">{alumni.canProvideReferral ? 'Yes' : 'No'}</span></p>
+              <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Mentoring</span> <span className="font-medium text-text-primary">{alumni.canMentor ? 'Yes' : 'No'}</span></p>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Skills</h3>
-              <p className="mt-2 text-sm text-slate-600">{alumni.skills?.join(', ') || 'Not provided'}</p>
+              <h3 className="text-badge font-bold uppercase tracking-wider text-text-muted block">Skills</h3>
+              <p className="mt-2 text-body font-medium text-text-primary">{alumni.skills?.join(', ') || 'Not provided'}</p>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Bio</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{alumni.bio || 'No bio provided.'}</p>
+              <h3 className="text-badge font-bold uppercase tracking-wider text-text-muted block">Bio</h3>
+              <p className="mt-2 text-body leading-relaxed text-text-secondary">{alumni.bio || 'No bio provided.'}</p>
             </div>
 
-            <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4">
+            <div className="content-card p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Connection request</h3>
-                  <p className="mt-2 text-sm text-slate-600">
+                  <h3 className="text-section font-semibold text-text-primary">Connection request</h3>
+                  <p className="mt-2 text-body text-text-secondary">
                     Send a simple introduction to start a connection with this verified alumni.
                   </p>
                 </div>
                 {alumni.connectionRequest ? (
                   <span
-                    className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                      STATUS_STYLES[alumni.connectionRequest.status] || STATUS_STYLES.PENDING
-                    }`}
+                    className={`inline-flex rounded-full border border-border bg-bg-secondary px-3 py-1 text-caption font-semibold uppercase tracking-wider text-text-primary`}
                   >
                     {alumni.connectionRequest.status}
                   </span>
                 ) : null}
               </div>
 
-              <form onSubmit={handleSubmitRequest} className="mt-4">
+              <form onSubmit={handleSubmitRequest} className="mt-6">
                 <textarea
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                   rows="4"
                   disabled={isSubmitting || Boolean(alumni.connectionRequest)}
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-not-allowed disabled:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:border-slate-700"
+                  className="field-control"
                   placeholder="Write an optional message about why you want to connect."
                 />
 
                 {errorMessage ? (
-                  <p className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" role="alert" aria-live="polite">
+                  <p className="alert-error mt-4" role="alert" aria-live="polite">
                     {errorMessage}
                   </p>
                 ) : null}
 
                 {successMessage ? (
-                  <p className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700" role="alert" aria-live="polite">
+                  <p className="alert-success mt-4" role="alert" aria-live="polite">
                     {successMessage}
                   </p>
                 ) : null}
 
                 {alumni.connectionRequest ? (
-                  <p className="mt-4 text-sm text-slate-600">
+                  <p className="mt-4 text-body text-text-secondary">
                     You already sent a connection request on{' '}
-                    {new Date(alumni.connectionRequest.createdAt).toLocaleDateString()}.
+                    <span className="font-medium text-text-primary">{new Date(alumni.connectionRequest.createdAt).toLocaleDateString()}</span>.
                   </p>
                 ) : null}
 
                 <button
                   type="submit"
                   disabled={isSubmitting || Boolean(alumni.connectionRequest)}
-                  className="mt-4 rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="btn-primary mt-6"
                 >
                   {alumni.connectionRequest ? 'Connection Request Sent' : isSubmitting ? 'Sending...' : 'Send Connection Request'}
                 </button>
               </form>
             </div>
 
-            <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4">
+            <div className="content-card p-6">
               <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                <h3 className="text-section font-semibold text-text-primary">
                   Guidance or referral request
                 </h3>
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-body text-text-secondary">
                   Ask this alumni for mentorship, referral support, project guidance, or broader career help.
                 </p>
               </div>
 
-              <form onSubmit={handleSubmitGuidanceRequest} className="mt-4 space-y-4">
-                <label className="block text-sm font-medium text-slate-700">
-                  Request type
+              <form onSubmit={handleSubmitGuidanceRequest} className="mt-6 space-y-6">
+                <div>
+                  <label htmlFor="guidance-type">Request type</label>
                   <select
+                    id="guidance-type"
                     name="type"
                     value={guidanceForm.type}
                     onChange={handleGuidanceChange}
                     disabled={isGuidanceSubmitting}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100 dark:bg-slate-800 dark:border-slate-700"
+                    className="field-control"
                   >
                     {GUIDANCE_REQUEST_TYPES.map((type) => (
                       <option key={type} value={type}>
@@ -271,41 +264,43 @@ function StudentAlumniDetailPage() {
                       </option>
                     ))}
                   </select>
-                </label>
+                </div>
 
-                <label className="block text-sm font-medium text-slate-700">
-                  Title
+                <div>
+                  <label htmlFor="guidance-title">Title</label>
                   <input
+                    id="guidance-title"
                     name="title"
                     value={guidanceForm.title}
                     onChange={handleGuidanceChange}
                     disabled={isGuidanceSubmitting}
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100 dark:bg-slate-800 dark:border-slate-700"
+                    className="field-control"
                     placeholder="Need help with internship preparation"
                   />
-                </label>
+                </div>
 
-                <label className="block text-sm font-medium text-slate-700">
-                  Message
+                <div>
+                  <label htmlFor="guidance-message">Message</label>
                   <textarea
+                    id="guidance-message"
                     name="message"
                     value={guidanceForm.message}
                     onChange={handleGuidanceChange}
                     disabled={isGuidanceSubmitting}
                     rows="4"
-                    className="mt-2 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100 dark:bg-slate-800 dark:border-slate-700"
+                    className="field-control"
                     placeholder="Explain what kind of help you need and any context that would help the alumni respond."
                   />
-                </label>
+                </div>
 
                 {guidanceErrorMessage ? (
-                  <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" role="alert" aria-live="polite">
+                  <p className="alert-error" role="alert" aria-live="polite">
                     {guidanceErrorMessage}
                   </p>
                 ) : null}
 
                 {guidanceSuccessMessage ? (
-                  <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700" role="alert" aria-live="polite">
+                  <p className="alert-success" role="alert" aria-live="polite">
                     {guidanceSuccessMessage}
                   </p>
                 ) : null}
@@ -313,9 +308,9 @@ function StudentAlumniDetailPage() {
                 <button
                   type="submit"
                   disabled={isGuidanceSubmitting}
-                  className="rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-900 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="btn-primary mt-2"
                 >
-                  {isGuidanceSubmitting ? 'Sending...' : 'Send Guidance/Referral Request'}
+                  {isGuidanceSubmitting ? 'Sending...' : 'Send Request'}
                 </button>
               </form>
             </div>
@@ -325,10 +320,8 @@ function StudentAlumniDetailPage() {
                 href={alumni.linkedInUrl || undefined}
                 target="_blank"
                 rel="noreferrer"
-                className={`rounded-md border px-4 py-3 text-sm font-medium ${
-                  alumni.linkedInUrl
-                    ? 'border-slate-300 text-slate-700 transition hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800'
-                    : 'cursor-not-allowed border-slate-200 text-slate-400'
+                className={`btn-secondary justify-center ${
+                  !alumni.linkedInUrl ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 LinkedIn
@@ -337,10 +330,8 @@ function StudentAlumniDetailPage() {
                 href={alumni.githubUrl || undefined}
                 target="_blank"
                 rel="noreferrer"
-                className={`rounded-md border px-4 py-3 text-sm font-medium ${
-                  alumni.githubUrl
-                    ? 'border-slate-300 text-slate-700 transition hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800'
-                    : 'cursor-not-allowed border-slate-200 text-slate-400'
+                className={`btn-secondary justify-center ${
+                  !alumni.githubUrl ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 GitHub
@@ -349,10 +340,8 @@ function StudentAlumniDetailPage() {
                 href={alumni.portfolioUrl || undefined}
                 target="_blank"
                 rel="noreferrer"
-                className={`rounded-md border px-4 py-3 text-sm font-medium ${
-                  alumni.portfolioUrl
-                    ? 'border-slate-300 text-slate-700 transition hover:bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800'
-                    : 'cursor-not-allowed border-slate-200 text-slate-400'
+                className={`btn-secondary justify-center ${
+                  !alumni.portfolioUrl ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 Portfolio
@@ -360,7 +349,7 @@ function StudentAlumniDetailPage() {
             </div>
           </div>
         ) : (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 p-4 text-sm text-slate-600">
+          <div className="p-4 text-body text-text-secondary">
             Alumni details are not available.
           </div>
         )}

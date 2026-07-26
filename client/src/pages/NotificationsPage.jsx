@@ -141,26 +141,26 @@ function NotificationsPage() {
             {notifications.map((notification) => (
               <article
                 key={notification._id}
-                className={`rounded-[1.5rem] border p-5 transition ${
+                className={`content-card p-6 flex flex-col ${
                   notification.isRead
-                    ? 'border-slate-200 bg-slate-50/80 dark:bg-slate-900/80 dark:border-slate-800'
-                    : 'border-brand-200 bg-gradient-to-br from-brand-50 via-white to-sky-50'
+                    ? ''
+                    : 'border-l-4 border-l-brand-600'
                 }`}
               >
-                <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-2">
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-950">{notification.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{notification.message}</p>
+                    <h2 className="text-section font-semibold text-text-primary">{notification.title}</h2>
+                    <p className="mt-1 text-body leading-relaxed text-text-secondary">{notification.message}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="status-badge border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 text-slate-700">{notification.type}</span>
+                    <span className="inline-flex rounded-full border border-border bg-bg-secondary px-3 py-1 text-caption font-semibold uppercase tracking-wider text-text-primary">{notification.type}</span>
                     <StatusBadge value={notification.isRead ? 'READ' : 'PENDING'} />
                   </div>
                 </div>
 
-                <p className="mt-3 text-xs text-slate-500">{formatDate(notification.createdAt)}</p>
+                <p className="text-caption font-medium text-text-muted mb-6">{formatDate(notification.createdAt)}</p>
 
-                <div className="mt-4 flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 mt-auto">
                   {!notification.isRead ? (
                     <button
                       type="button"

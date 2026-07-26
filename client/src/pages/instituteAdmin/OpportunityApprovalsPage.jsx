@@ -81,7 +81,7 @@ function OpportunityApprovalsPage() {
 
       <section className="surface-card">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-slate-600">Only pending opportunities from your institute appear here.</p>
+          <p className="text-body text-text-secondary">Only pending opportunities from your institute appear here.</p>
           <button
             type="button"
             onClick={loadOpportunities}
@@ -92,39 +92,48 @@ function OpportunityApprovalsPage() {
         </div>
 
         {errorMessage ? (
-          <p className="alert-error mb-4">
+          <p className="alert-error mb-4" role="alert" aria-live="polite">
             {errorMessage}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p className="alert-success mb-4">
+          <p className="alert-success mb-4" role="alert" aria-live="polite">
             {successMessage}
           </p>
         ) : null}
 
         {isLoading ? (
-          <LoadingState message="Loading pending opportunities..." />
+          <LoadingState message="Loading pending opportunities..." className="mt-6" />
         ) : opportunities.length === 0 ? (
-          <EmptyState title="No pending opportunities" description="Alumni opportunity submissions that need review will appear here." />
+          <div className="mt-6">
+            <EmptyState title="No pending opportunities" description="Alumni opportunity submissions that need review will appear here." />
+          </div>
         ) : (
           <div className="space-y-4">
             {opportunities.map((opportunity) => (
-              <article key={opportunity._id} className="content-card">
-                <div className="grid gap-2 text-sm text-slate-600 md:grid-cols-2">
-                  <p className="text-base font-semibold text-slate-950">{opportunity.title}</p>
-                  <p>Posted by: {opportunity.postedBy?.name}</p>
-                  <p>Type: {opportunity.type}</p>
-                  <p>Company: {opportunity.company}</p>
-                  <p>Role: {opportunity.role}</p>
-                  <p>Location: {opportunity.location}</p>
-                  <p>Mode: {opportunity.mode}</p>
-                  <p>Deadline: {new Date(opportunity.deadline).toLocaleDateString()}</p>
-                  <p>Skills: {opportunity.skillsRequired?.join(', ') || 'Not provided'}</p>
+              <article key={opportunity._id} className="content-card p-6">
+                <div className="grid gap-4 text-body text-text-secondary md:grid-cols-2">
+                  <p className="text-section font-semibold text-text-primary col-span-full">{opportunity.title}</p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Posted by</span> <span className="font-medium text-text-primary">{opportunity.postedBy?.name}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Type</span> <span className="font-medium text-text-primary">{opportunity.type}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Company</span> <span className="font-medium text-text-primary">{opportunity.company}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Role</span> <span className="font-medium text-text-primary">{opportunity.role}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Location</span> <span className="font-medium text-text-primary">{opportunity.location}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Mode</span> <span className="font-medium text-text-primary">{opportunity.mode}</span></p>
+                  <p><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Deadline</span> <span className="font-medium text-text-primary">{new Date(opportunity.deadline).toLocaleDateString()}</span></p>
+                  <p className="col-span-full"><span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Skills</span> <span className="font-medium text-text-primary">{opportunity.skillsRequired?.join(', ') || 'Not provided'}</span></p>
                 </div>
 
-                <p className="mt-3 text-sm text-slate-600">{opportunity.description}</p>
-                <p className="mt-3 text-sm text-slate-600">Eligibility: {opportunity.eligibility}</p>
+                <div className="mt-4">
+                  <span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Description</span>
+                  <p className="text-body font-medium text-text-primary">{opportunity.description}</p>
+                </div>
+                
+                <div className="mt-4">
+                  <span className="text-badge font-bold uppercase tracking-wider text-text-muted block">Eligibility</span>
+                  <p className="text-body font-medium text-text-primary">{opportunity.eligibility}</p>
+                </div>
 
                 <textarea
                   value={rejectionReasons[opportunity._id] || ''}

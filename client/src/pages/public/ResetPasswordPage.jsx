@@ -52,10 +52,10 @@ function ResetPasswordPage() {
   return (
     <div className="flex min-h-[80vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h2 className="mt-6 text-center text-display font-bold tracking-tight text-text-primary">
           Create new password
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-center text-body text-text-secondary">
           Your new password must be different from previous used passwords.
         </p>
       </div>
@@ -64,11 +64,11 @@ function ResetPasswordPage() {
         <div className="surface-card p-8">
           {isSuccess ? (
             <div className="animate-fadeInUp text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-600 shadow-lg shadow-emerald-500/20 mb-6">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-2xl text-success">
                 ✓
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Password reset complete</h3>
-              <p className="text-sm leading-6 text-slate-600 dark:text-slate-400 mb-6">
+              <h3 className="mb-2 text-section font-bold text-text-primary">Password reset complete</h3>
+              <p className="mb-6 text-body text-text-secondary">
                 Your password has been successfully updated. You can now log in with your new password.
               </p>
               <Link to="/login" className="btn-primary w-full text-center py-2.5">
@@ -84,15 +84,15 @@ function ResetPasswordPage() {
               )}
 
               <div>
-                <div className="flex justify-between items-center">
-                  <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="password">
+                <div className="flex justify-between items-center mb-2">
+                  <label htmlFor="password" className="mb-0">
                     New Password
                   </label>
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-badge font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                     {showPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
-                <div className="mt-2">
+                <div>
                   <input
                     id="password"
                     name="password"
@@ -108,10 +108,10 @@ function ResetPasswordPage() {
               </div>
 
               <div>
-                <label className="block text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-500" htmlFor="confirmPassword">
+                <label htmlFor="confirmPassword">
                   Confirm Password
                 </label>
-                <div className="mt-2">
+                <div>
                   <input
                     id="confirmPassword"
                     name="confirmPassword"

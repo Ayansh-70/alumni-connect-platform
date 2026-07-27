@@ -1,3 +1,14 @@
+// 1. Load environment variables FIRST
+import 'dotenv/config'; 
+
+// 2. Import DNS
+import dns from 'dns';
+
+// 3. Now Node actually knows that NODE_ENV is 'development'!
+if (process.env.NODE_ENV === 'development') {
+    dns.setServers(['8.8.8.8', '8.8.4.4']);
+}
+
 import dotenv from 'dotenv';
 import app from './src/app.js';
 import connectDB from './src/config/db.js';

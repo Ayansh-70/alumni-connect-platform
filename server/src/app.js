@@ -37,20 +37,19 @@ app.disable('x-powered-by');
 // Configure Helmet for security, keeping compatibility with the Vite frontend
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
-// Multi-origin CORS support
-const clientUrl = process.env.CLIENT_URL;
-if (process.env.NODE_ENV === 'production' && !clientUrl) {
-  throw new Error('[FATAL] CLIENT_URL is missing in production environment');
-}
-
-const corsOrigins = clientUrl 
-  ? clientUrl.split(',').map(url => url.trim())
-  : ['http://localhost:5173'];
+// CORS must be registered before route definitions so browser preflight
+// requests receive the correct Access-Control-Allow-* headers.
+const allowedOrigins = [
+  'https://alumni-connect-platform-tan.vercel.app',
+  'http://localhost:5173'
+];
 
 app.use(
   cors({
-    origin: corsOrigins,
-    credentials: true
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
 app.use(express.json());

@@ -10,11 +10,16 @@ export const validateClientEnv = () => {
   }
 };
 
+const normalizeApiBaseUrl = (baseUrl) => {
+  const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
+  return normalizedBaseUrl.endsWith('/api') ? normalizedBaseUrl : `${normalizedBaseUrl}/api`;
+};
+
 export const getApiBaseUrl = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   if (import.meta.env.PROD) {
-    return baseUrl;
+    return normalizeApiBaseUrl(baseUrl);
   }
   // Safe fallback for development only
-  return baseUrl || 'http://localhost:5000/api';
+  return normalizeApiBaseUrl(baseUrl || 'http://localhost:5000/api');
 };

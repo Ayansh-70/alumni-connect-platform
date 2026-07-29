@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 class SmtpProvider {
   constructor() {
@@ -10,6 +10,7 @@ class SmtpProvider {
     if (this.initPromise) {
       return this.initPromise;
     }
+
     this.initPromise = this._initializeInternal();
     return this.initPromise;
   }
@@ -21,21 +22,33 @@ class SmtpProvider {
     const pass = process.env.EMAIL_PASS;
 
     if (!host || !port || !user || !pass) {
-      if (process.env.NODE_ENV === 'production') {
-        throw new Error('[FATAL] SMTP configuration is incomplete in production. Mock provider is strictly forbidden.');
+      const message =
+        "[SMTP] SMTP configuration is incomplete. EMAIL_HOST, EMAIL_PORT, EMAIL_USER and EMAIL_PASS are required.";
+
+      if (process.env.NODE_ENV === "production") {
+        throw new Error(message);
       }
-      console.warn('[SMTP] Environment variables are missing. Email service will run in mock mode.');
+
+      console.warn(message);
+      console.warn("[SMTP] Development mode detected. Falling back to mock provider.");
       return;
     }
 
     this.transporter = nodemailer.createTransport({
       host,
       port: Number(port),
-      secure: Number(port) === 465, // true for 465, false for other ports
+
+      // Gmail: 465 -> true, 587 -> false
+      secure: Number(port) === 465,
+
       auth: {
         user,
         pass,
       },
+
+      // Force IPv4 (helps on Render when IPv6 SMTP is unreachable)
+      family: 4,
+
       connectionTimeout: 10000,
       greetingTimeout: 10000,
       socketTimeout: 15000,
@@ -43,37 +56,63 @@ class SmtpProvider {
 
     try {
       await this.transporter.verify();
-      console.log('[SMTP] SMTP connection verified successfully.');
+      console.log("[SMTP] SMTP connection verified successfully.");
     } catch (error) {
-      console.error('[SMTP] SMTP verification failed:', error.message);
-      console.warn('[SMTP] Falling back to mock mode.');
-      this.transporter = null; // Revert to mock mode
+      console.error("[SMTP] SMTP verification failed:");
+      console.error(error);
+
+      if (process.env.NODE_ENV === "production") {
+        throw new Error(
+          `SMTP verification failed in production: ${error.message}`
+        );
+      }
+
+      console.warn("[SMTP] Development mode detected. Falling back to mock provider.");
+      this.transporter = null;
     }
   }
 
   stripHtml(html) {
-    if (!html) return '';
-    // Strip HTML tags using regex
-    return html.replace(/<[^>]*>?/gm, '').trim();
+    if (!html) return "";
+    return html.replace(/<[^>]*>?/gm, "").trim();
   }
 
   async sendEmail({ to, subject, html, text }) {
     await this.initialize();
 
-    const fallbackUser = process.env.EMAIL_USER || 'noreply@alumniconnect.com';
-    const from = process.env.EMAIL_FROM || `AlumniConnect <${fallbackUser}>`;
-    
+    const fallbackUser =
+      process.env.EMAIL_USER || "noreply@alumniconnect.com";
+
+    const from =
+      process.env.EMAIL_FROM ||
+      `AlumniConnect <${fallbackUser}>`;
+
     const textContent = text || this.stripHtml(html);
 
+    // Development Mock Sender
     if (!this.transporter) {
-      console.log('--- MOCK EMAIL SENDER ---');
-      console.log(`[SMTP] To: ${to}`);
-      console.log(`[SMTP] From: ${from}`);
-      console.log(`[SMTP] Subject: ${subject}`);
-      console.log(`[SMTP] HTML: (Omitted for brevity, length: ${html?.length || 0})`);
-      console.log(`[SMTP] TEXT: (Omitted for brevity, length: ${textContent.length})`);
-      console.log('-------------------------');
-      return { success: true, message: 'Mock email sent successfully' };
+      if (process.env.NODE_ENV === "production") {
+        throw new Error(
+          "[SMTP] Transporter is unavailable in production. Email sending aborted."
+        );
+      }
+
+      console.log("------------ MOCK EMAIL ------------");
+      console.log(`[SMTP] To      : ${to}`);
+      console.log(`[SMTP] From    : ${from}`);
+      console.log(`[SMTP] Subject : ${subject}`);
+      console.log(
+        `[SMTP] HTML Length : ${html?.length || 0}`
+      );
+      console.log(
+        `[SMTP] TEXT Length : ${textContent.length}`
+      );
+      console.log("------------------------------------");
+
+      return {
+        success: true,
+        message: "Mock email sent successfully",
+      };
     }
 
     try {
@@ -85,11 +124,19 @@ class SmtpProvider {
         text: textContent,
       });
 
-      console.log(`[SMTP] Email sent successfully to ${to}`);
-      return { success: true, data: info };
+      console.log(
+        `[SMTP] Email sent successfully to ${to}`
+      );
+      console.log(`[SMTP] Message ID: ${info.messageId}`);
+
+      return {
+        success: true,
+        data: info,
+      };
     } catch (error) {
-      // Log failure strictly on backend to keep responses clean.
-      console.error('[SMTP] Failed to send email:', error.message);
+      console.error("[SMTP] Failed to send email:");
+      console.error(error);
+
       throw error;
     }
   }
